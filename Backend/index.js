@@ -9,6 +9,7 @@ const { initRepo } = require("./controllers/commands/init");
 const { addRepo } = require("./controllers/commands/add");
 const { commitRepo } = require("./controllers/commands/commit");
 const { pushRepo } = require("./controllers/commands/push");
+const { pullRepo } = require("./controllers/commands/pull");
 
 yargs(hideBin(process.argv))
   .command("begin", "Starting the server", {}, startServer)
@@ -56,6 +57,12 @@ yargs(hideBin(process.argv))
     "Push the latest commit to the remote repository",
     {},
     pushRepo
+  )
+  .command(
+    "pull",
+    "pull the commits in to local machine",
+    {},
+    pullRepo
   )
   .parse();
 
