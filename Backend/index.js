@@ -10,6 +10,7 @@ const { addRepo } = require("./controllers/commands/add");
 const { commitRepo } = require("./controllers/commands/commit");
 const { pushRepo } = require("./controllers/commands/push");
 const { pullRepo } = require("./controllers/commands/pull");
+const { revertRepo } = require("./controllers/commands/revert");
 
 yargs(hideBin(process.argv))
   .command("begin", "Starting the server", {}, startServer)
@@ -58,11 +59,14 @@ yargs(hideBin(process.argv))
     {},
     pushRepo
   )
+  .command("pull", "pull the commits in to local machine", {}, pullRepo)
   .command(
-    "pull",
-    "pull the commits in to local machine",
-    {},
-    pullRepo
+    "revert <commitId>",
+    "Restore the project to a specific commit",
+    () => {},
+    (argv) => {
+      revertRepo(argv.commitId);
+    }
   )
   .parse();
 
