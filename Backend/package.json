@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "bin": {
-    "codechronicle": "./index.js"
+    "chron": "./index.js"
   },
   "scripts": {
     "start": "node index.js begin"
