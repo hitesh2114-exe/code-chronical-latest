@@ -1,4 +1,22 @@
 {
+  "name": "codechronicle",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "bin": {
+    "codechronicle": "./index.js"
+  },
+  "scripts": {
+    "start": "node index.js begin"
+  },
+  "keywords": [
+    "vcs",
+    "git",
+    "cli",
+    "supabase"
+  ],
+  "author": "Hitesh Pandey",
+  "license": "MIT",
   "dependencies": {
     "@supabase/supabase-js": "^2.110.7",
     "dotenv": "^17.4.2",
