@@ -21,6 +21,7 @@
     "@supabase/supabase-js": "^2.110.7",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "mongoose": "^9.8.0",
     "uuid": "^14.0.1",
     "yargs": "^18.0.0"
   }

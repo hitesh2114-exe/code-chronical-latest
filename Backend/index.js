@@ -1,5 +1,6 @@
-#!/usr/bin/env node    
+#!/usr/bin/env node
 const express = require("express");
+const connectDB = require("./config/db");
 
 //yargs
 const yargs = require("yargs");
@@ -74,6 +75,8 @@ yargs(hideBin(process.argv))
 async function startServer() {
   const app = express();
   const port = 8080;
+
+  connectDB();
 
   app.get("/", (req, res) => {
     res.send("welcome to the root...!");
