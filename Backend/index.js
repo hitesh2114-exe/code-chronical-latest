@@ -14,6 +14,9 @@ const { pushRepo } = require("./controllers/commands/push");
 const { pullRepo } = require("./controllers/commands/pull");
 const { revertRepo } = require("./controllers/commands/revert");
 
+const errorHandler = require("./middleware/errorHandler");
+const mainRouter = require("./routes/mainRoutes");
+
 yargs(hideBin(process.argv))
   .command("begin", "Starting the server", {}, startServer)
   .command(
@@ -78,9 +81,9 @@ async function startServer() {
 
   connectDB();
 
-  app.get("/", (req, res) => {
-    res.send("welcome to the root...!");
-  });
+  app.use(express.json());
+  app.use(mainRouter);
+  app.use(errorHandler);
 
   app.listen(port, () => {
     console.log(`Connected to port : ${port}`);

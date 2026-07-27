@@ -1,0 +1,11 @@
+//Handles all errors thrown inside the application and returns a consistent JSON response to the client.
+const errorHandler = (err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+
+  res.status(statusCode).json({
+    success: false,
+    message: err.message || "Internal Server Error",
+  });
+};
+
+module.exports = errorHandler;
