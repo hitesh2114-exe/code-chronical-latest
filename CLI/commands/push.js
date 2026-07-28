@@ -1,6 +1,6 @@
 const fs = require("fs").promises; //file system
 const path = require("path");
-const supabase = require("../../config/supabase");
+const supabase = require("../config/supabase");
 
 async function pushRepo() {
   const repoPath = path.join(process.cwd(), ".vcsGit"); //current working directory

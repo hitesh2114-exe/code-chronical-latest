@@ -3,11 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "bin": {
-    "chron": "./index.js"
-  },
   "scripts": {
-    "start": "node index.js begin"
+    "start": "node index.js"
   },
   "keywords": [
     "vcs",
