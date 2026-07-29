@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
-require("dotenv").config();
+require("dotenv").config({
+  quiet: true,
+});
 
 //yargs
 const yargs = require("yargs");
@@ -18,6 +20,16 @@ const { pullRepo } = require("./commands/pull");
 const { revertRepo } = require("./commands/revert");
 
 yargs(hideBin(process.argv))
+  .scriptName("chron") //change the name from index.js to chron
+  .usage("Usage: chron <command> [options]")
+
+  .example("chron login", "Login to your Code Chronicle account")
+  .example("chron init my-repo", "Initialize a new repository")
+  .example("chron add .", "Stage all files")
+  .example("chron push", "Push commits to remote")
+
+  .strict() //gives complete list of commands and verify the unknown commands
+
   .command({
     command: "login",
     describe: "Login to Code Chronicle",
@@ -87,4 +99,5 @@ yargs(hideBin(process.argv))
       revertRepo(argv.commitId);
     }
   )
+  .help()
   .parse();
