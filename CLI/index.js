@@ -1,10 +1,15 @@
 #!/usr/bin/env node
 
+require("dotenv").config();
+
 //yargs
 const yargs = require("yargs");
 const { hideBin } = require("yargs/helpers");
 
 //commands
+const { login } = require("./commands/login");
+const { logout } = require("./commands/logout");
+const { whoami } = require("./commands/whoami");
 const { initRepo } = require("./commands/init");
 const { addRepo } = require("./commands/add");
 const { commitRepo } = require("./commands/commit");
@@ -13,6 +18,21 @@ const { pullRepo } = require("./commands/pull");
 const { revertRepo } = require("./commands/revert");
 
 yargs(hideBin(process.argv))
+  .command({
+    command: "login",
+    describe: "Login to Code Chronicle",
+    handler: login,
+  })
+  .command({
+    command: "logout",
+    describe: "Logout from Code Chronicle",
+    handler: logout,
+  })
+  .command({
+    command: "whoami",
+    describe: "check the current user detail",
+    handler: whoami,
+  })
   .command(
     "init <repoName>",
     "Initialize a new repository",

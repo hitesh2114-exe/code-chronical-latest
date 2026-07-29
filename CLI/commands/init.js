@@ -3,14 +3,14 @@ const path = require("path"); //helps safely construct filesystem paths
 
 async function initRepo(repoName) {
   // process.cwd() returns the directory from which the CLI command was executed.
-  const repoPath = path.resolve(process.cwd(), ".vcsGit");
+  const repoPath = path.resolve(process.cwd(), ".chron");
 
   const commitsPath = path.join(repoPath, "commits");
   const stagingPath = path.join(repoPath, "staging");
   const configPath = path.join(repoPath, "config.json");
 
   try {
-    // fs.access() checks whether .vcsGit already exists to prevent reinitialization.
+    // fs.access() checks whether .chron already exists to prevent reinitialization.
     try {
       await fs.access(repoPath);
       console.log("Repository is already initialized.");

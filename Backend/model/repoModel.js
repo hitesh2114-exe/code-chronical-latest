@@ -12,6 +12,7 @@ const repoSchema = new Schema(
     description: {
       type: String,
       default: "",
+      trim: true,
     },
 
     visibility: {
@@ -26,29 +27,22 @@ const repoSchema = new Schema(
       required: true,
     },
 
+    collaborators: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+
     storagePath: {
       type: String,
       required: true,
     },
 
-    defaultBranch: {
-      type: String,
-      default: "main",
-    },
-
     latestCommit: {
       type: Schema.Types.ObjectId,
       ref: "Commit",
-    },
-
-    stars: {
-      type: Number,
-      default: 0,
-    },
-
-    forks: {
-      type: Number,
-      default: 0,
+      default: null,
     },
   },
   {
@@ -64,23 +58,24 @@ REPOSITORY MODEL
 ============================================================
 
 Purpose:
-Represents a Code Chronicle repository.
+Represents a repository in Code Chronicle.
 
 Responsibilities:
 - Store repository metadata.
 - Maintain ownership information.
 - Define repository visibility.
-- Point to the storage location containing repository files.
+- Store collaborators.
+- Store the Supabase storage path.
+- Keep reference to the latest pushed commit.
 
 Important Design Decision:
-This model DOES NOT store actual repository files.
-All repository contents and commit snapshots are stored inside
-Supabase Storage, while MongoDB stores only metadata.
+Repository files and commit snapshots are NOT stored in MongoDB.
+MongoDB stores only metadata, while repository contents are stored
+inside Supabase Storage.
 
 Relationships:
 - One Repository belongs to one User (Owner).
-- One Repository has many Commits.
-- One Repository has many Issues.
-- One Repository has many Collaborators.
-- One Repository has many Activities.
+- One Repository can have many Collaborators.
+- One Repository can have many Commits.
+- One Repository can have many Activities.
 */

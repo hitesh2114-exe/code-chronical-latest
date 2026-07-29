@@ -3,12 +3,12 @@ const path = require("path");
 
 async function addRepo(filePath) {
   const projectRoot = process.cwd();
-  const repoPath = path.join(projectRoot, ".vcsGit");
+  const repoPath = path.join(projectRoot, ".chron");
   // path.join → combines segments into a clean, normalized path
   const stagingPath = path.join(repoPath, "staging");
 
   try {
-    // Ensure the user has initialized a Code Chronicle repository first (.vcsGit exists or not).
+    // Ensure the user has initialized a Code Chronicle repository first (.chron exists or not).
     await fs.access(repoPath);
 
     // "add ." stages the complete project.
@@ -73,7 +73,7 @@ async function copyDirectory(source, destination) {
   });
 
   for (const entry of entries) {
-    if (entry.name === ".vcsGit" || entry.name === "node_modules") {
+    if (entry.name === ".chron" || entry.name === "node_modules") {
       continue;
     }
 

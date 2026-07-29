@@ -3,7 +3,7 @@ const path = require("path");
 const supabase = require("../config/supabase");
 
 async function pullRepo() {
-  const repoPath = path.join(process.cwd(), ".vcsGit"); //current working directory
+  const repoPath = path.join(process.cwd(), ".chron"); //current working directory
   const commitsPath = path.join(repoPath, "commits"); //path to the commit folder
 
   try {

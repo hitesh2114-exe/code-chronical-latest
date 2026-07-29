@@ -2,7 +2,7 @@ const fs = require("fs"); //file system
 const path = require("path");
 
 async function revertRepo(commitID) {
-  const repoPath = path.join(process.cwd(), ".vcsGit"); //current working directory
+  const repoPath = path.join(process.cwd(), ".chron"); //current working directory
   const commitPath = path.join(repoPath, "commits", commitID); //path to the commit folder
 
   try {
