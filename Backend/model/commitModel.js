@@ -37,6 +37,14 @@ const commitSchema = new Schema(
       ref: "Commit",
       default: null,
     },
+    committedAt: {
+      type: Date,
+      required: true,
+    },
+    branch: {
+      type: String,
+      default: "main",
+    },
   },
   {
     timestamps: true,

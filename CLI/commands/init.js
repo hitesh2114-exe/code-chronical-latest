@@ -1,7 +1,11 @@
 const fs = require("fs").promises; //file system: we can use asynchronous Promise-based operations like await fs.mkdir(...), await fs.writeFile(...)
 const path = require("path"); //helps safely construct filesystem paths
+const { getToken } = require("../utils/auth");
+const repositoryApi = require("../services/repositoryApi");
+const { requireAuth } = require("../utils/auth");
 
 async function initRepo(repoName) {
+  requireAuth();
   // process.cwd() returns the directory from which the CLI command was executed.
   const repoPath = path.resolve(process.cwd(), ".chron");
 
@@ -19,15 +23,26 @@ async function initRepo(repoName) {
       // Repository doesn't exist yet, so initialization can continue.
     }
 
+    const token = getToken();
+
+    const response = await repositoryApi.createRepository(token, {
+      name: repoName,
+      description: "",
+      visibility: "private",
+    });
+
+    const repository = response.data;
+
     // recursive:true also creates the parent .vcsGit directory automatically.
     await fs.mkdir(commitsPath, { recursive: true });
     await fs.mkdir(stagingPath, { recursive: true });
 
-    // Remote storage configuration will be used later by commands such as push/pull.
+    // information of the repository
     const config = {
-      storage: "supabase",
-      bucket: "codechronicle",
-      repoName,
+      repositoryId: repository.repositoryId,
+      repositoryName: repository.repositoryName,
+      defaultBranch: "main",
+      lastPushedCommit: null,
     };
 
     // JSON.stringify(..., null, 2) converts the object to readable, indented JSON.
@@ -83,25 +98,6 @@ When the user runs:
 
 8. Supabase will act as the remote storage and will be used later
    when commands such as "push" and "pull" are executed.
-
-Overall flow:
-
-CLI Command
-    ↓
-node index.js init <repoName>
-    ↓
-Yargs detects "init"
-    ↓
-initRepo(repoName)
-    ↓
-Check if .vcsGit already exists
-    ↓
-Create local VCS structure
-    ↓
-.vcsGit/
-├── commits/
-├── staging/
-└── config.json
 
 This is conceptually similar to "git init", where Git creates a
 .git directory to maintain repository metadata. In Code Chronicle,

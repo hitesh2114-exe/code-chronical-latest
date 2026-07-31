@@ -1,11 +1,21 @@
 const fs = require("fs"); //file system
 const path = require("path");
+const { requireAuth } = require("../utils/auth");
 
 async function revertRepo(commitID) {
+  requireAuth();
   const repoPath = path.join(process.cwd(), ".chron"); //current working directory
   const commitPath = path.join(repoPath, "commits", commitID); //path to the commit folder
 
   try {
+    try {
+      await fs.access(repoPath);
+      // .chron exists
+    } catch {
+      console.log("Repository not initialized.");
+      return;
+    }
+
     // Check whether the commit exists
     if (!fs.existsSync(commitPath)) {
       console.log("Commit not found.");

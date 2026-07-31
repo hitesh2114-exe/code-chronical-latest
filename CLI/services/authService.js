@@ -9,7 +9,10 @@ async function login(email, password) {
 
     return response.data;
   } catch (error) {
-    throw error;
+    if (error.code === "ECONNREFUSED") {
+      return;
+    }
+    console.log(error.code);
   }
 }
 

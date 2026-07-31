@@ -5,7 +5,7 @@ const router = express.Router();
 
 const authController = require("../controllers/authController");
 const protect = require("../middleware/authMiddleware");
-const {validate} = require("../validation/validate");
+const { validate } = require("../validation/validate");
 const {
   registerSchema,
   loginSchema,

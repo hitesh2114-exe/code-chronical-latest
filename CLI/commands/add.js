@@ -1,7 +1,9 @@
 const fs = require("fs").promises;
 const path = require("path");
+const { requireAuth } = require("../utils/auth");
 
 async function addRepo(filePath) {
+  requireAuth();
   const projectRoot = process.cwd();
   const repoPath = path.join(projectRoot, ".chron");
   // path.join → combines segments into a clean, normalized path

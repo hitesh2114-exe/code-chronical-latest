@@ -39,6 +39,8 @@ async function commitRepo(message) {
       id: commitID,
       message,
       date: new Date().toISOString(),
+      parentCommit: lastCommit || null,
+      branch: "main",
     };
 
     await fs.writeFile(

@@ -4,7 +4,6 @@ const { saveConfig, getConfig } = require("../utils/chronConfig");
 const { getToken } = require("../utils/auth");
 
 async function login() {
-
   const config = getConfig();
   if (config) {
     console.log(`✔ You are already logged in as ${config.user.username}.`);
@@ -39,6 +38,17 @@ async function login() {
     console.log(`✔ ${response.message}`);
     console.log(`Welcome back, ${response.data.user.username}!`);
   } catch (error) {
+    // Server is not reachable
+    if (error.code === "ECONNREFUSED") {
+      console.log("Backend server is not running.");
+      return;
+    }
+
+    // No response received (network issue / timeout)
+    if (!error.response) {
+      console.log("Unable to connect. Please check your internet connection.");
+      return;
+    }
     console.log(`✖ ${error.response?.data?.message || error.message}`);
   }
 }

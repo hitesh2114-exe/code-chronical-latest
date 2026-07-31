@@ -1,6 +1,6 @@
 const Joi = require("joi");
 
-const repositorySchema = Joi.object({
+const createRepositorySchema = Joi.object({
   name: Joi.string()
     .trim()
     .min(3)
@@ -10,7 +10,7 @@ const repositorySchema = Joi.object({
   description: Joi.string()
     .trim()
     .allow("")
-    .max(500),
+    .default(""),
 
   visibility: Joi.string()
     .valid("public", "private")
@@ -18,5 +18,5 @@ const repositorySchema = Joi.object({
 });
 
 module.exports = {
-  repositorySchema,
+  createRepositorySchema,
 };
