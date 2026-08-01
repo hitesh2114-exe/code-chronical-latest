@@ -37,8 +37,6 @@ async function pushRepo() {
     await fs.access(commitPath);
     await zipDirectory(commitPath, zipPath);
 
-    console.log("ZIP created successfully.");
-
     const token = getToken();
 
     const response = await repositoryApi.pushRepository(
@@ -48,8 +46,22 @@ async function pushRepo() {
     );
 
     console.log(response);
+
+    config.lastPushedCommit = lastCommit;
+    await fs.writeFile(configPath, JSON.stringify(config, null, 2), "utf8");
+
   } catch (err) {
-    console.log("problem in pushing...");
+    if (err.code === "ECONNREFUSED") {
+      console.log("Backend server is not running.");
+      return;
+    }
+
+    if (!err.response) {
+      console.log("Unable to connect. Please check your internet connection.");
+      return;
+    }
+
+    console.log("problem in pushing...", + err.message);
   }
 }
 

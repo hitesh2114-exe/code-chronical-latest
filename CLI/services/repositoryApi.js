@@ -14,6 +14,7 @@ class RepositoryApi {
     return response.data;
   }
 
+  //this function is used to push repo
   async pushRepository(repositoryId, zipPath, token) {
     try {
       const form = new FormData();
@@ -33,12 +34,21 @@ class RepositoryApi {
       );
 
       return response.data;
-    }
-    finally {
+    } finally {
       if (fs.existsSync(zipPath)) {
         fs.unlinkSync(zipPath);
       }
     }
+  }
+
+  async pullRepository(repositoryId, token) {
+    const response = await api.get(`/api/repositories/${repositoryId}/pull`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      responseType: "stream",
+    });
+    return response;
   }
 }
 

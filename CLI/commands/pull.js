@@ -1,92 +1,82 @@
 const fs = require("fs").promises; //file system
+const fswp = require("fs");
 const path = require("path");
 const supabase = require("../config/supabase");
 const { requireAuth } = require("../utils/auth");
+const repositoryApi = require("../services/repositoryApi");
+const { getToken } = require("../utils/auth");
+const { unzipDirectory } = require("../utils/unzipDirectory");
 
 async function pullRepo() {
-  requireAuth();
-  const repoPath = path.join(process.cwd(), ".chron"); //current working directory
-  const commitsPath = path.join(repoPath, "commits"); //path to the commit folder
-
+  let tempDirectory = null;
   try {
-    try {
-      await fs.access(repoPath);
-      // .chron exists
-    } catch {
+    requireAuth(); //checks user logged in or not
+    console.log("pull started");
+    const repoPath = path.resolve(process.cwd(), ".chron"); //gives the current directory path
+    const configPath = path.join(repoPath, "config.json"); //path to json
+
+    if (!fswp.existsSync(repoPath)) {
       console.log("Repository not initialized.");
       return;
     }
-    const config = JSON.parse(
-      await fs.readFile(path.join(repoPath, "config.json"), "utf-8")
-    );
 
-    const { bucket, repoName } = config; //object destructuring
+    const config = JSON.parse(await fs.readFile(configPath, "utf8")); //reads the json file
+    const { repositoryId } = config; //storing repoId
 
-    // Remote commits folder
-    const remoteCommitsPath = `repos/${repoName}/commits`;
-
-    // Fetch all commit folders from Supabase
-    const { data: commitFolders, error } = await supabase.storage
-      .from(bucket)
-      .list(remoteCommitsPath);
-
-    if (error) {
-      throw new Error(error.message);
+    if (!repositoryId) {
+      console.log("Repository id not found.");
+      return;
     }
 
-    for (const commitFolder of commitFolders) {
-      const remoteCommitPath = `${remoteCommitsPath}/${commitFolder.name}`;
-      const localCommitPath = path.join(commitsPath, commitFolder.name);
+    const token = getToken(); //get the token
+    const response = await repositoryApi.pullRepository(repositoryId, token); //receive the zip file from backend
+    // console.log(response);
+    const tempDir = path.join(repoPath, "temp"); //create temporary folder
+    tempDirectory = tempDir;
+    fswp.mkdirSync(tempDir, { recursive: true });
+    const zipPath = path.join(tempDir, "pull.zip");
 
-      await downloadDirectory(remoteCommitPath, localCommitPath, bucket);
-    }
+    const writer = fswp.createWriteStream(zipPath);
+    response.data.pipe(writer);
 
-    console.log("Repository pulled successfully.");
+    await new Promise((resolve, reject) => {
+      writer.on("finish", resolve);
+      writer.on("error", reject);
+    });
+
+    console.log("ZIP downloaded successfully.");
+
+    // const zipPath = path.join(repoPath, "temp");
+    const commitsPath = path.join(repoPath, "commits");
+
+    await unzipDirectory(zipPath, commitsPath);
+
+    console.log("successfully pulled");
   } catch (err) {
-    console.error("Error pulling repository:", err.message);
-  }
-}
+    if (err.code === "ECONNREFUSED") {
+      console.log("Backend server is not running.");
+      return;
+    }
+    if (!err.response) {
+      console.log("Unable to connect. Please check your internet connection.");
+      return;
+    }
 
-async function downloadDirectory(remotePath, localPath, bucket) {
-  // Create the current directory locally
-  await fs.mkdir(localPath, { recursive: true }); //creates the folder locally
-
-  // List all items inside the current remote folder
-  const { data: items, error } = await supabase.storage
-    .from(bucket)
-    .list(remotePath);
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  for (const item of items) {
-    const remoteItemPath = `${remotePath}/${item.name}`;
-    const localItemPath = path.join(localPath, item.name);
-
-    // If the item has no id, treat it as a folder
-    if (!item.id) {
-      await downloadDirectory(remoteItemPath, localItemPath, bucket);
-    } else {
-      // Download the file
-      const { data: fileData, error } = await supabase.storage //A Blob is simply a container holding binary data.
-        .from(bucket)
-        .download(remoteItemPath);
-
-      if (error) {
-        throw new Error(error.message);
+    console.log("problem in pulling...", +err.message);
+  } finally {
+    //deleting the temp folder
+    try {
+      if (tempDirectory && fswp.existsSync(tempDirectory)) {
+        fswp.rmSync(tempDirectory, {
+          recursive: true,
+          force: true,
+        });
       }
-
-      // Convert Blob to Buffer
-      const buffer = Buffer.from(await fileData.arrayBuffer()); //ArrayBuffer : a chunk of raw memory
-
-      // Save file locally
-      await fs.writeFile(localItemPath, buffer);
-
-      console.log(`Downloaded: ${remoteItemPath}`);
+    } catch (err) {
+      console.log( err.code);
     }
   }
 }
+
 
 module.exports = { pullRepo };
-

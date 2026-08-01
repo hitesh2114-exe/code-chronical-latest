@@ -14,11 +14,6 @@ async function uploadDirectoryToSupabase(
   for (const entry of entries) {
     console.log("Entry name:", entry.name);
 
-    // Skip commit metadata file
-    if (entry.name === "commit.json") {
-      continue;
-    }
-
     const fullPath = path.join(localDir, entry.name);
 
     if (entry.isDirectory()) {

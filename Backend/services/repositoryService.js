@@ -6,6 +6,10 @@ const path = require("path");
 const {
   uploadDirectoryToSupabase,
 } = require("../utils/uploadDirectoryToSupabase");
+const {
+  downloadDirectoryFromSupabase,
+} = require("../utils/downloadDirectoryFromSupabase");
+const { zipDirectory } = require("../utils/zipDirectory");
 
 class RepositoryService {
   //create repo
@@ -100,6 +104,59 @@ class RepositoryService {
       };
     } catch (err) {
       console.log(err);
+    }
+  }
+
+  async pullRepo({ repositoryId, userId }) {
+    try {
+      console.log("reached service");
+      const repository = await Repository.findById(repositoryId); //found repository document
+
+      if (!repository) {
+        throw new ApiError(404, "Repository not found.");
+      }
+
+      const isOwner = repository.owner.toString() === userId.toString(); //persmission currently only owner of collaborator can send pull request
+      const isCollaborator = repository.collaborators.some(
+        (collaborator) => collaborator.toString() === userId.toString()
+      );
+      if (!isOwner && !isCollaborator) {
+        throw new Error(
+          "You don't have permission to pull to this repository."
+        );
+      }
+
+      const remotePath = `repos/${userId}/${repositoryId}/commits`;
+
+      //downloading the files from supabse to current downloads folder
+      const timestamp = Date.now();
+      const downloadDir = path.join(
+        __dirname,
+        "../temp/downloads",
+        `${timestamp}`
+      );
+
+      fs.mkdirSync(downloadDir, {
+        recursive: true,
+      });
+
+      await downloadDirectoryFromSupabase(
+        "codechronicle",
+        remotePath,
+        downloadDir
+      );
+
+      //create zip file
+      const sourceDir = downloadDir;
+      const zipPath = path.join(
+        __dirname,
+        "../temp/zipped",
+        `${timestamp}.zip`
+      );
+      await zipDirectory(sourceDir, zipPath);
+      return { zipPath, downloadDir };
+    } catch (error) {
+      console.log(error);
     }
   }
 }

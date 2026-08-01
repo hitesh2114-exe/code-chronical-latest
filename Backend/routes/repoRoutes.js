@@ -24,4 +24,6 @@ router.post(
   repositoryController.pushRepository
 );
 
+router.get("/:repositoryId/pull", protect, repositoryController.pullRepository);
+
 module.exports = router;
