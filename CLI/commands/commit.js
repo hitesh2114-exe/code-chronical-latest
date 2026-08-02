@@ -65,7 +65,10 @@ async function commitRepo(message) {
       recursive: true,
     });
 
-    console.log(`Commit ${commitID} created with message: ${message}`);
+    console.log(`Commit ${commitID} created with message: ${message}\n`);
+    console.log("Current version supports one commit per push.");
+    console.log("Please push your latest commit before creating a new one.");
+    console.log("");
   } catch (err) {
     if (err.code === "ENOENT") {
       console.log("Repository not initialized. Run the init command first.");

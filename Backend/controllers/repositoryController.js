@@ -28,6 +28,29 @@ class RepositoryController {
     }
   }
 
+  async returnLatestCommit(req, res) {
+    try {
+      const { repositoryId } = req.params;
+      const repository = await Repository.findById(repositoryId).populate(
+        "latestCommit"
+      );
+      if (!repository) {
+        return res.status(404).json({
+          message: "Repository not found",
+        });
+      }
+      return res.json({
+        latestCommit: repository.latestCommit.commitId,
+        defaultBranch: "main",
+      });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        message: "Internal Server Error",
+      });
+    }
+  }
+
   async pushRepository(req, res) {
     try {
       //push repo

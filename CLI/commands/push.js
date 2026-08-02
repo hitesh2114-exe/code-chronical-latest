@@ -49,7 +49,6 @@ async function pushRepo() {
 
     config.lastPushedCommit = lastCommit;
     await fs.writeFile(configPath, JSON.stringify(config, null, 2), "utf8");
-
   } catch (err) {
     if (err.code === "ECONNREFUSED") {
       console.log("Backend server is not running.");
@@ -61,7 +60,7 @@ async function pushRepo() {
       return;
     }
 
-    console.log("problem in pushing...", + err.message);
+    console.log("problem in pushing...", +err.message);
   }
 }
 

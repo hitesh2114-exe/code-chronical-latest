@@ -17,6 +17,8 @@ router.post(
   repositoryController.createRepository
 );
 
+router.get("/:repositoryId/sync", protect, repositoryController.returnLatestCommit);
+
 router.post(
   "/:repositoryId/push",
   protect,

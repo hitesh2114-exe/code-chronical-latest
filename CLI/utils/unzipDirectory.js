@@ -12,7 +12,7 @@ async function unzipDirectory(zipPath, destination) {
     fs.createReadStream(zipPath)
       .pipe(unzipper.Extract({ path: destination }))
       .on("finish", () => {
-        console.log("Extraction completed");
+        // console.log("Extraction completed");
         resolve();
       })
       .on("error", reject);

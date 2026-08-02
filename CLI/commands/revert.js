@@ -1,4 +1,5 @@
 const fs = require("fs"); //file system
+const fsp = require("fs").promises;
 const path = require("path");
 const { requireAuth } = require("../utils/auth");
 
@@ -9,7 +10,7 @@ async function revertRepo(commitID) {
 
   try {
     try {
-      await fs.access(repoPath);
+      await fsp.access(repoPath);
       // .chron exists
     } catch {
       console.log("Repository not initialized.");
@@ -21,6 +22,8 @@ async function revertRepo(commitID) {
       console.log("Commit not found.");
       return;
     }
+
+    clearProjectRoot(process.cwd());
 
     const commitItems = fs.readdirSync(commitPath); //read the particular commit folder
     for (const item of commitItems) {
@@ -48,11 +51,46 @@ async function revertRepo(commitID) {
 
         copyDirectory(sourcePath, destinationPath);
         console.log(`Restored folder: ${item}`);
+
+        const commitData = JSON.parse(
+          fs.readFileSync(path.join(commitPath, "commit.json"), "utf8")
+        );
+        const config = JSON.parse(
+          fs.readFileSync(path.join(repoPath, "config.json"), "utf8")
+        );
+        config.lastCommit = commitData.id;
+
+        fs.writeFileSync(
+          path.join(repoPath, "config.json"),
+          JSON.stringify(config, null, 2)
+        );
       }
     }
     console.log("\nRepository reverted successfully.");
   } catch (error) {
     console.log(error);
+  }
+}
+
+function clearProjectRoot(projectPath) {
+  const entries = fs.readdirSync(projectPath, {
+    withFileTypes: true,
+  });
+
+  for (const entry of entries) {
+    // Never delete the .chron directory
+    if (entry.name === ".chron") {
+      continue;
+    }
+
+    const fullPath = path.join(projectPath, entry.name);
+
+    fs.rmSync(fullPath, {
+      recursive: true,
+      force: true,
+    });
+
+    console.log(`Deleted: ${entry.name}`);
   }
 }
 

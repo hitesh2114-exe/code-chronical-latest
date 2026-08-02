@@ -11,7 +11,7 @@ async function pullRepo() {
   let tempDirectory = null;
   try {
     requireAuth(); //checks user logged in or not
-    console.log("pull started");
+    console.log("pulling commits back...");
     const repoPath = path.resolve(process.cwd(), ".chron"); //gives the current directory path
     const configPath = path.join(repoPath, "config.json"); //path to json
 
@@ -44,14 +44,13 @@ async function pullRepo() {
       writer.on("error", reject);
     });
 
-    console.log("ZIP downloaded successfully.");
+    // console.log("ZIP downloaded successfully.");
 
-    // const zipPath = path.join(repoPath, "temp");
     const commitsPath = path.join(repoPath, "commits");
 
     await unzipDirectory(zipPath, commitsPath);
 
-    console.log("successfully pulled");
+    console.log("done");
   } catch (err) {
     if (err.code === "ECONNREFUSED") {
       console.log("Backend server is not running.");
