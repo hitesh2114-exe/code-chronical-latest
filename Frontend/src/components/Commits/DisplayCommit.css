@@ -1,0 +1,205 @@
+/* ===========================
+   Display Commit Page
+=========================== */
+
+.display-commit-page{
+
+    min-height:100vh;
+    background:#0d1117;
+    color:#e6edf3;
+    padding:40px;
+    font-family:Inter,sans-serif;
+
+}
+
+/* ===========================
+ Header
+=========================== */
+
+.commit-header{
+
+    background:#161b22;
+    border:1px solid #30363d;
+    border-radius:14px;
+    padding:24px;
+    margin-bottom:30px;
+    box-shadow:0 10px 30px rgba(0,0,0,.25);
+
+}
+
+.commit-header h1{
+
+    font-size:2rem;
+    margin-bottom:10px;
+
+}
+
+.commit-header p{
+
+    color:#8b949e;
+
+}
+
+/* ===========================
+ Layout
+=========================== */
+
+.commit-layout{
+
+    display:flex;
+    gap:25px;
+
+}
+
+/* ===========================
+ Explorer
+=========================== */
+
+.commit-sidebar{
+
+    width:32%;
+    background:#161b22;
+    border:1px solid #30363d;
+    border-radius:14px;
+    overflow:hidden;
+
+}
+
+.sidebar-title{
+
+    background:#1f2630;
+    padding:18px;
+    font-weight:600;
+    border-bottom:1px solid #30363d;
+
+}
+
+.back-btn{
+
+    padding:14px 18px;
+    color:#58a6ff;
+    cursor:pointer;
+    border-bottom:1px solid #30363d;
+    transition:.3s;
+
+}
+
+.back-btn:hover{
+
+    background:#21262d;
+
+}
+
+.file-list{
+
+    max-height:72vh;
+    overflow:auto;
+
+}
+
+.file-item{
+
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:14px 18px;
+    cursor:pointer;
+    transition:.25s;
+    border-bottom:1px solid rgba(255,255,255,.03);
+
+}
+
+.file-item:hover{
+
+    background:#21262d;
+
+}
+
+.file-icon{
+
+    font-size:1.1rem;
+
+}
+
+/* ===========================
+ Viewer
+=========================== */
+
+.commit-viewer{
+
+    width:68%;
+    background:#161b22;
+    border:1px solid #30363d;
+    border-radius:14px;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+
+}
+
+.viewer-title{
+
+    background:#1f2630;
+    padding:18px;
+    border-bottom:1px solid #30363d;
+    font-weight:600;
+
+}
+
+.viewer-content{
+
+    padding:20px;
+    overflow:auto;
+    height:75vh;
+    white-space:pre-wrap;
+    font-family:Consolas,monospace;
+    line-height:1.6;
+    color:#d2d8df;
+
+}
+
+/* ===========================
+ Scrollbar
+=========================== */
+
+.viewer-content::-webkit-scrollbar,
+.file-list::-webkit-scrollbar{
+
+    width:8px;
+
+}
+
+.viewer-content::-webkit-scrollbar-thumb,
+.file-list::-webkit-scrollbar-thumb{
+
+    background:#3d444d;
+    border-radius:20px;
+
+}
+
+/* ===========================
+ Responsive
+=========================== */
+
+@media(max-width:950px){
+
+.commit-layout{
+
+    flex-direction:column;
+
+}
+
+.commit-sidebar,
+.commit-viewer{
+
+    width:100%;
+
+}
+
+.viewer-content{
+
+    height:50vh;
+
+}
+
+}

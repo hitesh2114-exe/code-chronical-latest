@@ -2,9 +2,11 @@ const express = require("express");
 const router = express.Router();
 const authRouter = require("./authRoutes");
 const repoRouter = require("./repoRoutes");
+const commitRouter = require("./commitRoute");
 
 router.use("/api/auth", authRouter);
 router.use("/api/repositories", repoRouter);
+router.use("/api/commits", commitRouter);
 
 router.get("/", (req, res) => {
   res.send("Welcome to the root");

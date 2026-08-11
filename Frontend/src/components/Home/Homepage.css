@@ -1,0 +1,8 @@
+body.landing-page {
+  scrollbar-width: none;      /* Firefox */
+  -ms-overflow-style: none;   /* IE and old Edge */
+}
+
+body.landing-page::-webkit-scrollbar {
+  display: none;              /* Chrome, Safari, Edge */
+}

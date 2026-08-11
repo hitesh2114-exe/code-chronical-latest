@@ -10,6 +10,7 @@ const {
   downloadDirectoryFromSupabase,
 } = require("../utils/downloadDirectoryFromSupabase");
 const { zipDirectory } = require("../utils/zipDirectory");
+const { supabase } = require("../config/supabase");
 
 class RepositoryService {
   //create repo
@@ -29,7 +30,7 @@ class RepositoryService {
       owner: userId,
     });
 
-    repository.storagePath = `repositories/${repository._id}`;
+    repository.storagePath = `repos/${userId}/${repository._id}`;
     await repository.save();
     return repository;
   }
@@ -104,6 +105,7 @@ class RepositoryService {
       };
     } catch (err) {
       console.log(err);
+      throw err;
     }
   }
 
@@ -157,6 +159,89 @@ class RepositoryService {
       return { zipPath, downloadDir };
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  //functions for the frontend
+  async currentUserRepos(userId) {
+    try {
+      console.log(userId);
+      const response = await Repository.find({
+        owner: userId,
+      })
+        .populate("owner")
+        .populate("latestCommit");
+      return response;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async getRepoDetail(repoId) {
+    try {
+      const response = await Repository.findById(repoId)
+        .populate("owner")
+        .populate("latestCommit");
+      return response;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async getRepoFiles(repoId, path) {
+    try {
+      const repository = await Repository.findById(repoId).populate(
+        "latestCommit"
+      );
+      const pathToFind = path
+        ? `${repository.latestCommit.storagePath}/${path}`
+        : repository.latestCommit.storagePath;
+      // console.log(pathToFind);
+      const { data, error } = await supabase.storage
+        .from("codechronicle")
+        .list(pathToFind);
+
+      if (error) {
+        throw error;
+      }
+
+      const files = data.map((item) => ({
+        name: item.name,
+        type: item.id ? "file" : "folder",
+        path: path ? `${path}/${item.name}` : item.name,
+      }));
+
+      return files;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async readFile(repoId, path) {
+    try {
+      const repository = await Repository.findById(repoId).populate(
+        "latestCommit"
+      );
+
+      if (!repository) {
+        throw new Error("Repository not found");
+      }
+
+      const filePath = `${repository.latestCommit.storagePath}/${path}`;
+
+      const { data, error } = await supabase.storage
+        .from("codechronicle")
+        .download(filePath);
+
+      if (error) {
+        throw error;
+      }
+
+      const content = await data.text();
+
+      return content;
+    } catch (err) {
+      throw err;
     }
   }
 }

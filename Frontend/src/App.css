@@ -1,0 +1,15 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
+html.landing-page {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html.landing-page::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}

@@ -60,7 +60,10 @@ async function pushRepo() {
       return;
     }
 
-    console.log("problem in pushing...", +err.message);
+    console.log(
+      "problem in pushing...",
+      err.response?.data?.message || err.message
+    );
   }
 }
 

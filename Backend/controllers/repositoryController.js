@@ -25,31 +25,35 @@ class RepositoryController {
       });
     } catch (err) {
       console.log(err);
+      return res.status(500).json({
+        success: false,
+        message: err.message,
+      });
     }
   }
 
-  async returnLatestCommit(req, res) {
-    try {
-      const { repositoryId } = req.params;
-      const repository = await Repository.findById(repositoryId).populate(
-        "latestCommit"
-      );
-      if (!repository) {
-        return res.status(404).json({
-          message: "Repository not found",
-        });
-      }
-      return res.json({
-        latestCommit: repository.latestCommit.commitId,
-        defaultBranch: "main",
-      });
-    } catch (err) {
-      console.log(err);
-      return res.status(500).json({
-        message: "Internal Server Error",
-      });
-    }
-  }
+  // async returnLatestCommit(req, res) {
+  //   try {
+  //     const { repositoryId } = req.params;
+  //     const repository = await Repository.findById(repositoryId).populate(
+  //       "latestCommit"
+  //     );
+  //     if (!repository) {
+  //       return res.status(404).json({
+  //         message: "Repository not found",
+  //       });
+  //     }
+  //     return res.json({
+  //       latestCommit: repository.latestCommit.commitId,
+  //       defaultBranch: "main",
+  //     });
+  //   } catch (err) {
+  //     console.log(err);
+  //     return res.status(500).json({
+  //       message: "Internal Server Error",
+  //     });
+  //   }
+  // }
 
   async pushRepository(req, res) {
     try {
@@ -94,7 +98,12 @@ class RepositoryController {
         message: "all files are successfully pushed",
       });
     } catch (err) {
-      console.log(err);
+      console.error(err);
+
+      return res.status(403).json({
+        success: false,
+        message: err.message,
+      });
     }
   }
 
@@ -130,6 +139,78 @@ class RepositoryController {
       });
     } catch (err) {
       console.log(err);
+      return res.status(500).json({
+        success: false,
+        message: err.message,
+      });
+    }
+  }
+
+  //functions for frontend
+  async currentUserRepos(req, res) {
+    try {
+      console.log(req.user._id.toString());
+      const result = await repositoryService.currentUserRepos(
+        req.user._id.toString()
+      );
+      console.log(result);
+      return res.send(result);
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        success: false,
+        message: err.message,
+      });
+    }
+  }
+
+  async getRepoDetail(req, res) {
+    try {
+      const { repoId } = req.params;
+      const response = await repositoryService.getRepoDetail(repoId);
+      return res.send(response);
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        success: false,
+        message: err.message,
+      });
+    }
+  }
+
+  async getRepoFiles(req, res) {
+    try {
+      const { repoId } = req.params;
+      const path = req.query.path || "";
+      const response = await repositoryService.getRepoFiles(repoId, path);
+      return res.send(response);
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        success: false,
+        message: err.message,
+      });
+    }
+  }
+
+  async getRepoFilesContent(req, res) {
+    try {
+      const { repoId } = req.params;
+      const { path } = req.query;
+
+      const content = await repositoryService.readFile(repoId, path);
+
+      return res.status(200).json({
+        success: true,
+        content,
+      });
+    } catch (err) {
+      console.log(err);
+
+      return res.status(500).json({
+        success: false,
+        message: err.message,
+      });
     }
   }
 }

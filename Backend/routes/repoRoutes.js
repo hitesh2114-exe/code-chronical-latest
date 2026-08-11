@@ -10,6 +10,7 @@ const {
 
 const { upload } = require("../middleware/upload");
 
+//routes for CLI
 router.post(
   "/",
   protect,
@@ -17,8 +18,7 @@ router.post(
   repositoryController.createRepository
 );
 
-router.get("/:repositoryId/sync", protect, repositoryController.returnLatestCommit);
-
+// router.get("/:repositoryId/sync", protect, repositoryController.returnLatestCommit);
 router.post(
   "/:repositoryId/push",
   protect,
@@ -27,5 +27,11 @@ router.post(
 );
 
 router.get("/:repositoryId/pull", protect, repositoryController.pullRepository);
+
+//routes for frontend
+router.get("/my", protect, repositoryController.currentUserRepos); //all repos of current user
+router.get("/:repoId", protect, repositoryController.getRepoDetail); //get repo in detail
+router.get("/:repoId/files", protect, repositoryController.getRepoFiles);   //get all files present in the supabase
+router.get("/:repoId/file", protect, repositoryController.getRepoFilesContent); 
 
 module.exports = router;

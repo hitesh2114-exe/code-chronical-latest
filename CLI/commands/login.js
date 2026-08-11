@@ -44,11 +44,11 @@ async function login() {
       return;
     }
 
-    // No response received (network issue / timeout)
-    if (!error.response) {
-      console.log("Unable to connect. Please check your internet connection.");
-      return;
-    }
+    // // No response received (network issue / timeout)
+    // if (!error.response) {
+    //   console.log("Unable to connect. Please check your internet connection.");
+    //   return;
+    // }
     console.log(`✖ ${error.response?.data?.message || error.message}`);
   }
 }
