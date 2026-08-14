@@ -2,6 +2,7 @@ const Repository = require("../model/repoModel");
 const Commit = require("../model/commitModel");
 const ApiError = require("../utils/ApiError");
 const fs = require("fs");
+const fsp = require("fs").promises;
 const path = require("path");
 const {
   uploadDirectoryToSupabase,
@@ -11,6 +12,9 @@ const {
 } = require("../utils/downloadDirectoryFromSupabase");
 const { zipDirectory } = require("../utils/zipDirectory");
 const { supabase } = require("../config/supabase");
+const { randomUUID } = require("crypto");
+const { writeFile } = require("../utils/writeFile");
+const { createCommitJson } = require("../utils/createCommit");
 
 class RepositoryService {
   //create repo
@@ -39,6 +43,7 @@ class RepositoryService {
   async pushRepo({ repositoryId, userId, extractDir, uploadDir }) {
     try {
       const commitPath = path.join(extractDir, "commit.json");
+
       if (!fs.existsSync(commitPath)) {
         throw new Error("commit.json not found.");
       }
@@ -193,6 +198,12 @@ class RepositoryService {
       const repository = await Repository.findById(repoId).populate(
         "latestCommit"
       );
+
+      // Repository has no commits yet
+      if (!repository.latestCommit) {
+        return [];
+      }
+
       const pathToFind = path
         ? `${repository.latestCommit.storagePath}/${path}`
         : repository.latestCommit.storagePath;
@@ -242,6 +253,267 @@ class RepositoryService {
       return content;
     } catch (err) {
       throw err;
+    }
+  }
+
+  async createRepoFromWeb(content, userId) {
+    try {
+      //check if repo already exists
+      const existingRepository = await Repository.findOne({
+        owner: userId,
+        name: content.name,
+      });
+
+      if (existingRepository) {
+        throw new Error("Repository with this name already exists.");
+      }
+
+      const repository = new Repository({
+        ...content,
+        owner: userId,
+      });
+
+      repository.storagePath = `repos/${userId}/${repository._id}`;
+      await repository.save();
+      return repository;
+    } catch (err) {
+      console.log(err);
+      throw err;
+    }
+  }
+
+  //uploading folder to the repository
+  async uploadFolder(req) {
+    let uploadPath;
+    try {
+      const { repoId } = req.params;
+      const repository = await Repository.findById(repoId); //get repository
+
+      const parentCommit = repository.latestCommit; //previous commit
+      console.log("parent commit : ", parentCommit);
+
+      const uploadId = randomUUID();
+      uploadPath = path.join(__dirname, "../temp/uploads", uploadId); //creating folder inside uploads
+
+      await fs.promises.mkdir(uploadPath, {
+        recursive: true,
+      });
+
+      //download the parent commit folder if present
+      if (parentCommit) {
+        console.log("parent commit exists");
+        const comm = await Commit.findById(parentCommit);
+        const remotePath = `repos/${req.user._id}/${repoId}/commits/${comm.commitId}`;
+        await downloadDirectoryFromSupabase(
+          "codechronicle",
+          remotePath,
+          uploadPath
+        );
+        await fsp.rm(path.join(uploadPath, "commit.json"), {
+          force: true,
+        });
+      }
+
+      const paths = Array.isArray(req.body.paths)
+        ? req.body.paths
+        : [req.body.paths];
+      const currentPath = req.body.currentPath || "";
+      for (let i = 0; i < req.files.length; i++) {
+        const file = req.files[i];
+        const relativePath = paths[i];
+        const destination = path.join(uploadPath, currentPath, relativePath);
+
+        console.log({
+          paths: req.body.paths,
+          pathsType: typeof req.body.paths,
+          isArray: Array.isArray(req.body.paths),
+          relativePath,
+          destination,
+        });
+
+        // Create all parent folders if they don't exist
+        await fsp.mkdir(path.dirname(destination), {
+          recursive: true,
+        });
+
+        // Write file to disk
+        await fs.promises.writeFile(destination, file.buffer);
+
+        // console.log(`${destination} uploaded`);
+      }
+
+      // creates commit.json in commits folder
+      await createCommitJson(
+        uploadPath,
+        uploadId,
+        req.body.message,
+        parentCommit
+      );
+
+      //uploading to supabase
+      const userId = req.user._id.toString();
+      const destinationPath = `repos/${userId}/${repoId}/commits/${uploadId}`;
+      const localPath = path.join(__dirname, `../temp/uploads/${uploadId}`);
+
+      await uploadDirectoryToSupabase(
+        uploadPath,
+        "codechronicle",
+        destinationPath
+      );
+
+      //creating commit
+      const commitPath = path.join(uploadPath, "commit.json");
+      const data = await fsp.readFile(commitPath, "utf-8");
+      const commitData = JSON.parse(data);
+
+      //create commit document
+      const commit = await Commit.create({
+        commitId: uploadId,
+        message: req.body.message,
+        repository: repoId,
+        author: userId,
+        storagePath: `repos/${userId}/${repoId}/commits/${uploadId}`,
+        parentCommit: repository.latestCommit?._id || null,
+        committedAt: new Date(commitData.date),
+        branch: "main",
+      });
+
+      //update the latest commit inside repository
+      await Repository.findByIdAndUpdate(repoId, {
+        $set: { latestCommit: commit._id },
+      });
+
+      return {
+        success: true,
+        commitId: uploadId,
+      };
+    } catch (err) {
+      console.error("Upload failed:", err);
+      throw err;
+    } finally {
+      //at last delete the temporary folder
+      if (uploadPath) {
+        try {
+          await fsp.rm(uploadPath, {
+            recursive: true,
+            force: true,
+          });
+
+          console.log("Temporary folder deleted.");
+        } catch (cleanupError) {
+          console.error("Cleanup failed:", cleanupError);
+        }
+      }
+    }
+  }
+
+  async uplaodFiles(req) {
+    let uploadPath;
+    try {
+      const { repoId } = req.params;
+      const repository = await Repository.findById(repoId); //get repository
+
+      const parentCommit = repository.latestCommit; //previous commit
+      // console.log(parentCommit);
+
+      const uploadId = randomUUID();
+      uploadPath = path.join(__dirname, "../temp/uploads", uploadId); //creating folder inside uploads
+
+      await fs.promises.mkdir(uploadPath, {
+        recursive: true,
+      });
+
+      //writing down the files
+      const currentPath = req.body.currentPath || "";
+      for (const file of req.files) {
+        const destination = path.join(
+          uploadPath,
+          currentPath,
+          file.originalname
+        );
+
+        await fsp.mkdir(path.dirname(destination), {
+          recursive: true,
+        });
+
+        await fsp.writeFile(destination, file.buffer);
+      }
+
+      //download the parent commit folder if present
+      if (parentCommit) {
+        const comm = await Commit.findById(parentCommit);
+        const remotePath = `repos/${req.user._id}/${repoId}/commits/${comm.commitId}`;
+        await downloadDirectoryFromSupabase(
+          "codechronicle",
+          remotePath,
+          uploadPath
+        );
+        await fsp.rm(path.join(uploadPath, "commit.json"), {
+          force: true,
+        });
+      }
+
+      //creates commit.json in commits folder
+      await createCommitJson(
+        uploadPath,
+        uploadId,
+        req.body.message,
+        parentCommit
+      );
+
+      //uploading to supabase
+      const userId = req.user._id.toString();
+      const destinationPath = `repos/${userId}/${repoId}/commits/${uploadId}`;
+      const localPath = path.join(__dirname, `../temp/uploads/${uploadId}`);
+      await uploadDirectoryToSupabase(
+        uploadPath,
+        "codechronicle",
+        destinationPath
+      );
+
+      //creating commit
+      const commitPath = path.join(uploadPath, "commit.json");
+      const data = await fsp.readFile(commitPath, "utf-8");
+      const commitData = JSON.parse(data);
+
+      //create commit document
+      const commit = await Commit.create({
+        commitId: uploadId,
+        message: req.body.message,
+        repository: repoId,
+        author: userId,
+        storagePath: `repos/${userId}/${repoId}/commits/${uploadId}`,
+        parentCommit: repository.latestCommit?._id || null,
+        committedAt: new Date(commitData.date),
+        branch: "main",
+      });
+
+      //update the latest commit inside repository
+      await Repository.findByIdAndUpdate(repoId, {
+        $set: { latestCommit: commit._id },
+      });
+
+      return {
+        success: true,
+        commitId: uploadId,
+      };
+    } catch (err) {
+      console.error("Upload failed:", err);
+      throw err;
+    } finally {
+      //at last delete the temporary folder
+      if (uploadPath) {
+        try {
+          await fsp.rm(uploadPath, {
+            recursive: true,
+            force: true,
+          });
+
+          console.log("Temporary folder deleted.");
+        } catch (cleanupError) {
+          console.error("Cleanup failed:", cleanupError);
+        }
+      }
     }
   }
 }

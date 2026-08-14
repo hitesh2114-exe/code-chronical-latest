@@ -28,7 +28,7 @@ async function initRepo(repoName) {
     const response = await repositoryApi.createRepository(token, {
       name: repoName,
       description: "",
-      visibility: "private",
+      visibility: "public",
     });
 
     const repository = response.data;

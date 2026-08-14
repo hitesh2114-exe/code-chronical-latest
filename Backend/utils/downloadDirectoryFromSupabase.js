@@ -7,7 +7,7 @@ async function downloadDirectoryFromSupabase(
   storagePath, //remote path
   downloadDir //local path
 ) {
-  console.log("reachead downloadDirectoryFromSupabase");
+  // console.log("reachead downloadDirectoryFromSupabase");
 
   await fs.mkdir(downloadDir, { recursive: true }); //creates the parent folder
 
@@ -46,7 +46,7 @@ async function downloadDirectoryFromSupabase(
       // Save file locally
       await fs.writeFile(localItemPath, buffer);
 
-      console.log(`Downloaded: ${remoteItemPath}`);
+      console.log(`Downloaded: ${remoteItemPath} from supabase`);
     }
   }
 }

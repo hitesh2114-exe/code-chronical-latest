@@ -6,6 +6,7 @@ import { useState } from "react";
 import Box from "@mui/material/Box";
 import { Link } from "react-router-dom";
 import "./DisplayCommit.css";
+import NavBar from "../Commons/NavBar";
 
 function DisplayCommit() {
   const { commitId } = useParams();
@@ -71,55 +72,58 @@ function DisplayCommit() {
   // }, [fileContent]);
 
   return (
-    <div className="display-commit-page">
-      <div className="commit-header">
-        <h1>Commit Snapshot</h1>
+    <>
+      <NavBar />
+      <div className="display-commit-page">
+        <div className="commit-header">
+          <h1>Commit Snapshot</h1>
 
-        <p>Browse files exactly as they existed in this commit.</p>
-      </div>
+          <p>Browse files exactly as they existed in this commit.</p>
+        </div>
 
-      <div className="commit-layout">
-        <div className="commit-sidebar">
-          <div className="sidebar-title">Commit Explorer</div>
+        <div className="commit-layout">
+          <div className="commit-sidebar">
+            <div className="sidebar-title">Commit Explorer</div>
 
-          {currentPath && (
-            <div className="back-btn" onClick={goBack}>
-              ⬅ Back
-            </div>
-          )}
-
-          <div className="file-list">
-            {commitFile.map((file) => (
-              <div
-                className="file-item"
-                key={file.path}
-                onClick={() => {
-                  if (file.type === "folder") {
-                    setCurrentPath(file.path);
-                  } else {
-                    openFile(file.path);
-                  }
-                }}
-              >
-                <span className="file-icon">
-                  {file.type === "folder" ? "📁" : "📄"}
-                </span>
-
-                <span>{file.name}</span>
+            {currentPath && (
+              <div className="back-btn" onClick={goBack}>
+                ⬅ Back
               </div>
-            ))}
+            )}
+
+            <div className="file-list">
+              {commitFile.map((file) => (
+                <div
+                  className="file-item"
+                  key={file.path}
+                  onClick={() => {
+                    if (file.type === "folder") {
+                      setCurrentPath(file.path);
+                    } else {
+                      openFile(file.path);
+                    }
+                  }}
+                >
+                  <span className="file-icon">
+                    {file.type === "folder" ? "📁" : "📄"}
+                  </span>
+
+                  <span>{file.name}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="commit-viewer">
+            <div className="viewer-title">File Preview</div>
+
+            <pre className="viewer-content">
+              {fileContent || "Select a file from the explorer."}
+            </pre>
           </div>
         </div>
-
-        <div className="commit-viewer">
-          <div className="viewer-title">File Preview</div>
-
-          <pre className="viewer-content">
-            {fileContent || "Select a file from the explorer."}
-          </pre>
-        </div>
       </div>
-    </div>
+    </>
   );
 }
 

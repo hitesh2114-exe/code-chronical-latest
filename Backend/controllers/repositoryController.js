@@ -32,29 +32,6 @@ class RepositoryController {
     }
   }
 
-  // async returnLatestCommit(req, res) {
-  //   try {
-  //     const { repositoryId } = req.params;
-  //     const repository = await Repository.findById(repositoryId).populate(
-  //       "latestCommit"
-  //     );
-  //     if (!repository) {
-  //       return res.status(404).json({
-  //         message: "Repository not found",
-  //       });
-  //     }
-  //     return res.json({
-  //       latestCommit: repository.latestCommit.commitId,
-  //       defaultBranch: "main",
-  //     });
-  //   } catch (err) {
-  //     console.log(err);
-  //     return res.status(500).json({
-  //       message: "Internal Server Error",
-  //     });
-  //   }
-  // }
-
   async pushRepository(req, res) {
     try {
       //push repo
@@ -207,6 +184,58 @@ class RepositoryController {
     } catch (err) {
       console.log(err);
 
+      return res.status(500).json({
+        success: false,
+        message: err.message,
+      });
+    }
+  }
+
+  async createRepoFromWeb(req, res) {
+    try {
+      const content = req.body;
+      const userId = req.user._id;
+      const response = await repositoryService.createRepoFromWeb(
+        content,
+        userId
+      );
+      return res.send(response);
+    } catch (err) {
+      console.log(err);
+
+      return res.status(500).json({
+        success: false,
+        message: err.message,
+      });
+    }
+  }
+
+  async uploadFolder(req, res) {
+    try {
+      const response = await repositoryService.uploadFolder(req);
+
+      return res.status(200).json({
+        success: true,
+        ...response,
+      });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        success: false,
+        message: err.message,
+      });
+    }
+  }
+
+  async uploadFiles(req, res) {
+    try {
+      const response = await repositoryService.uplaodFiles(req);
+      return res.status(200).json({
+        success: true,
+        ...response,
+      });
+    } catch (err) {
+      console.log(err);
       return res.status(500).json({
         success: false,
         message: err.message,

@@ -35,7 +35,7 @@ async function uploadDirectoryToSupabase(
           throw error;
         }
 
-        console.log(`Uploaded: ${destinationPath}/${entry.name}`);
+        console.log(`Uploaded: ${destinationPath}/${entry.name} to supabase`);
       } catch (err) {
         console.error("UPLOAD FAILED:");
         console.error(err);
