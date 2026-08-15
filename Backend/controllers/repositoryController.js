@@ -242,6 +242,47 @@ class RepositoryController {
       });
     }
   }
+
+  async deleteRepository(req, res) {
+    try {
+      const { repoId } = req.params;
+      const userId = req.user.id;
+      const response = await repositoryService.deleteRepository(repoId, userId);
+      return res.status(200).json({
+        success: true,
+        response,
+      });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        success: false,
+        message: err.message,
+      });
+    }
+  }
+
+  async deleteFileOrFolder(req, res) {
+    try {
+      const { repoId } = req.params;
+      const path = req.body.path;
+      const userId = req.user.id;
+      const response = await repositoryService.deleteFileOrFolder(
+        path,
+        repoId,
+        userId
+      );
+      return res.status(200).json({
+        success: true,
+        response,
+      });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        success: false,
+        message: err.message,
+      });
+    }
+  }
 }
 
 module.exports = new RepositoryController();

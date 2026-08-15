@@ -15,6 +15,10 @@ const { supabase } = require("../config/supabase");
 const { randomUUID } = require("crypto");
 const { writeFile } = require("../utils/writeFile");
 const { createCommitJson } = require("../utils/createCommit");
+const { error } = require("console");
+const {
+  deleteDirectoryInSupabase,
+} = require("../utils/deleteDirectoryInSupabase");
 
 class RepositoryService {
   //create repo
@@ -366,7 +370,6 @@ class RepositoryService {
       const data = await fsp.readFile(commitPath, "utf-8");
       const commitData = JSON.parse(data);
 
-      //create commit document
       const commit = await Commit.create({
         commitId: uploadId,
         message: req.body.message,
@@ -505,6 +508,132 @@ class RepositoryService {
       if (uploadPath) {
         try {
           await fsp.rm(uploadPath, {
+            recursive: true,
+            force: true,
+          });
+
+          console.log("Temporary folder deleted.");
+        } catch (cleanupError) {
+          console.error("Cleanup failed:", cleanupError);
+        }
+      }
+    }
+  }
+
+  async deleteRepository(repoId, userId) {
+    const repository = await Repository.findById(repoId);
+
+    //check repository exists
+    if (!repository) {
+      throw new Error("repository doesn't exists");
+    }
+
+    //check for the owner
+    if (userId !== repository.owner._id.toString()) {
+      throw new Error("you don't have permission to delete this repository");
+    }
+
+    const repositoryPath = `repos/${userId}/${repoId}`;
+    await deleteDirectoryInSupabase("codechronicle", repositoryPath); //calling the helper function
+
+    await Commit.deleteMany({ repository: repoId }); //delete all related commits
+    await Repository.findByIdAndDelete(repoId); //delete the repository
+    try {
+    } catch (err) {
+      console.log(err);
+      throw err;
+    }
+  }
+
+  async deleteFileOrFolder(filePath, repoId, userId) {
+    let localPath;
+    try {
+      const repository = await Repository.findById(repoId);
+      const commit = await Commit.findById(repository.latestCommit);
+      const uploadId = randomUUID();
+
+      //download latest snapshot
+      const remotePath = `repos/${userId}/${repoId}/commits/${commit.commitId}`;
+      localPath = path.join(__dirname, `../temp/uploads`, uploadId);
+      await downloadDirectoryFromSupabase(
+        "codechronicle",
+        remotePath,
+        localPath
+      );
+      await fsp.rm(path.join(localPath, "commit.json"), {
+        force: true,
+      });
+
+      //delete the filePath
+      const targetPath = path.resolve(localPath, filePath);
+      const rootPath = path.resolve(localPath);
+
+      if (
+        targetPath === rootPath ||
+        !targetPath.startsWith(rootPath + path.sep)
+      ) {
+        throw new Error("Invalid file path");
+      }
+
+      const exists = await fsp
+        .access(targetPath)
+        .then(() => true)
+        .catch(() => false);
+
+      if (!exists) {
+        throw new Error("File or folder not found");
+      }
+
+      await fsp.rm(targetPath, {
+        recursive: true,
+        force: true,
+      });
+
+      //creating new commit.json
+      const commitMessage = `Deleted: ${filePath}`;
+      await createCommitJson(localPath, uploadId, commitMessage, commit._id);
+
+      //upload snapshot to supabase
+      const destinationPath = `repos/${userId}/${repoId}/commits/${uploadId}`;
+      await uploadDirectoryToSupabase(
+        localPath,
+        "codechronicle",
+        destinationPath
+      );
+
+      //create commit document
+      const commitPath = path.join(localPath, "commit.json");
+      const data = await fsp.readFile(commitPath, "utf-8");
+      const commitData = JSON.parse(data);
+
+      const commitDoc = await Commit.create({
+        commitId: uploadId,
+        message: commitMessage,
+        repository: repoId,
+        author: userId,
+        storagePath: `repos/${userId}/${repoId}/commits/${uploadId}`,
+        parentCommit: commit._id || null,
+        committedAt: new Date(commitData.date),
+        branch: "main",
+      });
+
+      //update the latest commit inside repository
+      await Repository.findByIdAndUpdate(repoId, {
+        $set: { latestCommit: commitDoc._id },
+      });
+
+      return {
+        success: true,
+        commitId: uploadId,
+      };
+    } catch (err) {
+      console.log(err);
+      throw err;
+    } finally {
+      //at last delete the temporary folder
+      if (localPath) {
+        try {
+          await fsp.rm(localPath, {
             recursive: true,
             force: true,
           });

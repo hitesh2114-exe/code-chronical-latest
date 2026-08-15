@@ -52,4 +52,16 @@ router.post(
   repositoryController.uploadFiles //used to upload files form website
 );
 
+router.delete(
+  "/:repoId",
+  protect,
+  repositoryController.deleteRepository //used to upload files form website
+);
+
+router.delete(
+  "/:repoId/file",
+  protect,
+  repositoryController.deleteFileOrFolder
+); //used to delete file or folder
+
 module.exports = router;

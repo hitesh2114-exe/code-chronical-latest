@@ -12,8 +12,15 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
+import { useNavigate } from "react-router-dom";
+
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
 
 function Repository() {
+  const navigate = useNavigate();
   const { repoId } = useParams();
   const [repo, setRepo] = useState({});
   const [files, setFiles] = useState([]);
@@ -28,7 +35,11 @@ function Repository() {
   const [selectedUploadFiles, setSelectedUploadFiles] = useState([]); //files selected to be uploaded
   const [uploadType, setUploadType] = useState(""); //to check if file is selected or folder
   const [isUploading, setIsUploading] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false); //for deleting the repo
+  const [deleteTarget, setDeleteTarget] = useState(null); //file or folder that actually needed to be deleted
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false); //for deleting the files/folders
 
+  //this function is used to get all files and folders from supabase
   const fetchFiles = async () => {
     try {
       const response = await axios.get(
@@ -40,12 +51,14 @@ function Repository() {
         }
       );
       setFiles(response.data || []);
+      console.log(response.data);
     } catch (err) {
       console.log(err);
       setFiles([]);
     }
   };
 
+  //this function is used to get the repo details
   const fetchRepo = async () => {
     try {
       const response = await axios.get(
@@ -62,11 +75,22 @@ function Repository() {
     }
   };
 
+  useEffect(() => {
+    fetchRepo();
+    fetchFiles();
+  }, []);
+
+  useEffect(() => {
+    fetchFiles();
+  }, [currentPath]);
+
+  //used to navigate back
   const goBack = () => {
     const parent = currentPath.split("/").slice(0, -1).join("/");
     setCurrentPath(parent);
   };
 
+  //used to get the content of the file
   const openFile = async (path) => {
     try {
       const response = await axios.get(
@@ -136,6 +160,7 @@ function Repository() {
       );
 
       console.log(response.data);
+      await fetchFiles();
       setIsUploading(false);
       setSelectedFiles([]);
       setCommitMessage("");
@@ -170,6 +195,7 @@ function Repository() {
 
       console.log(response.data);
 
+      await fetchFiles();
       setIsUploading(false);
       setSelectedUploadFiles([]);
       setCommitMessage("");
@@ -180,14 +206,43 @@ function Repository() {
     }
   };
 
-  useEffect(() => {
-    fetchRepo();
-    fetchFiles();
-  }, []);
+  const handleDeleteRepository = async () => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:8080/api/repositories/${repoId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setDeleteDialogOpen(false);
+      navigate(`/dashboard`);
+    } catch (error) {
+      console.error("Failed to delete repository:", error);
+    }
+  };
 
-  useEffect(() => {
-    fetchFiles();
-  }, [currentPath]);
+  const handleDeleteFileOrFolder = async () => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:8080/api/repositories/${repoId}/file`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          data: {
+            path: deleteTarget.path,
+          },
+        }
+      );
+      console.log(response.data);
+      setOpenDeleteDialog(false);
+      await fetchFiles();
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   // useEffect(() => {
   //   console.log(repo);
@@ -197,9 +252,9 @@ function Repository() {
   //   console.log(files);
   // }, [files]);
 
-  // useEffect(() => {
-  //   console.log("path : ", currentPath);
-  // }, [currentPath]);
+  useEffect(() => {
+    console.log("path : ", currentPath);
+  }, [currentPath]);
 
   // useEffect(() => {
   //   console.log("content : ", fileContent);
@@ -265,6 +320,24 @@ function Repository() {
                     </span>
 
                     <span className="file-name">{file.name}</span>
+
+                    <Button
+                      size="small"
+                      color="error"
+                      onClick={(e) => {
+                        e.stopPropagation();
+
+                        setDeleteTarget({
+                          name: file.name,
+                          path: file.path,
+                          type: file.type,
+                        });
+
+                        setOpenDeleteDialog(true);
+                      }}
+                    >
+                      🗑️
+                    </Button>
                   </div>
                 ))
               )}
@@ -387,7 +460,80 @@ function Repository() {
           >
             Upload Files
           </Button>
+
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => setDeleteDialogOpen(true)}
+          >
+            Delete Repository
+          </Button>
         </Box>
+        <Dialog
+          open={deleteDialogOpen}
+          onClose={() => setDeleteDialogOpen(false)}
+        >
+          <DialogTitle>Delete Repository?</DialogTitle>
+
+          <DialogContent>
+            <Typography>
+              Are you sure you want to delete this repository? This action
+              cannot be undone.
+            </Typography>
+          </DialogContent>
+
+          <DialogActions>
+            <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
+
+            <Button
+              color="error"
+              variant="contained"
+              onClick={handleDeleteRepository}
+            >
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <Dialog
+          open={openDeleteDialog}
+          onClose={() => setOpenDeleteDialog(false)}
+        >
+          <DialogTitle>
+            Delete {deleteTarget?.type === "folder" ? "Folder" : "File"}?
+          </DialogTitle>
+
+          <DialogContent>
+            <Typography>
+              Are you sure you want to delete{" "}
+              <strong>{deleteTarget?.name}</strong>?
+            </Typography>
+
+            {deleteTarget?.type === "folder" && (
+              <Typography sx={{ mt: 1 }} color="text.secondary">
+                All files inside this folder will also be deleted.
+              </Typography>
+            )}
+          </DialogContent>
+
+          <DialogActions>
+            <Button
+              onClick={() => {
+                setOpenDeleteDialog(false);
+                setDeleteTarget(null);
+              }}
+            >
+              Cancel
+            </Button>
+
+            <Button
+              color="error"
+              variant="contained"
+              onClick={handleDeleteFileOrFolder}
+            >
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
     </>
   );
