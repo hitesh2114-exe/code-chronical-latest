@@ -1,0 +1,341 @@
+/* ===========================
+   User Profile Page
+=========================== */
+
+.user-profile-page {
+  min-height: calc(100vh - 64px);
+
+  padding: 3.5rem 8% 5rem;
+
+  box-sizing: border-box;
+
+  background: #0f1115;
+  color: #ffffff;
+
+  font-family: "Manrope", sans-serif;
+}
+
+
+/* ===========================
+   Profile Header
+=========================== */
+
+.user-profile-header {
+  display: flex;
+  align-items: center;
+
+  gap: 1.5rem;
+
+  padding-bottom: 2.5rem;
+
+  border-bottom: 1px solid #252a31;
+
+  margin-bottom: 2.5rem;
+}
+
+
+/* ===========================
+   Avatar
+=========================== */
+
+.user-avatar {
+  width: 82px;
+  height: 82px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #20252c;
+
+  border: 1px solid #343a42;
+
+  color: #f5f5f5;
+
+  font-size: 2rem;
+  font-weight: 400;
+
+  text-transform: uppercase;
+}
+
+
+/* ===========================
+   User Information
+=========================== */
+
+.user-profile-info h1 {
+  margin: 0 0 0.5rem;
+
+  font-size: 2rem;
+  font-weight: 400;
+
+  color: #f5f5f5;
+}
+
+.user-profile-info p {
+  margin: 0;
+
+  max-width: 650px;
+
+  color: #8b949e;
+
+  font-size: 0.95rem;
+  font-weight: 300;
+
+  line-height: 1.6;
+}
+
+
+/* ===========================
+   Repository Section
+=========================== */
+
+.user-repositories {
+  width: 100%;
+}
+
+.repositories-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 1.5rem;
+
+  padding-bottom: 0.8rem;
+
+  border-bottom: 1px solid #252a31;
+}
+
+.repositories-header h2 {
+  margin: 0;
+
+  font-size: 1.4rem;
+  font-weight: 400;
+
+  color: #f5f5f5;
+}
+
+.repositories-header span {
+  color: #777f89;
+
+  font-size: 0.82rem;
+}
+
+
+/* ===========================
+   Repository Grid
+=========================== */
+
+.repository-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(auto-fill, minmax(280px, 1fr));
+
+  gap: 1.5rem;
+
+  align-items: start;
+}
+
+
+/* ===========================
+   Repository Card
+=========================== */
+
+.profile-repository-card {
+  background: #161b22 !important;
+
+  border: 1px solid #30363d;
+
+  border-radius: 10px !important;
+
+  overflow: hidden;
+
+  box-shadow: none !important;
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.profile-repository-card:hover {
+  transform: translateY(-4px);
+
+  border-color: #484f58;
+
+  box-shadow:
+    0 10px 25px rgba(0, 0, 0, 0.25) !important;
+}
+
+
+/* ===========================
+   Repository Image
+=========================== */
+
+.profile-repository-card .MuiCardMedia-root {
+  opacity: 0.75;
+
+  transition: opacity 0.2s ease;
+}
+
+.profile-repository-card:hover
+  .MuiCardMedia-root {
+  opacity: 0.9;
+}
+
+
+/* ===========================
+   Card Content
+=========================== */
+
+.profile-repository-card .MuiCardContent-root {
+  padding: 1.2rem 1.2rem 0.8rem;
+}
+
+.repo-card-title {
+  color: #f5f5f5 !important;
+
+  font-size: 1.15rem !important;
+  font-weight: 400 !important;
+}
+
+.repo-card-description {
+  color: #8b949e !important;
+
+  min-height: 42px;
+
+  line-height: 1.5 !important;
+}
+
+.repo-card-updated {
+  margin-top: 0.8rem !important;
+
+  color: #666d76 !important;
+
+  font-size: 0.75rem !important;
+}
+
+
+/* ===========================
+   Card Actions
+=========================== */
+
+.profile-repository-card
+  .MuiCardActions-root {
+  padding: 0.7rem 1.2rem 1.1rem;
+}
+
+.profile-repository-card
+  .MuiButton-root {
+  color: #8b949e;
+
+  font-family: "Manrope", sans-serif;
+
+  font-size: 0.82rem;
+
+  text-transform: none;
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.profile-repository-card
+  .MuiButton-root:hover {
+  background: #21262d;
+
+  color: #ffffff;
+}
+
+
+/* ===========================
+   Empty State
+=========================== */
+
+.empty-repositories {
+  padding: 4rem 1rem;
+
+  text-align: center;
+
+  background: #15191f;
+
+  border: 1px dashed #30363d;
+
+  border-radius: 10px;
+}
+
+.empty-repositories h3 {
+  margin: 0 0 0.5rem;
+
+  color: #c9d1d9;
+
+  font-size: 1.05rem;
+  font-weight: 400;
+}
+
+.empty-repositories p {
+  margin: 0;
+
+  color: #666d76;
+
+  font-size: 0.85rem;
+  font-weight: 300;
+}
+
+
+/* ===========================
+   Responsive
+=========================== */
+
+@media (max-width: 700px) {
+  .user-profile-page {
+    padding: 2.5rem 5% 4rem;
+  }
+
+  .user-profile-header {
+    align-items: flex-start;
+
+    gap: 1rem;
+  }
+
+  .user-avatar {
+    width: 65px;
+    height: 65px;
+
+    font-size: 1.5rem;
+  }
+
+  .user-profile-info h1 {
+    font-size: 1.6rem;
+  }
+
+  .user-profile-info p {
+    font-size: 0.85rem;
+  }
+
+  .repository-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+@media (max-width: 480px) {
+  .user-profile-page {
+    padding: 2rem 4% 3rem;
+  }
+
+  .user-profile-header {
+    flex-direction: column;
+
+    align-items: flex-start;
+  }
+
+  .repositories-header h2 {
+    font-size: 1.2rem;
+  }
+}

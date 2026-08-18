@@ -1,175 +1,1050 @@
+/* =========================================
+   Repository Page
+========================================= */
+
 .repository-page {
-    min-height: 100vh;
-    background: #0d1117;
-    color: #e6edf3;
-    padding: 35px;
-    font-family: "Inter", sans-serif;
+  min-height: calc(100vh - 70px);
+  padding: 2.5rem 6% 4rem;
+
+  background: #0d1117;
+  color: #f0f6fc;
+
+  font-family: "Manrope", sans-serif;
+
+  box-sizing: border-box;
 }
 
+
+/* =========================================
+   Repository Header
+========================================= */
+
 .repository-header {
-    background: #161b22;
-    border: 1px solid #30363d;
-    border-radius: 14px;
-    padding: 24px;
-    margin-bottom: 25px;
-    box-shadow: 0 10px 30px rgba(0,0,0,.25);
+  padding: 1.8rem 2rem;
+
+  background: #161b22;
+
+  border: 1px solid #30363d;
+  border-radius: 12px;
+
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
 }
 
 .repository-title {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 10px;
-    color: white;
+  color: #f0f6fc;
+
+  font-size: 2rem;
+  font-weight: 600;
+
+  letter-spacing: -0.5px;
+
+  word-break: break-word;
 }
 
 .repository-description {
-    color: #9ba3af;
-    margin-bottom: 18px;
+  margin-top: 0.6rem;
+
+  max-width: 750px;
+
+  color: #8b949e;
+
+  font-size: 0.95rem;
+  font-weight: 300;
+
+  line-height: 1.6;
 }
+
+
+/* =========================================
+   Repository Information
+========================================= */
 
 .repository-info {
-    display: flex;
-    gap: 25px;
-    flex-wrap: wrap;
-    font-size: .9rem;
-    color: #8b949e;
+  display: flex;
+
+  align-items: center;
+
+  flex-wrap: wrap;
+
+  gap: 0.7rem;
+
+  margin-top: 1.2rem;
 }
+
+.repository-info span {
+  display: inline-flex;
+
+  align-items: center;
+
+  padding: 0.4rem 0.75rem;
+
+  background: #0d1117;
+
+  border: 1px solid #30363d;
+
+  border-radius: 20px;
+
+  color: #8b949e;
+
+  font-size: 0.75rem;
+}
+
+.repository-info a {
+  color: #58a6ff;
+
+  text-decoration: none;
+}
+
+.repository-info a:hover {
+  text-decoration: underline;
+}
+
+.repository-info p {
+  margin: 0;
+}
+
+
+/* =========================================
+   Main Repository Area
+========================================= */
 
 .repository-container {
-    display: flex;
-    gap: 25px;
+  display: grid;
+
+  grid-template-columns: 290px minmax(0, 1fr);
+
+  gap: 1.25rem;
+
+  margin-top: 1.5rem;
+
+  min-width: 0;
 }
 
-/* ======================
-   Left Explorer
-====================== */
+
+/* =========================================
+   Repository Sidebar
+========================================= */
 
 .repository-sidebar {
-    width: 32%;
-    background: #161b22;
-    border-radius: 14px;
-    border: 1px solid #30363d;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
+  min-width: 0;
+
+  height: 650px;
+
+  background: #161b22;
+
+  border: 1px solid #30363d;
+
+  border-radius: 12px;
+
+  overflow: hidden;
+
+  display: flex;
+
+  flex-direction: column;
 }
 
 .sidebar-header {
-    padding: 18px;
-    font-size: 1.1rem;
-    font-weight: 600;
-    border-bottom: 1px solid #30363d;
-    background: #1f2630;
+  padding: 1rem 1.1rem;
+
+  border-bottom: 1px solid #30363d;
+
+  color: #f0f6fc;
+
+  font-size: 0.9rem;
+
+  font-weight: 500;
 }
 
+
+/* =========================================
+   Back Button
+========================================= */
+
 .back-btn {
-    cursor: pointer;
-    padding: 14px 20px;
-    color: #58a6ff;
-    border-bottom: 1px solid #30363d;
-    transition: .3s;
+  margin: 0.7rem 0.7rem 0;
+
+  padding: 0.55rem 0.7rem;
+
+  border-radius: 7px;
+
+  color: #8b949e;
+
+  font-size: 0.8rem;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
 }
 
 .back-btn:hover {
-    background: #21262d;
+  background: #21262d;
+
+  color: #58a6ff;
 }
+
+
+/* =========================================
+   File List
+========================================= */
 
 .file-list {
-    overflow-y: auto;
-    max-height: 70vh;
+  padding: 0.55rem;
+
+  overflow-y: auto;
+
+  flex: 1;
 }
 
+.file-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.file-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.file-list::-webkit-scrollbar-thumb {
+  background: #30363d;
+
+  border-radius: 10px;
+}
+
+.file-list::-webkit-scrollbar-thumb:hover {
+  background: #484f58;
+}
+
+
+/* =========================================
+   File Item
+========================================= */
+
 .file-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 14px 18px;
-    cursor: pointer;
-    transition: .25s;
-    border-bottom: 1px solid rgba(255,255,255,.03);
+  display: flex;
+
+  align-items: center;
+
+  gap: 0.65rem;
+
+  min-height: 40px;
+
+  padding: 0.45rem 0.55rem;
+
+  margin-bottom: 2px;
+
+  border-radius: 7px;
+
+  color: #c9d1d9;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
 }
 
 .file-item:hover {
-    background: #21262d;
+  background: #21262d;
+
+  color: #ffffff;
 }
 
 .file-icon {
-    font-size: 1.1rem;
+  width: 22px;
+
+  flex-shrink: 0;
+
+  text-align: center;
+
+  font-size: 0.95rem;
 }
 
 .file-name {
-    font-size: .95rem;
+  min-width: 0;
+
+  flex: 1;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+
+  font-size: 0.82rem;
 }
 
-/* ======================
-   Right Viewer
-====================== */
 
-.file-viewer {
-    width: 68%;
-    background: #161b22;
-    border-radius: 14px;
-    border: 1px solid #30363d;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
+/* =========================================
+   Delete File Button
+========================================= */
+
+.file-item button {
+  min-width: 30px !important;
+
+  width: 30px;
+  height: 30px;
+
+  padding: 0 !important;
+
+  opacity: 0;
+
+  color: #f85149 !important;
+
+  transition:
+    opacity 0.2s ease,
+    background 0.2s ease;
 }
 
-.viewer-header {
-    background: #1f2630;
-    padding: 18px;
-    border-bottom: 1px solid #30363d;
-    font-weight: 600;
+.file-item:hover button {
+  opacity: 1;
 }
 
-.viewer-content {
-    padding: 20px;
-    overflow: auto;
-    height: 75vh;
-    white-space: pre-wrap;
-    font-family: Consolas, monospace;
-    line-height: 1.6;
-    font-size: .92rem;
-    color: #d2d8df;
+.file-item button:hover {
+  background: rgba(248, 81, 73, 0.12);
 }
 
-/* scrollbar */
 
-.viewer-content::-webkit-scrollbar,
-.file-list::-webkit-scrollbar{
-    width:8px;
-}
-
-.viewer-content::-webkit-scrollbar-thumb,
-.file-list::-webkit-scrollbar-thumb{
-    background:#3d444d;
-    border-radius:20px;
-}
-
-/* ======================
-Responsive
-====================== */
-
-@media(max-width:950px){
-
-.repository-container{
-    flex-direction:column;
-}
-
-.repository-sidebar,
-.file-viewer{
-    width:100%;
-}
-
-.viewer-content{
-    height:50vh;
-}
-
-}
+/* =========================================
+   Empty Folder
+========================================= */
 
 .empty-folder {
-  padding: 20px;
+  padding: 3rem 1rem;
+
   text-align: center;
-  color: #888;
-  font-style: italic;
+
+  color: #6e7681;
+
+  font-size: 0.8rem;
+
+  line-height: 1.6;
+}
+
+
+/* =========================================
+   File Viewer
+========================================= */
+
+.file-viewer {
+  min-width: 0;
+
+  height: 650px;
+
+  background: #161b22;
+
+  border: 1px solid #30363d;
+
+  border-radius: 12px;
+
+  overflow: hidden;
+
+  display: flex;
+
+  flex-direction: column;
+}
+
+
+/* =========================================
+   Viewer Header
+========================================= */
+
+.viewer-header {
+  min-height: 58px;
+
+  padding: 0 1rem;
+
+  box-sizing: border-box;
+
+  border-bottom: 1px solid #30363d;
+
+  background: #161b22;
+
+  color: #c9d1d9;
+
+  font-size: 0.85rem;
+
+  font-weight: 500;
+}
+
+.viewer-header > span {
+  color: #f0f6fc;
+}
+
+
+/* =========================================
+   Viewer Buttons
+========================================= */
+
+.viewer-header .MuiButton-root {
+  text-transform: none;
+
+  font-family: "Manrope", sans-serif;
+
+  font-size: 0.78rem;
+
+  border-radius: 6px;
+}
+
+.viewer-header .MuiButton-contained {
+  background: #238636;
+}
+
+.viewer-header .MuiButton-contained:hover {
+  background: #2ea043;
+}
+
+.viewer-header .MuiButton-outlined {
+  color: #c9d1d9;
+
+  border-color: #30363d;
+}
+
+.viewer-header .MuiButton-outlined:hover {
+  border-color: #58a6ff;
+
+  background: rgba(88, 166, 255, 0.08);
+}
+
+
+/* =========================================
+   Viewer Content
+========================================= */
+
+.viewer-content {
+  flex: 1;
+
+  margin: 0;
+
+  padding: 1.25rem 1.4rem;
+
+  box-sizing: border-box;
+
+  overflow: auto;
+
+  background: #0d1117;
+
+  color: #c9d1d9;
+
+  font-family:
+    "JetBrains Mono",
+    "Fira Code",
+    Consolas,
+    "Courier New",
+    monospace;
+
+  font-size: 0.82rem;
+
+  line-height: 1.75;
+
+  white-space: pre;
+
+  tab-size: 2;
+}
+
+.viewer-content::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.viewer-content::-webkit-scrollbar-track {
+  background: #0d1117;
+}
+
+.viewer-content::-webkit-scrollbar-thumb {
+  background: #30363d;
+
+  border-radius: 10px;
+}
+
+
+/* =========================================
+   Edit TextField
+========================================= */
+
+.file-viewer .MuiTextField-root {
+  flex: 1;
+
+  height: 100%;
+}
+
+.file-viewer .MuiInputBase-root {
+  height: 100%;
+
+  align-items: flex-start;
+
+  background: #0d1117;
+
+  color: #c9d1d9;
+
+  border-radius: 0;
+}
+
+.file-viewer .MuiInputBase-input {
+  height: 100% !important;
+
+  padding: 1.25rem 1.4rem !important;
+
+  box-sizing: border-box !important;
+
+  font-family:
+    "JetBrains Mono",
+    "Fira Code",
+    Consolas,
+    monospace !important;
+
+  font-size: 0.82rem !important;
+
+  line-height: 1.75 !important;
+
+  color: #c9d1d9 !important;
+
+  overflow: auto !important;
+}
+
+
+/* =========================================
+   Bottom Action Area
+========================================= */
+
+.repository-page > .MuiBox-root {
+  width: 100% !important;
+
+  height: auto !important;
+
+  min-height: 70px;
+
+  margin-top: 1.25rem;
+
+  padding: 1rem 1.1rem;
+
+  box-sizing: border-box;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: flex-end;
+
+  gap: 0.65rem;
+
+  background: #161b22 !important;
+
+  border: 1px solid #30363d;
+
+  border-radius: 12px;
+}
+
+
+/* =========================================
+   Upload / Repository Buttons
+========================================= */
+
+.repository-page > .MuiBox-root > .MuiButton-root {
+  text-transform: none;
+
+  font-family: "Manrope", sans-serif;
+
+  font-size: 0.8rem;
+
+  font-weight: 500;
+
+  border-radius: 7px;
+
+  padding: 0.55rem 1rem;
+}
+
+.repository-page > .MuiBox-root > .MuiButton-contained:not(.MuiButton-colorError) {
+  background: #238636;
+}
+
+.repository-page > .MuiBox-root > .MuiButton-contained:not(.MuiButton-colorError):hover {
+  background: #2ea043;
+}
+
+.repository-page > .MuiBox-root > .MuiButton-colorError {
+  background: #da3633;
+}
+
+.repository-page > .MuiBox-root > .MuiButton-colorError:hover {
+  background: #f85149;
+}
+
+
+/* =========================================
+   Dialogs
+========================================= */
+
+.MuiDialog-paper {
+  background: #161b22 !important;
+
+  color: #f0f6fc !important;
+
+  border: 1px solid #30363d;
+
+  border-radius: 12px !important;
+
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55) !important;
+}
+
+.MuiDialogTitle-root {
+  color: #f0f6fc !important;
+
+  font-family: "Manrope", sans-serif !important;
+
+  font-weight: 500 !important;
+}
+
+.MuiDialogContent-root {
+  color: #8b949e !important;
+}
+
+.MuiDialogContent-root p {
+  color: #8b949e;
+}
+
+.MuiDialogActions-root {
+  padding: 1rem 1.5rem !important;
+}
+
+.MuiDialogActions-root .MuiButton-root {
+  text-transform: none;
+
+  font-family: "Manrope", sans-serif;
+}
+
+
+/* =========================================
+   Commit Modal
+========================================= */
+
+.MuiModal-root .MuiBox-root {
+  background: #161b22 !important;
+
+  color: #f0f6fc;
+
+  border: 1px solid #30363d;
+}
+
+.MuiModal-root .MuiTypography-root {
+  color: #f0f6fc;
+}
+
+.MuiModal-root .MuiTextField-root {
+  margin-top: 0.2rem;
+}
+
+.MuiModal-root .MuiInputLabel-root {
+  color: #8b949e;
+}
+
+.MuiModal-root .MuiInputLabel-root.Mui-focused {
+  color: #58a6ff;
+}
+
+.MuiModal-root .MuiOutlinedInput-root {
+  color: #f0f6fc;
+
+  background: #0d1117;
+}
+
+.MuiModal-root .MuiOutlinedInput-notchedOutline {
+  border-color: #30363d;
+}
+
+.MuiModal-root .MuiOutlinedInput-root:hover
+.MuiOutlinedInput-notchedOutline {
+  border-color: #484f58;
+}
+
+.MuiModal-root .MuiOutlinedInput-root.Mui-focused
+.MuiOutlinedInput-notchedOutline {
+  border-color: #58a6ff;
+}
+
+.MuiModal-root p {
+  color: #f85149;
+
+  font-size: 0.75rem;
+
+  margin-top: 0.5rem;
+}
+
+
+/* =========================================
+   Responsive
+========================================= */
+
+@media (max-width: 1000px) {
+  .repository-page {
+    padding: 2rem 4%;
+  }
+
+  .repository-container {
+    grid-template-columns: 240px minmax(0, 1fr);
+  }
+}
+
+
+@media (max-width: 800px) {
+  .repository-header {
+    padding: 1.4rem;
+  }
+
+  .repository-container {
+    grid-template-columns: 1fr;
+  }
+
+  .repository-sidebar,
+  .file-viewer {
+    height: 500px;
+  }
+
+  .repository-sidebar {
+    max-height: 350px;
+  }
+}
+
+
+@media (max-width: 600px) {
+  .repository-page {
+    padding: 1.2rem 3% 3rem;
+  }
+
+  .repository-title {
+    font-size: 1.5rem;
+  }
+
+  .repository-description {
+    font-size: 0.85rem;
+  }
+
+  .repository-info {
+    gap: 0.45rem;
+  }
+
+  .repository-info span {
+    font-size: 0.7rem;
+  }
+
+  .repository-page > .MuiBox-root {
+    justify-content: flex-start;
+
+    flex-wrap: wrap;
+  }
+
+  .repository-page > .MuiBox-root > .MuiButton-root {
+    flex: 1;
+
+    min-width: 130px;
+  }
+}
+
+/* =========================================
+   Repository Description
+========================================= */
+
+.repository-description-section {
+  margin-top: 0.7rem;
+  max-width: 750px;
+}
+
+.description-display {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+}
+
+.repository-description {
+  flex: 1;
+
+  margin: 0;
+
+  color: #8b949e;
+
+  font-size: 0.9rem;
+  font-weight: 300;
+
+  line-height: 1.6;
+}
+
+.description-edit-btn {
+  flex-shrink: 0;
+
+  padding: 0.3rem 0.65rem;
+
+  background: transparent;
+
+  border: 1px solid #30363d;
+
+  border-radius: 6px;
+
+  color: #8b949e;
+
+  font-family: "Manrope", sans-serif;
+
+  font-size: 0.7rem;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.description-edit-btn:hover {
+  background: #21262d;
+
+  border-color: #58a6ff;
+
+  color: #58a6ff;
+}
+
+
+/* =========================================
+   Description Editor
+========================================= */
+
+.description-editor {
+  width: 100%;
+}
+
+.description-editor textarea {
+  width: 100%;
+  min-height: 90px;
+  padding: 0.75rem;
+  box-sizing: border-box;
+  resize: vertical;
+  background: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 7px;
+  outline: none;
+  color: #f0f6fc;
+  font-family: "Manrope", sans-serif;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  transition: border-color 0.2s ease;
+}
+
+.description-editor textarea:focus {
+  border-color: #58a6ff;
+}
+
+.description-editor textarea::placeholder {
+  color: #6e7681;
+}
+
+
+/* =========================================
+   Description Actions
+========================================= */
+
+.description-actions {
+  display: flex;
+
+  justify-content: flex-end;
+
+  gap: 0.6rem;
+
+  margin-top: 0.6rem;
+}
+
+.description-cancel-btn,
+.description-save-btn {
+  padding: 0.45rem 0.75rem;
+
+  border-radius: 6px;
+
+  font-family: "Manrope", sans-serif;
+
+  font-size: 0.72rem;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.description-cancel-btn {
+  background: transparent;
+
+  border: 1px solid #30363d;
+
+  color: #8b949e;
+}
+
+.description-cancel-btn:hover {
+  background: #21262d;
+
+  color: #f0f6fc;
+}
+
+.description-save-btn {
+  background: #238636;
+
+  border: 1px solid #238636;
+
+  color: #ffffff;
+}
+
+.description-save-btn:hover {
+  background: #2ea043;
+}
+
+.description-save-btn:disabled,
+.description-cancel-btn:disabled,
+.description-edit-btn:disabled {
+  opacity: 0.5;
+
+  cursor: not-allowed;
+}
+
+/* =========================================
+   Repository Path
+========================================= */
+
+.repository-path {
+  display: flex;
+
+  align-items: center;
+
+  gap: 0.35rem;
+
+  margin: 0.7rem;
+
+  padding: 0.65rem 0.7rem;
+
+  background: #0d1117;
+
+  border: 1px solid #30363d;
+
+  border-radius: 7px;
+
+  overflow-x: auto;
+
+  white-space: nowrap;
+
+  scrollbar-width: thin;
+}
+
+.repository-path::-webkit-scrollbar {
+  height: 4px;
+}
+
+.repository-path::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.repository-path::-webkit-scrollbar-thumb {
+  background: #30363d;
+
+  border-radius: 10px;
+}
+
+
+/* Root */
+
+.path-root {
+  flex-shrink: 0;
+
+  padding: 0;
+
+  background: transparent;
+
+  border: none;
+
+  color: #58a6ff;
+
+  font-family: "Manrope", sans-serif;
+
+  font-size: 0.72rem;
+
+  cursor: pointer;
+
+  transition: color 0.2s ease;
+}
+
+.path-root:hover {
+  color: #79c0ff;
+}
+
+
+/* Separator */
+
+.path-separator {
+  flex-shrink: 0;
+
+  color: #484f58;
+
+  font-size: 0.75rem;
+}
+
+
+/* Path parts */
+
+.path-part {
+  flex-shrink: 0;
+
+  padding: 0;
+
+  background: transparent;
+
+  border: none;
+
+  color: #8b949e;
+
+  font-family: "Manrope", sans-serif;
+
+  font-size: 0.72rem;
+
+  cursor: pointer;
+
+  transition: color 0.2s ease;
+}
+
+.path-part:hover {
+  color: #f0f6fc;
+}
+
+/* =========================================
+   Viewer File Path
+========================================= */
+
+.viewer-file-path {
+  display: flex;
+
+  align-items: center;
+
+  gap: 0.5rem;
+
+  min-width: 0;
+
+  flex: 1;
+}
+
+.viewer-file-icon {
+  flex-shrink: 0;
+
+  font-size: 0.85rem;
+}
+
+.viewer-path {
+  min-width: 0;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+
+  color: #c9d1d9;
+
+  font-family:
+    "Manrope",
+    sans-serif;
+
+  font-size: 0.78rem;
+}
+
+.viewer-placeholder {
+  color: #6e7681;
+
+  font-family: "Manrope", sans-serif;
+
+  font-size: 0.78rem;
 }

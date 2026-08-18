@@ -3,10 +3,21 @@ import Box from "@mui/material/Box";
 import HeroImage from "../../public/hero-image.jpg";
 import Button from "@mui/material/Button";
 import "./Hero.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SplitText from "../Animation/SplitText";
+import { useState } from "react";
+
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import Typography from "@mui/material/Typography";
 
 function Hero() {
+  const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
+  const token = localStorage.getItem("token");
+  const navigate = useNavigate();
+
   const handleAnimationComplete = () => {
     console.log("All letters have animated!");
   };
@@ -84,7 +95,6 @@ function Hero() {
           sx={{
             width: "8rem",
             height: "2rem",
-            // backgroundColor: "red",
             position: "absolute",
             top: "1.5rem",
             right: "2rem",
@@ -94,42 +104,87 @@ function Hero() {
             padding: "0 1rem",
           }}
         >
-          <Link
-            to={"/login"}
-            style={{
-              textDecoration: "none",
-              textShadow: "0px 4px 10px rgba(232, 229, 229, 0.85)",
-            }}
-          >
-            <h3
-              style={{
-                color: "whitesmoke",
-                fontFamily: "'Manrope', sans-serif",
-                fontWeight: "300",
-              }}
-            >
-              login
-            </h3>
-          </Link>
+          {token ? (
+            <>
+              <h3
+                onClick={() => setLogoutDialogOpen(true)}
+                style={{
+                  color: "whitesmoke",
+                  fontFamily: "'Manrope', sans-serif",
+                  fontWeight: "300",
+                  cursor: "pointer",
+                  textShadow: "0px 4px 10px rgba(232, 229, 229, 0.85)",
+                }}
+              >
+                logout
+              </h3>
+            </>
+          ) : (
+            <>
+              <Link
+                to={"/login"}
+                style={{
+                  textDecoration: "none",
+                  textShadow: "0px 4px 10px rgba(232, 229, 229, 0.85)",
+                }}
+              >
+                <h3
+                  style={{
+                    color: "whitesmoke",
+                    fontFamily: "'Manrope', sans-serif",
+                    fontWeight: "300",
+                  }}
+                >
+                  login
+                </h3>
+              </Link>
 
-          <Link
-            to={"/signup"}
-            style={{
-              textDecoration: "none",
-              textShadow: "0px 4px 10px rgba(232, 229, 229, 0.85)",
-            }}
-          >
-            <h3
-              style={{
-                color: "whitesmoke",
-                fontFamily: "'Manrope', sans-serif",
-                fontWeight: "300",
+              <Link
+                to={"/signup"}
+                style={{
+                  textDecoration: "none",
+                  textShadow: "0px 4px 10px rgba(232, 229, 229, 0.85)",
+                }}
+              >
+                <h3
+                  style={{
+                    color: "whitesmoke",
+                    fontFamily: "'Manrope', sans-serif",
+                    fontWeight: "300",
+                  }}
+                >
+                  register
+                </h3>
+              </Link>
+            </>
+          )}
+        </Box>
+        <Dialog
+          open={logoutDialogOpen}
+          onClose={() => setLogoutDialogOpen(false)}
+        >
+          <DialogTitle>Logout?</DialogTitle>
+
+          <DialogContent>
+            <Typography>Are you sure you want to logout?</Typography>
+          </DialogContent>
+
+          <DialogActions>
+            <Button onClick={() => setLogoutDialogOpen(false)}>Cancel</Button>
+
+            <Button
+              color="error"
+              variant="contained"
+              onClick={() => {
+                localStorage.removeItem("token");
+                setLogoutDialogOpen(false);
+                navigate("/login");
               }}
             >
-              sign up
-            </h3>
-          </Link>
-        </Box>
+              Logout
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Box>
     </>
   );

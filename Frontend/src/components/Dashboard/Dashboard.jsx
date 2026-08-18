@@ -18,6 +18,18 @@ import {
   Radio,
 } from "@mui/material";
 
+import image1 from "../../public/image1.jpg";
+import image2 from "../../public/image2.jpg";
+import image3 from "../../public/image3.jpg";
+import image4 from "../../public/image4.jpg";
+import image5 from "../../public/image5.jpg";
+
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Typography from "@mui/material/Typography";
+
 function Dashboard() {
   const [user, setUser] = useState({});
   const [repo, setRepo] = useState([]);
@@ -26,11 +38,52 @@ function Dashboard() {
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
   const [error, setError] = useState("");
+  const [repoSearch, setRepoSearch] = useState("");
+
+  const images = [image1, image2, image3, image4, image5];
 
   const [formData, setFormData] = useState({
     name: "",
     description: "",
     visibility: "public",
+  });
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deletingAccount, setDeletingAccount] = useState(false);
+
+  const handleDeleteAccount = async () => {
+    try {
+      setDeletingAccount(true);
+
+      const token = localStorage.getItem("token");
+
+      await axios.delete("http://localhost:8080/api/users/me", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      localStorage.removeItem("token");
+
+      navigate("/");
+    } catch (error) {
+      console.error("Failed to delete account:", error);
+    } finally {
+      setDeletingAccount(false);
+      setDeleteDialogOpen(false);
+    }
+  };
+
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [bio, setBio] = useState("");
+
+  const filteredRepos = repo.filter((repository) => {
+    const query = repoSearch.toLowerCase().trim();
+
+    return (
+      repository.name.toLowerCase().includes(query) ||
+      repository.description?.toLowerCase().includes(query)
+    );
   });
 
   const getRepo = async () => {
@@ -57,6 +110,7 @@ function Dashboard() {
         },
       });
       setUser(response?.data?.data);
+      setBio(response?.data?.data.bio || "");
     } catch (err) {
       console.log(err);
     }
@@ -74,6 +128,27 @@ function Dashboard() {
   // useEffect(() => {
   //   console.log(repo);
   // }, [repo]);
+
+  const handleSaveProfile = async () => {
+    try {
+      const response = await axios.put(
+        "http://localhost:8080/api/users/bio",
+        {
+          bio,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      //  console.log(response)
+      setUser(response.data.response);
+      setIsEditingProfile(false);
+    } catch (error) {
+      console.error("Failed to update profile:", error);
+    }
+  };
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -127,50 +202,159 @@ function Dashboard() {
         </div>
 
         <div className="user-card">
-          <h2>{user.username}</h2>
+          <div className="user-avatar">
+            {user.username?.charAt(0).toUpperCase()}
+          </div>
 
-          <p>{user.email}</p>
+          <div className="user-details">
+            <div className="user-card-header">
+              <h2>{user.username}</h2>
 
-          <p>{user.bio || "No bio added yet."}</p>
+              {!isEditingProfile && (
+                <button
+                  className="profile-edit-btn"
+                  onClick={() => setIsEditingProfile(true)}
+                >
+                  Edit
+                </button>
+              )}
+            </div>
+
+            <p className="user-email">{user.email}</p>
+
+            {isEditingProfile ? (
+              <div className="profile-edit-area">
+                <label>Bio</label>
+
+                <textarea
+                  value={bio}
+                  onChange={(e) => setBio(e.target.value)}
+                  placeholder="Tell something about yourself..."
+                  maxLength={160}
+                />
+
+                <div className="profile-edit-actions">
+                  <button
+                    className="profile-cancel-btn"
+                    onClick={() => {
+                      setBio(user.bio || "");
+                      setIsEditingProfile(false);
+                    }}
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    className="profile-save-btn"
+                    onClick={handleSaveProfile}
+                  >
+                    Save Changes
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <p className="user-bio">{user.bio || "No bio added yet."}</p>
+            )}
+          </div>
+        </div>
+
+        <div className="dashboard-search">
+          <div className="dashboard-search-input">
+            <span className="search-icon">⌕</span>
+
+            <input
+              type="text"
+              placeholder="Search your repositories..."
+              value={repoSearch}
+              onChange={(e) => setRepoSearch(e.target.value)}
+            />
+
+            {repoSearch && (
+              <button
+                className="search-clear"
+                onClick={() => setRepoSearch("")}
+              >
+                ×
+              </button>
+            )}
+          </div>
         </div>
 
         <div className="repo-section-title">
           <h2>Your Repositories</h2>
         </div>
 
-        {repo.length === 0 ? (
+        {filteredRepos.length === 0 ? (
           <div className="empty">
-            <h2>No repositories found</h2>
+            <div className="empty-icon">📁</div>
 
-            <p>Create your first repository and start committing.</p>
+            <h2>
+              {repo.length === 0
+                ? "No repositories yet"
+                : "No repositories found"}
+            </h2>
+
+            <p>
+              {repo.length === 0
+                ? "Create your first repository and start committing."
+                : "Try searching with a different keyword."}
+            </p>
+
+            {repo.length === 0 && (
+              <button className="empty-create-btn" onClick={handleOpen}>
+                + Create Repository
+              </button>
+            )}
           </div>
         ) : (
           <div className="repo-grid">
-            {repo.map((repository) => {
+            {filteredRepos.map((repository, index) => {
               return (
-                <div
-                  className="repo-card"
+                <Card
+                  className="dashboard-repo-card"
                   key={repository._id}
                   onClick={() => {
                     navigate(`/repository/${repository._id}`);
                   }}
                 >
-                  <div>
-                    <div className="repo-name">📁 {repository.name}</div>
+                  <CardMedia
+                    component="img"
+                    className="repo-card-image"
+                    alt={repository.name}
+                    image={images[index % images.length]}
+                  />
 
-                    <div className="repo-description">
-                      {repository.description}
+                  <CardContent className="repo-card-content">
+                    <Typography
+                      className="repo-card-title"
+                      gutterBottom
+                      variant="h5"
+                      component="div"
+                    >
+                      📁 {repository.name}
+                    </Typography>
+
+                    <Typography
+                      className="repo-card-description"
+                      variant="body2"
+                    >
+                      {repository.description || "No description provided."}
+                    </Typography>
+
+                    <div className="repo-card-meta">
+                      <span>🌐 {repository.visibility}</span>
+
+                      <span>
+                        Updated{" "}
+                        {new Date(repository.updatedAt).toLocaleDateString()}
+                      </span>
                     </div>
-                  </div>
+                  </CardContent>
 
-                  <div className="repo-footer">
-                    <span className="visibility">{repository.visibility}</span>
-
-                    <span className="updated">
-                      {new Date(repository.updatedAt).toLocaleDateString()}
-                    </span>
-                  </div>
-                </div>
+                  <CardActions className="repo-card-actions">
+                    <Button size="small">See repository →</Button>
+                  </CardActions>
+                </Card>
               );
             })}
           </div>
@@ -203,7 +387,7 @@ function Dashboard() {
             onChange={handleChange}
           />
 
-          {/* <FormControl margin="normal">
+          <FormControl margin="normal">
             <FormLabel>Visibility</FormLabel>
 
             <RadioGroup
@@ -223,7 +407,7 @@ function Dashboard() {
                 label="Public"
               />
             </RadioGroup>
-          </FormControl> */}
+          </FormControl>
         </DialogContent>
 
         <DialogActions>
@@ -231,6 +415,59 @@ function Dashboard() {
 
           <Button variant="contained" onClick={handleCreateRepository}>
             Create
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <div className="danger-zone">
+        <div className="danger-zone-content">
+          <h3>Delete Account</h3>
+
+          <p>
+            Permanently delete your account and all associated repositories.
+          </p>
+        </div>
+
+        <button
+          className="delete-account-btn"
+          onClick={() => setDeleteDialogOpen(true)}
+        >
+          Delete Account
+        </button>
+      </div>
+
+      <Dialog
+        open={deleteDialogOpen}
+        onClose={() => {
+          if (!deletingAccount) {
+            setDeleteDialogOpen(false);
+          }
+        }}
+      >
+        <DialogTitle>Delete your account?</DialogTitle>
+
+        <DialogContent>
+          <Typography>
+            This will permanently delete your account, repositories, commits,
+            and repository files. This action cannot be undone.
+          </Typography>
+        </DialogContent>
+
+        <DialogActions>
+          <Button
+            onClick={() => setDeleteDialogOpen(false)}
+            disabled={deletingAccount}
+          >
+            Cancel
+          </Button>
+
+          <Button
+            variant="contained"
+            color="error"
+            onClick={handleDeleteAccount}
+            disabled={deletingAccount}
+          >
+            {deletingAccount ? "Deleting..." : "Delete Account"}
           </Button>
         </DialogActions>
       </Dialog>

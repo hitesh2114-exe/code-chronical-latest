@@ -645,6 +645,107 @@ class RepositoryService {
       }
     }
   }
+
+  async editFile(repoId, userId, content, filePath) {
+    let localPath;
+    try {
+      const repository = await Repository.findById(repoId);
+      const commit = await Commit.findById(repository.latestCommit);
+      const uploadId = randomUUID();
+
+      //download latest snapshot
+      const remotePath = `repos/${userId}/${repoId}/commits/${commit.commitId}`;
+      localPath = path.join(__dirname, `../temp/uploads`, uploadId);
+      await downloadDirectoryFromSupabase(
+        "codechronicle",
+        remotePath,
+        localPath
+      );
+      await fsp.rm(path.join(localPath, "commit.json"), {
+        force: true,
+      });
+
+      //replacing the file content
+      const targetPath = path.join(localPath, filePath);
+      const stats = await fsp.stat(targetPath); //checking file exists or not
+      if (!stats.isFile()) {
+        throw new Error("The specified path is not a file");
+      }
+      await fsp.writeFile(targetPath, content, "utf8");
+
+      //creating new commit.json
+      const commitMessage = `updated: ${filePath}`;
+      await createCommitJson(localPath, uploadId, commitMessage, commit._id);
+
+      //upload snapshot to supabase
+      const destinationPath = `repos/${userId}/${repoId}/commits/${uploadId}`;
+      await uploadDirectoryToSupabase(
+        localPath,
+        "codechronicle",
+        destinationPath
+      );
+
+      //create commit document
+      const commitPath = path.join(localPath, "commit.json");
+      const data = await fsp.readFile(commitPath, "utf-8");
+      const commitData = JSON.parse(data);
+
+      const commitDoc = await Commit.create({
+        commitId: uploadId,
+        message: commitMessage,
+        repository: repoId,
+        author: userId,
+        storagePath: `repos/${userId}/${repoId}/commits/${uploadId}`,
+        parentCommit: commit._id || null,
+        committedAt: new Date(commitData.date),
+        branch: "main",
+      });
+
+      //update the latest commit inside repository
+      await Repository.findByIdAndUpdate(repoId, {
+        $set: { latestCommit: commitDoc._id },
+      });
+
+      return {
+        success: true,
+        commitId: uploadId,
+      };
+    } catch (err) {
+      throw err;
+    } finally {
+      //at last delete the temporary folder
+      if (localPath) {
+        try {
+          await fsp.rm(localPath, {
+            recursive: true,
+            force: true,
+          });
+
+          console.log("Temporary folder deleted.");
+        } catch (cleanupError) {
+          console.error("Cleanup failed:", cleanupError);
+        }
+      }
+    }
+  }
+
+  async updateRepository(repoId, description) {
+    try {
+      const repository = await Repository.findByIdAndUpdate(
+        repoId,
+        {
+          description: description.trim(),
+        },
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
+      return repository;
+    } catch (err) {
+      throw err;
+    }
+  }
 }
 
 module.exports = new RepositoryService();

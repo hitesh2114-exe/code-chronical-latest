@@ -1,0 +1,301 @@
+.explore-page {
+  width: 100%;
+  min-height: calc(100vh - 3.5rem);
+  padding: 3rem 8%;
+  box-sizing: border-box;
+
+  background-color: #0f0f0f;
+  color: whitesmoke;
+
+  font-family: "Manrope", sans-serif;
+}
+
+/* Header */
+
+.explore-header {
+  margin-bottom: 2.5rem;
+}
+
+.explore-header h1 {
+  margin: 0;
+
+  font-size: 2.5rem;
+  font-weight: 300;
+
+  color: whitesmoke;
+}
+
+.explore-header p {
+  margin-top: 0.6rem;
+
+  color: #999;
+  font-size: 1rem;
+  font-weight: 300;
+}
+
+/* Search */
+
+.explore-search-section {
+  width: 100%;
+  max-width: 800px;
+  margin-bottom: 3rem;
+}
+
+/* MUI TextField */
+
+.explore-search-section .MuiTextField-root {
+  background-color: #181818;
+  border-radius: 6px;
+}
+
+.explore-search-section .MuiInputLabel-root {
+  color: #888;
+}
+
+.explore-search-section .MuiInputLabel-root.Mui-focused {
+  color: whitesmoke;
+}
+
+.explore-search-section .MuiOutlinedInput-root {
+  color: whitesmoke;
+}
+
+.explore-search-section
+  .MuiOutlinedInput-notchedOutline {
+  border-color: #333;
+}
+
+.explore-search-section
+  .MuiOutlinedInput-root:hover
+  .MuiOutlinedInput-notchedOutline {
+  border-color: #555;
+}
+
+.explore-search-section
+  .MuiOutlinedInput-root.Mui-focused
+  .MuiOutlinedInput-notchedOutline {
+  border-color: #888;
+}
+
+/* Radio buttons */
+
+.search-type {
+  margin-top: 1rem;
+}
+
+.search-type .MuiFormControlLabel-label {
+  color: #aaa;
+  font-family: "Manrope", sans-serif;
+  font-size: 0.9rem;
+}
+
+.search-type .MuiRadio-root {
+  color: #555;
+}
+
+.search-type .MuiRadio-root.Mui-checked {
+  color: whitesmoke;
+}
+
+/* Results */
+
+.explore-results {
+  width: 100%;
+  max-width: 1000px;
+}
+
+.results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 1.2rem;
+  padding-bottom: 0.8rem;
+
+  border-bottom: 1px solid #292929;
+}
+
+.results-header h2 {
+  margin: 0;
+
+  font-size: 1.4rem;
+  font-weight: 300;
+
+  color: whitesmoke;
+}
+
+.results-header span {
+  font-size: 0.8rem;
+  color: #777;
+}
+
+/* Results list */
+
+.results-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+/* Result card */
+
+.explore-result-card {
+  width: 100%;
+  min-height: 90px;
+
+  padding: 1.2rem 1.4rem;
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+
+  background-color: #171717;
+
+  border: 1px solid #292929;
+  border-radius: 8px;
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.explore-result-card:hover {
+  transform: translateY(-2px);
+
+  background-color: #1c1c1c;
+  border-color: #444;
+}
+
+/* Icon */
+
+.result-icon {
+  width: 45px;
+  height: 45px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 8px;
+
+  background-color: #242424;
+
+  font-size: 1.2rem;
+}
+
+/* Result content */
+
+.result-content {
+  min-width: 0;
+}
+
+.result-content h3 {
+  margin: 0 0 0.35rem;
+
+  font-size: 1.05rem;
+  font-weight: 400;
+
+  color: whitesmoke;
+}
+
+.result-content p {
+  margin: 0 0 0.5rem;
+
+  color: #888;
+
+  font-size: 0.9rem;
+  font-weight: 300;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.result-meta {
+  font-size: 0.78rem;
+  color: #666;
+}
+
+/* Empty state */
+
+.no-results {
+  padding: 4rem 1rem;
+
+  text-align: center;
+
+  background-color: #151515;
+
+  border: 1px dashed #333;
+  border-radius: 8px;
+}
+
+.no-results-icon {
+  margin-bottom: 0.5rem;
+
+  font-size: 2rem;
+  color: #666;
+}
+
+.no-results h3 {
+  margin: 0.5rem 0;
+
+  font-size: 1.1rem;
+  font-weight: 300;
+
+  color: #ccc;
+}
+
+.no-results p {
+  margin: 0;
+
+  color: #666;
+
+  font-size: 0.9rem;
+  font-weight: 300;
+}
+
+/* Responsive */
+
+@media (max-width: 768px) {
+  .explore-page {
+    padding: 2rem 5%;
+  }
+
+  .explore-header h1 {
+    font-size: 2rem;
+  }
+
+  .explore-result-card {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .explore-page {
+    padding: 1.5rem 4%;
+  }
+
+  .explore-header {
+    margin-bottom: 1.8rem;
+  }
+
+  .explore-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .search-type {
+    width: 100%;
+  }
+
+  .search-type .MuiFormGroup-root {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .explore-result-card {
+    align-items: flex-start;
+  }
+}

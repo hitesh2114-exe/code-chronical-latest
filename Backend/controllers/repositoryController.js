@@ -266,11 +266,57 @@ class RepositoryController {
       const { repoId } = req.params;
       const path = req.body.path;
       const userId = req.user.id;
+      if (req.body.path === "commit.json") {
+        throw new Error("commit.json cannot be deleted");
+      }
       const response = await repositoryService.deleteFileOrFolder(
         path,
         repoId,
         userId
       );
+      return res.status(200).json({
+        success: true,
+        response,
+      });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        success: false,
+        message: err.message,
+      });
+    }
+  }
+
+  async editFile(req, res) {
+    try {
+      const { repoId } = req.params;
+      const userId = req.user.id;
+      const content = req.body.content;
+      const filePath = req.body.path;
+      const response = await repositoryService.editFile(
+        repoId,
+        userId,
+        content,
+        filePath
+      );
+      return res.status(200).json({
+        success: true,
+        response,
+      });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        success: false,
+        message: err.message,
+      });
+    }
+  }
+
+  async updateRepository(req, res) {
+    try {
+      const { repoId } = req.params;
+      const { description } = req.body;
+      const response = await repositoryService.updateRepository(repoId, description);
       return res.status(200).json({
         success: true,
         response,

@@ -36,6 +36,18 @@ function AnimationOne() {
           >
             continue to dashboard
           </Button>
+
+          <Button
+            variant="contained"
+            onClick={() => {
+              navigate("/explore");
+            }}
+            sx={{
+              marginLeft: "1rem",
+            }}
+          >
+            search for user or repo...?
+          </Button>
         </Box>
       </Box>
     </>

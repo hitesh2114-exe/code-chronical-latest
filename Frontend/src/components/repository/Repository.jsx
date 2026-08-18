@@ -39,6 +39,37 @@ function Repository() {
   const [deleteTarget, setDeleteTarget] = useState(null); //file or folder that actually needed to be deleted
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false); //for deleting the files/folders
 
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedContent, setEditedContent] = useState(""); //stores the edited file content
+  const [selectedFilePath, setSelectedFilePath] = useState(""); //stores the path of file that is being edited
+  const [isSaving, setIsSaving] = useState(false);
+
+  const isLoggedIn = !!token;
+  const [currentUserId, setCurrentUserId] = useState(null);
+
+  const [isEditingDescription, setIsEditingDescription] = useState(false);
+  const [description, setDescription] = useState("");
+  const [updatingDescription, setUpdatingDescription] = useState(false);
+
+  const [filePath, setFilePath] = useState("");
+
+  //used to get the current logged in user info
+  const fetchCurrentUser = async () => {
+    if (!token) return;
+
+    try {
+      const response = await axios.get("http://localhost:8080/api/auth/me", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setCurrentUserId(response.data.data._id);
+    } catch (error) {
+      console.error("Failed to fetch current user:", error);
+    }
+  };
+
   //this function is used to get all files and folders from supabase
   const fetchFiles = async () => {
     try {
@@ -70,6 +101,7 @@ function Repository() {
         }
       );
       setRepo(response.data);
+      setDescription(response.data.description || "");
     } catch (err) {
       console.log(err);
     }
@@ -78,11 +110,16 @@ function Repository() {
   useEffect(() => {
     fetchRepo();
     fetchFiles();
+    fetchCurrentUser();
   }, []);
 
   useEffect(() => {
     fetchFiles();
   }, [currentPath]);
+
+  //used to check for owner of repo
+  const isOwner =
+    currentUserId && repo?.owner?._id && currentUserId === repo?.owner?._id;
 
   //used to navigate back
   const goBack = () => {
@@ -93,6 +130,7 @@ function Repository() {
   //used to get the content of the file
   const openFile = async (path) => {
     try {
+      setSelectedFilePath(path);
       const response = await axios.get(
         `http://localhost:8080/api/repositories/${repoId}/file`,
         {
@@ -236,12 +274,73 @@ function Repository() {
           },
         }
       );
-      console.log(response.data);
+      // console.log(response.data);
       setOpenDeleteDialog(false);
       await fetchFiles();
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const handleSaveFile = async () => {
+    try {
+      setIsSaving(true);
+      const response = await axios.put(
+        `http://localhost:8080/api/repositories/${repoId}/file`,
+        {
+          path: selectedFilePath,
+          content: editedContent,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log(response.data);
+      setFileContent(editedContent);
+      setIsEditing(false);
+      await fetchFiles();
+    } catch (error) {
+      console.error("Failed to update file:", error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleUpdateDescription = async () => {
+    try {
+      setUpdatingDescription(true);
+
+      const token = localStorage.getItem("token");
+
+      const response = await axios.patch(
+        `http://localhost:8080/api/repositories/${repoId}`,
+        {
+          description,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setRepo(response.data.response);
+      setDescription(response.data.response.description || "");
+      setIsEditingDescription(false);
+    } catch (error) {
+      console.error("Failed to update description:", error);
+    } finally {
+      setUpdatingDescription(false);
+    }
+  };
+
+  const navigateToPath = (path) => {
+    setCurrentPath(path);
+    setSelectedFilePath(null);
+    setFileContent("");
   };
 
   // useEffect(() => {
@@ -252,13 +351,17 @@ function Repository() {
   //   console.log(files);
   // }, [files]);
 
-  useEffect(() => {
-    console.log("path : ", currentPath);
-  }, [currentPath]);
+  // useEffect(() => {
+  //   console.log("path : ", currentPath);
+  // }, [currentPath]);
 
   // useEffect(() => {
   //   console.log("content : ", fileContent);
   // }, [fileContent]);
+
+  // useEffect(() => {
+  //   console.log("current path : ", currentPath);
+  // }, [currentPath]);
 
   return (
     <>
@@ -267,7 +370,54 @@ function Repository() {
         <div className="repository-header">
           <div className="repository-title">{repo.name}</div>
 
-          <div className="repository-description">{repo.description}</div>
+          <div className="repository-description-section">
+            {isEditingDescription ? (
+              <div className="description-editor">
+                <textarea
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Add a description for your repository..."
+                  maxLength={300}
+                />
+
+                <div className="description-actions">
+                  <button
+                    className="description-cancel-btn"
+                    onClick={() => {
+                      setDescription(repo.description || "");
+                      setIsEditingDescription(false);
+                    }}
+                    disabled={updatingDescription}
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    className="description-save-btn"
+                    onClick={handleUpdateDescription}
+                    disabled={updatingDescription}
+                  >
+                    {updatingDescription ? "Saving..." : "Save"}
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="description-display">
+                <p className="repository-description">
+                  {repo.description || "No description provided."}
+                </p>
+
+                {isOwner && (
+                  <button
+                    className="description-edit-btn"
+                    onClick={() => setIsEditingDescription(true)}
+                  >
+                    Edit
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
 
           <div className="repository-info">
             <span>🌐 {repo.visibility}</span>
@@ -292,6 +442,30 @@ function Repository() {
         <div className="repository-container">
           <div className="repository-sidebar">
             <div className="sidebar-header">Repository Explorer</div>
+
+            <div className="repository-path">
+              <span className="path-root" onClick={() => navigateToPath("")}>
+                📁 {repo.name}
+              </span>
+
+              {currentPath &&
+                currentPath.split("/").map((part, index, parts) => {
+                  const path = parts.slice(0, index + 1).join("/");
+
+                  return (
+                    <React.Fragment key={path}>
+                      <span className="path-separator">/</span>
+
+                      <button
+                        className="path-part"
+                        onClick={() => navigateToPath(path)}
+                      >
+                        {part}
+                      </button>
+                    </React.Fragment>
+                  );
+                })}
+            </div>
 
             {currentPath && (
               <div className="back-btn" onClick={goBack}>
@@ -321,23 +495,25 @@ function Repository() {
 
                     <span className="file-name">{file.name}</span>
 
-                    <Button
-                      size="small"
-                      color="error"
-                      onClick={(e) => {
-                        e.stopPropagation();
+                    {isOwner && file.name !== "commit.json" && (
+                      <Button
+                        size="small"
+                        color="error"
+                        onClick={(e) => {
+                          e.stopPropagation();
 
-                        setDeleteTarget({
-                          name: file.name,
-                          path: file.path,
-                          type: file.type,
-                        });
+                          setDeleteTarget({
+                            name: file.name,
+                            path: file.path,
+                            type: file.type,
+                          });
 
-                        setOpenDeleteDialog(true);
-                      }}
-                    >
-                      🗑️
-                    </Button>
+                          setOpenDeleteDialog(true);
+                        }}
+                      >
+                        🗑️
+                      </Button>
+                    )}
                   </div>
                 ))
               )}
@@ -345,11 +521,89 @@ function Repository() {
           </div>
 
           <div className="file-viewer">
-            <div className="viewer-header">File Preview</div>
+            <div
+              className="viewer-header"
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <div className="viewer-file-path">
+                {selectedFilePath ? (
+                  <>
+                    <span className="viewer-file-icon">📄</span>
 
-            <pre className="viewer-content">
-              {fileContent || "Select a file to preview"}
-            </pre>
+                    <span className="viewer-path">
+                      {repo.name} / {selectedFilePath}
+                    </span>
+                  </>
+                ) : (
+                  <span className="viewer-placeholder">
+                    Select a file to preview
+                  </span>
+                )}
+              </div>
+              {/* <span>{isEditing ? "Edit File" : "File Preview"}</span> */}
+
+              {!isEditing &&
+                isOwner &&
+                selectedFilePath &&
+                !selectedFilePath.endsWith("commit.json") && (
+                  <Button
+                    variant="contained"
+                    onClick={() => {
+                      setEditedContent(fileContent);
+                      setIsEditing(true);
+                    }}
+                  >
+                    Edit
+                  </Button>
+                )}
+              {isEditing && (
+                <div>
+                  <Button
+                    variant="outlined"
+                    onClick={() => {
+                      setEditedContent(fileContent);
+                      setIsEditing(false);
+                    }}
+                  >
+                    Cancel
+                  </Button>
+
+                  <Button
+                    variant="contained"
+                    sx={{ ml: 1 }}
+                    onClick={handleSaveFile}
+                    disabled={isSaving}
+                  >
+                    {isSaving ? "Saving..." : "Save"}
+                  </Button>
+                </div>
+              )}
+            </div>
+
+            {isEditing ? (
+              <TextField
+                fullWidth
+                multiline
+                minRows={20}
+                value={editedContent}
+                onChange={(e) => setEditedContent(e.target.value)}
+                sx={{
+                  "& textarea": {
+                    fontFamily: "monospace",
+                    whiteSpace: "pre",
+                    color: "whitesmoke",
+                  },
+                }}
+              />
+            ) : (
+              <pre className="viewer-content">
+                {fileContent || "Select a file to preview"}
+              </pre>
+            )}
           </div>
         </div>
         <Box
@@ -430,44 +684,48 @@ function Repository() {
             </Box>
           </Modal>
 
-          <input
-            ref={folderInputRef}
-            type="file"
-            webkitdirectory=""
-            directory=""
-            multiple
-            hidden
-            onChange={handleFolderUpload}
-          />
-          <Button
-            variant="contained"
-            onClick={() => folderInputRef.current.click()}
-          >
-            Upload Folder
-          </Button>
+          {isOwner && (
+            <>
+              <input
+                ref={folderInputRef}
+                type="file"
+                webkitdirectory=""
+                directory=""
+                multiple
+                hidden
+                onChange={handleFolderUpload}
+              />
+              <Button
+                variant="contained"
+                onClick={() => folderInputRef.current.click()}
+              >
+                Upload Folder
+              </Button>
 
-          <input
-            ref={fileInputRef}
-            type="file"
-            multiple
-            hidden
-            onChange={handleFilesUpload}
-          />
+              <input
+                ref={fileInputRef}
+                type="file"
+                multiple
+                hidden
+                onChange={handleFilesUpload}
+              />
 
-          <Button
-            variant="contained"
-            onClick={() => fileInputRef.current.click()}
-          >
-            Upload Files
-          </Button>
+              <Button
+                variant="contained"
+                onClick={() => fileInputRef.current.click()}
+              >
+                Upload Files
+              </Button>
 
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => setDeleteDialogOpen(true)}
-          >
-            Delete Repository
-          </Button>
+              <Button
+                variant="contained"
+                color="error"
+                onClick={() => setDeleteDialogOpen(true)}
+              >
+                Delete Repository
+              </Button>
+            </>
+          )}
         </Box>
         <Dialog
           open={deleteDialogOpen}
