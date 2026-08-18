@@ -746,6 +746,37 @@ class RepositoryService {
       throw err;
     }
   }
+
+  async getLatestCommit(repoId, userId) {
+    try {
+      const repository = await Repository.findById(repoId).select(
+        "latestCommit owner collaborators"
+      );
+
+      const commit = await Commit.findById(repository.latestCommit);
+
+      if (!repository) {
+        throw new ApiError(404, "Repository not found.");
+      }
+
+      const isOwner = repository.owner.toString() === userId.toString();
+
+      const isCollaborator = repository.collaborators.some(
+        (collaborator) => collaborator.toString() === userId.toString()
+      );
+
+      if (!isOwner && !isCollaborator) {
+        throw new ApiError(
+          403,
+          "You don't have permission to access this repository."
+        );
+      }
+
+      return commit.commitId;
+    } catch (err) {
+      throw err;
+    }
+  }
 }
 
 module.exports = new RepositoryService();

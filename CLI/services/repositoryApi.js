@@ -50,6 +50,18 @@ class RepositoryApi {
     });
     return response;
   }
+
+  async getLatestCommit(repoId, token) {
+    const response = await api.get(
+      `/api/repositories/${repoId}/latest-commit`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response;
+  }
 }
 
 module.exports = new RepositoryApi();

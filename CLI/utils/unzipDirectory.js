@@ -1,6 +1,5 @@
 const fs = require("fs");
-const path = require("path");
-const unzipper = require("unzipper"); //used to extract the zip files
+const unzipper = require("unzipper");
 
 async function unzipDirectory(zipPath, destination) {
   // Create destination folder if it doesn't exist
@@ -8,14 +7,10 @@ async function unzipDirectory(zipPath, destination) {
     fs.mkdirSync(destination, { recursive: true });
   }
 
-  return new Promise((resolve, reject) => {
-    fs.createReadStream(zipPath)
-      .pipe(unzipper.Extract({ path: destination }))
-      .on("finish", () => {
-        // console.log("Extraction completed");
-        resolve();
-      })
-      .on("error", reject);
+  const zip = await unzipper.Open.file(zipPath);
+
+  await zip.extract({
+    path: destination,
   });
 }
 

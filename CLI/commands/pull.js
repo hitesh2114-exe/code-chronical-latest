@@ -29,6 +29,13 @@ async function pullRepo() {
     }
 
     const token = getToken(); //get the token
+    const latestCommitResponse = await repositoryApi.getLatestCommit(
+      repositoryId,
+      token
+    );
+    const latestCommit = latestCommitResponse.data.response;
+    console.log("Remote latest commit:", latestCommit);
+
     const response = await repositoryApi.pullRepository(repositoryId, token); //receive the zip file from backend
     // console.log(response);
     const tempDir = path.join(repoPath, "temp"); //create temporary folder
@@ -45,10 +52,15 @@ async function pullRepo() {
     });
 
     // console.log("ZIP downloaded successfully.");
-
     const commitsPath = path.join(repoPath, "commits");
 
     await unzipDirectory(zipPath, commitsPath);
+
+    // Update local config only after pull succeeds
+    config.lastCommit = latestCommit;
+    config.lastPushedCommit = latestCommit;
+
+    await fs.writeFile(configPath, JSON.stringify(config, null, 2), "utf8");
 
     console.log("done");
   } catch (err) {
@@ -62,20 +74,19 @@ async function pullRepo() {
     }
 
     console.log("problem in pulling...", +err.message);
-  } finally {
-    //deleting the temp folder
-    try {
-      if (tempDirectory && fswp.existsSync(tempDirectory)) {
-        fswp.rmSync(tempDirectory, {
-          recursive: true,
-          force: true,
-        });
-      }
-    } catch (err) {
-      console.log( err.code);
-    }
-  }
+   } //finally {
+  //   //deleting the temp folder
+  //   try {
+  //     if (tempDirectory && fswp.existsSync(tempDirectory)) {
+  //       fswp.rmSync(tempDirectory, {
+  //         recursive: true,
+  //         force: true,
+  //       });
+  //     }
+  //   } catch (err) {
+  //     console.log(err.code);
+  //   }
+  // }
 }
-
 
 module.exports = { pullRepo };

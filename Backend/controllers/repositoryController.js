@@ -316,7 +316,28 @@ class RepositoryController {
     try {
       const { repoId } = req.params;
       const { description } = req.body;
-      const response = await repositoryService.updateRepository(repoId, description);
+      const response = await repositoryService.updateRepository(
+        repoId,
+        description
+      );
+      return res.status(200).json({
+        success: true,
+        response,
+      });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        success: false,
+        message: err.message,
+      });
+    }
+  }
+
+  async getLatestCommit(req, res) {
+    try {
+      const { repoId } = req.params;
+      const userId = req.user.id;
+      const response = await repositoryService.getLatestCommit(repoId, userId);
       return res.status(200).json({
         success: true,
         response,

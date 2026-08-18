@@ -77,4 +77,11 @@ router.patch(
   repositoryController.updateRepository
 );
 
+router.get(
+  "/:repoId/latest-commit",
+  protect,
+  isRepositoryOwner,
+  repositoryController.getLatestCommit
+);
+
 module.exports = router;
