@@ -118,6 +118,7 @@ class RepositoryService {
     }
   }
 
+  //pull repo
   async pullRepo({ repositoryId, userId }) {
     try {
       console.log("reached service");
@@ -168,6 +169,55 @@ class RepositoryService {
       return { zipPath, downloadDir };
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  async cloneRepository(repoId, userId) {
+    try {
+      const repository = await Repository.findById(repoId).populate(
+        "latestCommit"
+      );
+
+      if (!repository) {
+        throw new ApiError(404, "Repository not found.");
+      }
+
+      const latestCommit = repository.latestCommit;
+      const remotePath = latestCommit.storagePath;
+
+      //downloading the files from supabse to current downloads folder
+      const timestamp = Date.now();
+      const downloadDir = path.join(
+        __dirname,
+        "../temp/downloads",
+        `${timestamp}`
+      );
+
+      fs.mkdirSync(downloadDir, {
+        recursive: true,
+      });
+
+      await downloadDirectoryFromSupabase(
+        "codechronicle",
+        remotePath,
+        downloadDir
+      );
+
+      await fsp.rm(path.join(downloadDir, "commit.json"), {
+        force: true,
+      });
+
+      //create zip file
+      const sourceDir = downloadDir;
+      const zipPath = path.join(
+        __dirname,
+        "../temp/zipped",
+        `${timestamp}.zip`
+      );
+      await zipDirectory(sourceDir, zipPath);
+      return { zipPath, downloadDir };
+    } catch (err) {
+      throw err;
     }
   }
 

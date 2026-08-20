@@ -74,19 +74,19 @@ async function pullRepo() {
     }
 
     console.log("problem in pulling...", +err.message);
-   } //finally {
-  //   //deleting the temp folder
-  //   try {
-  //     if (tempDirectory && fswp.existsSync(tempDirectory)) {
-  //       fswp.rmSync(tempDirectory, {
-  //         recursive: true,
-  //         force: true,
-  //       });
-  //     }
-  //   } catch (err) {
-  //     console.log(err.code);
-  //   }
-  // }
+   } finally {
+    //deleting the temp folder
+    try {
+      if (tempDirectory && fswp.existsSync(tempDirectory)) {
+        fswp.rmSync(tempDirectory, {
+          recursive: true,
+          force: true,
+        });
+      }
+    } catch (err) {
+      console.log(err.code);
+    }
+  }
 }
 
 module.exports = { pullRepo };

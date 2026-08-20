@@ -5,6 +5,9 @@ const { unzipDirectory } = require("../utils/unzipDirectory");
 const Repository = require("../model/repoModel");
 
 class RepositoryController {
+  //for CLI
+
+  //for the creation of repository
   async createRepository(req, res, next) {
     try {
       //create repo
@@ -32,6 +35,7 @@ class RepositoryController {
     }
   }
 
+  //for pushing the repository
   async pushRepository(req, res) {
     try {
       //push repo
@@ -83,7 +87,7 @@ class RepositoryController {
       });
     }
   }
-
+  
   //this function is for the pull request
   async pullRepository(req, res) {
     try {
@@ -95,6 +99,42 @@ class RepositoryController {
         repositoryId,
         userId,
       });
+
+      return res.download(zipPath, async (err) => {
+        if (err) {
+          console.log(err);
+          return;
+        }
+
+        // Delete temporary ZIP
+        if (fs.existsSync(zipPath)) {
+          fs.unlinkSync(zipPath);
+        }
+        // Delete downloaded folder
+        if (fs.existsSync(downloadDir)) {
+          fs.rmSync(downloadDir, {
+            recursive: true,
+            force: true,
+          });
+        }
+      });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        success: false,
+        message: err.message,
+      });
+    }
+  }
+
+  async cloneRepository(req, res) {
+    try {
+      const { repositoryId } = req.params;
+      const userId = req.user.id;
+      const { zipPath, downloadDir } = await repositoryService.cloneRepository(
+        repositoryId,
+        userId
+      );
 
       return res.download(zipPath, async (err) => {
         if (err) {

@@ -62,6 +62,25 @@ class RepositoryApi {
     );
     return response;
   }
+
+  async getRepoDetail(repoId, token) {
+    const response = await api.get(`/api/repositories/${repoId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response;
+  }
+
+  async cloneRepository(repoId, token) {
+    const response = await api.get(`/api/repositories/${repoId}/clone`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      responseType: "stream",
+    });
+    return response;
+  }
 }
 
 module.exports = new RepositoryApi();

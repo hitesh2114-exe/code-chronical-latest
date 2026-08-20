@@ -18,6 +18,7 @@ const { commitRepo } = require("./commands/commit");
 const { pushRepo } = require("./commands/push");
 const { pullRepo } = require("./commands/pull");
 const { revertRepo } = require("./commands/revert");
+const { cloneRepo } = require("./commands/clone");
 
 yargs(hideBin(process.argv))
   .scriptName("chron") //change the name from index.js to chron
@@ -97,6 +98,14 @@ yargs(hideBin(process.argv))
     () => {},
     (argv) => {
       revertRepo(argv.commitId);
+    }
+  )
+  .command(
+    "clone <repoId>",
+    "Clone the Project",
+    () => {},
+    (argv) => {
+      cloneRepo(argv.repoId);
     }
   )
   .help()
