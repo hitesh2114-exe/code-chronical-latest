@@ -28,7 +28,6 @@ router.post(
 router.get("/:repositoryId/pull", protect, repositoryController.pullRepository);
 router.get("/:repositoryId/clone", protect, repositoryController.cloneRepository);
 
-
 //routes for frontend
 router.get("/my", protect, repositoryController.currentUserRepos); //all repos of current user
 router.get("/:repoId", repositoryController.getRepoDetail); //get repo in detail
@@ -84,6 +83,13 @@ router.get(
   protect,
   isRepositoryOwner,
   repositoryController.getLatestCommit
+);
+
+router.patch(
+  "/:repoId/change-visibility",
+  protect,
+  isRepositoryOwner,
+  repositoryController.changeVisibility
 );
 
 module.exports = router;

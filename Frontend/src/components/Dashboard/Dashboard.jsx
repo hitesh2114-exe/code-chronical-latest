@@ -24,10 +24,6 @@ import image3 from "../../public/image3.jpg";
 import image4 from "../../public/image4.jpg";
 import image5 from "../../public/image5.jpg";
 
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 
 function Dashboard() {
@@ -310,51 +306,67 @@ function Dashboard() {
           <div className="repo-grid">
             {filteredRepos.map((repository, index) => {
               return (
-                <Card
+                <article
                   className="dashboard-repo-card"
                   key={repository._id}
                   onClick={() => {
                     navigate(`/repository/${repository._id}`);
                   }}
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      navigate(`/repository/${repository._id}`);
+                    }
+                  }}
                 >
-                  <CardMedia
-                    component="img"
-                    className="repo-card-image"
-                    alt={repository.name}
-                    image={images[index % images.length]}
-                  />
+                  <div className="repo-card-image-wrap">
+                    <img
+                      className="repo-card-image"
+                      src={images[index % images.length]}
+                      alt={repository.name}
+                    />
 
-                  <CardContent className="repo-card-content">
-                    <Typography
-                      className="repo-card-title"
-                      gutterBottom
-                      variant="h5"
-                      component="div"
-                    >
-                      📁 {repository.name}
-                    </Typography>
+                    <div className="repo-card-image-overlay" />
 
-                    <Typography
-                      className="repo-card-description"
-                      variant="body2"
-                    >
+                    <div className="repo-card-top">
+                      <span className="repo-type">REPOSITORY</span>
+
+                      <span
+                        className={`visibility-badge ${
+                          repository.visibility === "private"
+                            ? "private"
+                            : "public"
+                        }`}
+                      >
+                        <span className="visibility-dot" />
+                        {repository.visibility}
+                      </span>
+                    </div>
+
+                    <div className="repo-card-image-title">
+                      <span className="repo-folder-icon">⌁</span>
+                      <span>{repository.name}</span>
+                    </div>
+                  </div>
+
+                  <div className="repo-card-body">
+                    <p className="repo-card-description">
                       {repository.description || "No description provided."}
-                    </Typography>
+                    </p>
 
-                    <div className="repo-card-meta">
-                      <span>🌐 {repository.visibility}</span>
-
-                      <span>
+                    <div className="repo-card-footer">
+                      <span className="repo-updated">
                         Updated{" "}
                         {new Date(repository.updatedAt).toLocaleDateString()}
                       </span>
-                    </div>
-                  </CardContent>
 
-                  <CardActions className="repo-card-actions">
-                    <Button size="small">See repository →</Button>
-                  </CardActions>
-                </Card>
+                      <span className="repo-open">
+                        Open
+                        <span>↗</span>
+                      </span>
+                    </div>
+                  </div>
+                </article>
               );
             })}
           </div>

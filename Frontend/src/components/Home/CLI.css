@@ -1,0 +1,415 @@
+.cli-section {
+  width: 100%;
+  min-height: 60vh;
+  background: #000;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+
+.cli-container {
+  width: 92%;
+  max-width: 1400px;
+  min-height: 80vh;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  align-items: center;
+  gap: 6rem;
+  padding: 7rem 0;
+}
+
+/* =================================
+   LEFT CONTENT
+================================= */
+
+.cli-content {
+  max-width: 600px;
+}
+
+.cli-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 2rem;
+  color: #697565;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+}
+
+.cli-label::before {
+  content: "";
+  width: 28px;
+  height: 1px;
+  background: #697565;
+}
+
+.cli-content h2 {
+  margin: 0;
+  max-width: 620px;
+  color: #fff;
+  font-size: clamp(3rem, 4.5vw, 5rem);
+  line-height: 1.02;
+  font-weight: 500;
+  letter-spacing: -0.055em;
+}
+
+.cli-content h2 span {
+  color: #697565;
+}
+
+.cli-content p {
+  max-width: 550px;
+  margin: 1.7rem 0 0;
+  color: #b5b5b5;
+  font-size: 1rem;
+  line-height: 1.8;
+}
+
+.cli-content code {
+  color: #fff;
+
+  font-family: monospace;
+  font-size: 0.9em;
+}
+
+/* =================================
+   INSTALL COMMAND
+================================= */
+
+.cli-install {
+  margin-top: 2.5rem;
+}
+
+.install-label {
+  display: block;
+
+  margin-bottom: 0.7rem;
+
+  color: #555;
+
+  font-size: 0.62rem;
+  letter-spacing: 0.15em;
+}
+
+.install-command {
+  width: fit-content;
+
+  display: flex;
+  align-items: center;
+
+  gap: 1.5rem;
+
+  padding: 0.85rem 1rem;
+
+  border: 1px solid #292929;
+  border-radius: 7px;
+
+  background: #0b0b0b;
+
+  color: #aaa;
+
+  font-family: monospace;
+  font-size: 0.78rem;
+}
+
+.install-command b {
+  color: #697565;
+}
+
+.install-command button {
+  border: none;
+  background: transparent;
+
+  color: #697565;
+
+  font-family: monospace;
+  font-size: 0.62rem;
+
+  cursor: pointer;
+
+  transition: color 0.2s ease;
+}
+
+.install-command button:hover {
+  color: #fff;
+}
+
+/* =================================
+   COMMAND LIST
+================================= */
+
+.cli-commands {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 0.6rem;
+
+  margin-top: 2.5rem;
+}
+
+.cli-commands span {
+  padding: 0.45rem 0.7rem;
+
+  border: 1px solid #252525;
+  border-radius: 5px;
+
+  color: #777;
+
+  font-family: monospace;
+  font-size: 0.68rem;
+
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.cli-commands span:hover {
+  color: #fff;
+
+  border-color: #697565;
+}
+
+/* =================================
+   TERMINAL
+================================= */
+
+.cli-terminal-wrapper {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cli-terminal {
+  width: 100%;
+  max-width: 680px;
+
+  background: #090909;
+
+  border: 1px solid #292929;
+  border-radius: 14px;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 35px 90px rgba(0, 0, 0, 0.75),
+    0 0 0 1px rgba(255, 255, 255, 0.015);
+}
+
+/* =================================
+   TERMINAL HEADER
+================================= */
+
+.terminal-header {
+  height: 48px;
+
+  display: flex;
+  align-items: center;
+
+  padding: 0 1.2rem;
+
+  border-bottom: 1px solid #242424;
+
+  position: relative;
+}
+
+.terminal-dots {
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+}
+
+.terminal-dots span {
+  width: 8px;
+  height: 8px;
+
+  border-radius: 50%;
+
+  background: #3c3d37;
+}
+
+.terminal-title {
+  position: absolute;
+
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  color: #555;
+
+  font-family: monospace;
+  font-size: 0.68rem;
+}
+
+/* =================================
+   TERMINAL BODY
+================================= */
+
+.terminal-body {
+  min-height: 420px;
+
+  padding: 1.8rem;
+
+  font-family: monospace;
+  font-size: 0.78rem;
+
+  line-height: 1.7;
+}
+
+.terminal-path {
+  margin-bottom: 1.5rem;
+
+  color: #555;
+}
+
+.terminal-line {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 0.7rem;
+
+  margin-top: 1rem;
+
+  color: #d0d0d0;
+}
+
+.prompt {
+  color: #697565;
+
+  user-select: none;
+}
+
+.terminal-success {
+  margin-left: 1.4rem;
+
+  color: #8d8d8d;
+
+  margin-top: 0.25rem;
+}
+
+.terminal-hash {
+  color: #555;
+
+  font-size: 0.68rem;
+}
+
+.terminal-cursor span:last-child {
+  display: block;
+
+  width: 7px;
+  height: 14px;
+
+  margin-top: 4px;
+
+  background: #697565;
+
+  animation: terminalBlink 1s steps(1) infinite;
+}
+
+@keyframes terminalBlink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* =================================
+   TABLET
+================================= */
+
+@media (max-width: 1000px) {
+  .cli-container {
+    width: 88%;
+
+    grid-template-columns: 1fr;
+
+    gap: 4rem;
+
+    padding: 6rem 0;
+  }
+
+  .cli-content {
+    max-width: 750px;
+  }
+
+  .cli-terminal-wrapper {
+    justify-content: flex-start;
+  }
+
+  .cli-terminal {
+    max-width: 750px;
+  }
+}
+
+/* =================================
+   MOBILE
+================================= */
+
+@media (max-width: 600px) {
+  .cli-container {
+    width: 88%;
+
+    gap: 4.5rem;
+
+    padding: 5rem 0;
+  }
+
+  .cli-content h2 {
+    font-size: 2.8rem;
+
+    letter-spacing: -0.045em;
+  }
+
+  .cli-content p {
+    font-size: 0.92rem;
+
+    line-height: 1.7;
+  }
+
+  .cli-install {
+    margin-top: 2rem;
+  }
+
+  .install-command {
+    width: 100%;
+
+    justify-content: space-between;
+
+    font-size: 0.68rem;
+
+    gap: 0.5rem;
+  }
+
+  .cli-commands {
+    margin-top: 2rem;
+  }
+
+  .cli-terminal {
+    border-radius: 11px;
+  }
+
+  .terminal-header {
+    height: 42px;
+  }
+
+  .terminal-body {
+    min-height: 360px;
+
+    padding: 1.2rem;
+
+    font-size: 0.65rem;
+
+    line-height: 1.65;
+  }
+
+  .terminal-success {
+    margin-left: 1.1rem;
+  }
+
+  .terminal-hash {
+    font-size: 0.58rem;
+  }
+}

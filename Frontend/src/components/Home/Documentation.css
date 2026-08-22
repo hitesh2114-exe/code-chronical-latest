@@ -1,0 +1,157 @@
+.documentation-section {
+  width: 100%;
+  background: #000;
+  color: #fff;
+  padding: 5rem 0;
+}
+
+.documentation-container {
+  width: 92%;
+  max-width: 1400px;
+  min-height: 280px;
+  margin: 0 auto;
+  padding: 3.5rem 4rem;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4rem;
+  border: 1px solid #2f293a;
+  border-radius: 20px;
+  background: #0b0b0b;
+}
+
+.documentation-content {
+  max-width: 720px;
+}
+
+.documentation-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 1.2rem;
+  color: #697565;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+}
+
+.documentation-label::before {
+  content: "";
+  width: 24px;
+  height: 1px;
+  background: #697565;
+}
+
+.documentation-content h2 {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(2.2rem, 4vw, 4rem);
+  line-height: 1.05;
+  font-weight: 500;
+  letter-spacing: -0.045em;
+}
+
+.documentation-content h2 span {
+  color: #697565;
+}
+
+.documentation-content p {
+  max-width: 600px;
+  margin: 1.2rem 0 0;
+  color: #a5a5a5;
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.documentation-action {
+  flex-shrink: 0;
+}
+
+.documentation-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem 1.3rem;
+  border: 1px solid #3c3d37;
+  border-radius: 8px;
+  background: transparent;
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease,
+    transform 0.3s ease;
+}
+
+.documentation-arrow {
+  color: #697565;
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+}
+
+.documentation-button:hover {
+  background: #181c14;
+  border-color: #697565;
+  transform: translateY(-2px);
+}
+
+.documentation-button:hover .documentation-arrow {
+  transform: translateX(4px);
+}
+
+@media (max-width: 800px) {
+  .documentation-section {
+    padding: 4rem 0;
+  }
+
+  .documentation-container {
+    width: 88%;
+    padding: 3rem 2.5rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2rem;
+  }
+
+  .documentation-content h2 {
+    font-size: clamp(2.2rem, 8vw, 3.2rem);
+  }
+
+  .documentation-content p {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 500px) {
+  .documentation-section {
+    padding: 3rem 0;
+  }
+
+  .documentation-container {
+    width: 90%;
+    padding: 2.5rem 1.5rem;
+    border-radius: 16px;
+    gap: 2rem;
+  }
+
+  .documentation-label {
+    font-size: 0.6rem;
+  }
+
+  .documentation-content h2 {
+    font-size: 2.2rem;
+    line-height: 1.08;
+  }
+
+  .documentation-content p {
+    font-size: 0.85rem;
+    line-height: 1.65;
+  }
+
+  .documentation-button {
+    padding: 0.9rem 1.1rem;
+    font-size: 0.75rem;
+  }
+}

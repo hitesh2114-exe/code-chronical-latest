@@ -87,7 +87,7 @@ class RepositoryController {
       });
     }
   }
-  
+
   //this function is for the pull request
   async pullRepository(req, res) {
     try {
@@ -378,6 +378,25 @@ class RepositoryController {
       const { repoId } = req.params;
       const userId = req.user.id;
       const response = await repositoryService.getLatestCommit(repoId, userId);
+      return res.status(200).json({
+        success: true,
+        response,
+      });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        success: false,
+        message: err.message,
+      });
+    }
+  }
+
+  async changeVisibility(req, res) {
+    try {
+      const { repoId } = req.params;
+      const userId = req.user.id;
+      const visibility = req.body.visibility;
+      const response = await repositoryService.changeVisibility(repoId, userId, visibility);
       return res.status(200).json({
         success: true,
         response,

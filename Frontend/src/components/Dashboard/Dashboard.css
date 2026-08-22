@@ -1,554 +1,729 @@
-/* =========================================
-   Dashboard
-========================================= */
+/* =========================================================
+   CODE CHRONICLE — DASHBOARD
+   ========================================================= */
 
 .dashboard-page {
   min-height: calc(100vh - 70px);
-
   padding: 2.5rem 6% 5rem;
-
   box-sizing: border-box;
-
-  background: #0d1117;
-
+  background:
+    radial-gradient(circle at 8% 0%, rgba(88, 166, 255, 0.06), transparent 28rem),
+    radial-gradient(circle at 92% 24%, rgba(35, 134, 54, 0.045), transparent 26rem),
+    #0d1117;
   color: #f0f6fc;
-
   font-family: "Manrope", sans-serif;
 }
 
-
-/* =========================================
-   Dashboard Header
-========================================= */
+/* =========================================================
+   HEADER
+   ========================================================= */
 
 .dashboard-header {
+  position: relative;
   display: flex;
-
   align-items: center;
-
   justify-content: space-between;
-
   gap: 2rem;
-
-  padding: 2rem;
-
-  background: #161b22;
-
+  padding: 2.3rem 2.4rem;
+  overflow: hidden;
+  background: linear-gradient(120deg, rgba(22, 27, 34, 0.98), rgba(13, 17, 23, 0.98));
   border: 1px solid #30363d;
-
-  border-radius: 12px;
-
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+  border-radius: 18px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.22);
 }
 
+.dashboard-header::after {
+  content: "";
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  right: -80px;
+  top: -110px;
+  border-radius: 50%;
+  background: rgba(88, 166, 255, 0.07);
+  filter: blur(10px);
+  pointer-events: none;
+}
 
-/* =========================================
-   Welcome
-========================================= */
+.welcome {
+  position: relative;
+  z-index: 1;
+}
+
+.welcome-kicker,
+.profile-kicker,
+.section-kicker,
+.danger-kicker {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #6e7681;
+  font-size: 0.63rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
 
 .welcome h1 {
   margin: 0;
-
   color: #f0f6fc;
-
-  font-size: 2rem;
-
+  font-size: clamp(1.6rem, 2.8vw, 2.2rem);
   font-weight: 500;
-
-  letter-spacing: -0.5px;
+  letter-spacing: -0.7px;
 }
 
 .welcome p {
-  margin: 0.6rem 0 0;
-
+  margin: 0.55rem 0 0;
   color: #8b949e;
-
-  font-size: 0.9rem;
-
+  font-size: 0.88rem;
   font-weight: 300;
 }
 
-
-/* =========================================
-   New Repository Button
-========================================= */
-
 .new-repo-btn {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   flex-shrink: 0;
-
-  padding: 0.7rem 1.1rem;
-
+  padding: 0.72rem 1.05rem;
   background: #238636;
-
-  border: 1px solid rgba(240, 246, 252, 0.1);
-
-  border-radius: 7px;
-
-  color: #ffffff;
-
+  border: 1px solid rgba(240, 246, 252, 0.12);
+  border-radius: 8px;
+  color: #fff;
   font-family: "Manrope", sans-serif;
-
-  font-size: 0.82rem;
-
-  font-weight: 500;
-
+  font-size: 0.8rem;
+  font-weight: 600;
   cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
 
-  transition:
-    background 0.2s ease,
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+.new-repo-btn span {
+  font-size: 1rem;
+  line-height: 1;
 }
 
 .new-repo-btn:hover {
   background: #2ea043;
-
-  transform: translateY(-1px);
-
-  box-shadow: 0 6px 18px rgba(35, 134, 54, 0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(35, 134, 54, 0.22);
 }
 
-
-/* =========================================
-   User Card
-========================================= */
+/* =========================================================
+   PROFILE
+   ========================================================= */
 
 .user-card {
   display: flex;
-
   align-items: center;
-
-  gap: 1.2rem;
-
-  margin-top: 1.5rem;
-
+  gap: 1.25rem;
+  margin-top: 1.4rem;
   padding: 1.3rem 1.5rem;
-
-  background: #161b22;
-
+  background: rgba(22, 27, 34, 0.84);
   border: 1px solid #30363d;
-
-  border-radius: 12px;
-
-  transition:
-    border-color 0.2s ease,
-    transform 0.2s ease;
+  border-radius: 15px;
+  transition: border-color 0.2s ease, transform 0.2s ease;
 }
 
 .user-card:hover {
   border-color: #484f58;
-
   transform: translateY(-1px);
 }
 
-
-/* =========================================
-   User Avatar
-========================================= */
-
 .user-avatar {
   width: 52px;
-
   height: 52px;
-
   flex-shrink: 0;
-
   display: flex;
-
   align-items: center;
-
   justify-content: center;
-
-  border-radius: 50%;
-
-  background: #21262d;
-
-  border: 1px solid #30363d;
-
+  border-radius: 14px;
+  background: linear-gradient(145deg, #21262d, #161b22);
+  border: 1px solid #3b434d;
   color: #58a6ff;
-
   font-size: 1.2rem;
-
-  font-weight: 600;
+  font-weight: 700;
 }
 
+.user-details {
+  min-width: 0;
+  flex: 1;
+}
 
-/* =========================================
-   User Details
-========================================= */
+.user-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.user-card-header .profile-kicker {
+  margin-bottom: 0.2rem;
+}
 
 .user-details h2 {
   margin: 0;
-
   color: #f0f6fc;
-
   font-size: 1.05rem;
-
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .user-email {
   margin: 0.25rem 0 0;
-
   color: #8b949e;
-
   font-size: 0.78rem;
 }
 
 .user-bio {
+  max-width: 700px;
   margin: 0.45rem 0 0;
-
   color: #c9d1d9;
+  font-size: 0.8rem;
+  line-height: 1.55;
+}
 
-  font-size: 0.82rem;
+.profile-edit-btn {
+  padding: 0.38rem 0.72rem;
+  background: transparent;
+  border: 1px solid #30363d;
+  border-radius: 7px;
+  color: #8b949e;
+  font-family: "Manrope", sans-serif;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
 
+.profile-edit-btn:hover {
+  border-color: #58a6ff;
+  color: #58a6ff;
+  background: #161b22;
+}
+
+.profile-edit-area {
+  margin-top: 0.7rem;
+}
+
+.profile-edit-area label {
+  display: block;
+  margin-bottom: 0.4rem;
+  color: #8b949e;
+  font-size: 0.72rem;
+}
+
+.profile-edit-area textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 0.7rem;
+  box-sizing: border-box;
+  resize: vertical;
+  background: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  outline: none;
+  color: #f0f6fc;
+  font-family: "Manrope", sans-serif;
+  font-size: 0.8rem;
   line-height: 1.5;
 }
 
+.profile-edit-area textarea:focus {
+  border-color: #58a6ff;
+}
 
-/* =========================================
-   Repository Section Header
-========================================= */
+.profile-edit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  margin-top: 0.7rem;
+}
+
+.profile-cancel-btn,
+.profile-save-btn {
+  padding: 0.45rem 0.8rem;
+  border-radius: 7px;
+  font-family: "Manrope", sans-serif;
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.profile-cancel-btn {
+  background: transparent;
+  border: 1px solid #30363d;
+  color: #8b949e;
+}
+
+.profile-cancel-btn:hover {
+  background: #21262d;
+  color: #f0f6fc;
+}
+
+.profile-save-btn {
+  background: #238636;
+  border: 1px solid #238636;
+  color: #fff;
+}
+
+.profile-save-btn:hover {
+  background: #2ea043;
+}
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+
+.dashboard-search {
+  display: flex;
+  align-items: center;
+  margin-top: 1.5rem;
+  padding: 0.65rem;
+  background: rgba(22, 27, 34, 0.82);
+  border: 1px solid #30363d;
+  border-radius: 11px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dashboard-search:focus-within {
+  border-color: #58a6ff;
+  box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.07);
+}
+
+.dashboard-search-input {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  gap: 0.65rem;
+  padding: 0 0.7rem;
+}
+
+.search-icon {
+  flex-shrink: 0;
+  color: #6e7681;
+  font-size: 1.25rem;
+  transform: rotate(-15deg);
+}
+
+.dashboard-search-input input {
+  width: 100%;
+  padding: 0.62rem 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #f0f6fc;
+  font-family: "Manrope", sans-serif;
+  font-size: 0.82rem;
+}
+
+.dashboard-search-input input::placeholder {
+  color: #6e7681;
+}
+
+.search-clear {
+  width: 27px;
+  height: 27px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  color: #8b949e;
+  font-size: 1.05rem;
+  cursor: pointer;
+}
+
+.search-clear:hover {
+  background: #21262d;
+  color: #f0f6fc;
+}
+
+/* =========================================================
+   REPOSITORY SECTION
+   ========================================================= */
+
+.repo-section {
+  margin-top: 2.5rem;
+}
 
 .repo-section-title {
   display: flex;
-
-  align-items: center;
-
+  align-items: flex-end;
   justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.05rem;
+}
 
-  margin-top: 2.5rem;
-
-  margin-bottom: 1rem;
+.repo-section-title .section-kicker {
+  margin-bottom: 0.35rem;
 }
 
 .repo-section-title h2 {
   margin: 0;
-
   color: #f0f6fc;
-
-  font-size: 1.15rem;
-
-  font-weight: 500;
+  font-size: 1.18rem;
+  font-weight: 600;
+  letter-spacing: -0.2px;
 }
 
+.repo-count {
+  padding: 0.3rem 0.6rem;
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 999px;
+  color: #8b949e;
+  font-size: 0.67rem;
+}
 
-/* =========================================
-   Repository Grid
-========================================= */
+/* =========================================================
+   REPOSITORY GRID
+   ========================================================= */
 
 .repo-grid {
   display: grid;
-
-  grid-template-columns:
-    repeat(
-      auto-fill,
-      minmax(260px, 1fr)
-    );
-
-  gap: 1.2rem;
-
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.15rem;
   align-items: stretch;
 }
 
-
-/* =========================================
-   Repository Card
-========================================= */
+/* =========================================================
+   REPOSITORY CARD
+   ========================================================= */
 
 .dashboard-repo-card {
-  width: 100%;
-
-  height: 100%;
-
+  position: relative;
+  min-width: 0;
   display: flex;
-
   flex-direction: column;
-
   overflow: hidden;
-
-  background: #161b22 !important;
-
+  background: #161b22;
   border: 1px solid #30363d;
-
-  border-radius: 11px !important;
-
-  box-shadow: none !important;
-
+  border-radius: 16px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.16);
   cursor: pointer;
-
-  transition:
-    transform 0.2s ease,
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
+  outline: none;
+  transition: transform 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease;
 }
 
-.dashboard-repo-card:hover {
-  transform: translateY(-4px);
-
-  border-color: #58a6ff;
-
-  box-shadow:
-    0 12px 30px rgba(0, 0, 0, 0.25) !important;
+.dashboard-repo-card:hover,
+.dashboard-repo-card:focus-visible {
+  transform: translateY(-6px);
+  border-color: #4b5662;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.3);
 }
 
+/* =========================================================
+   IMAGE AREA
+   ========================================================= */
 
-/* =========================================
-   Repository Image
-========================================= */
+.repo-card-image-wrap {
+  position: relative;
+  height: 190px;
+  overflow: hidden;
+  background: #21262d;
+}
 
 .repo-card-image {
-  height: 145px !important;
-
+  width: 100%;
+  height: 100%;
+  display: block;
   object-fit: cover;
-
-  filter: brightness(65%);
-
-  transition:
-    filter 0.3s ease,
-    transform 0.3s ease;
+  filter: brightness(72%) saturate(82%);
+  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.4s ease;
 }
 
 .dashboard-repo-card:hover .repo-card-image {
-  filter: brightness(78%);
-
-  transform: scale(1.02);
+  transform: scale(1.07);
+  filter: brightness(82%) saturate(92%);
 }
 
-
-/* =========================================
-   Repository Content
-========================================= */
-
-.repo-card-content {
-  flex: 1;
-
-  padding: 1rem 1rem 0.7rem !important;
+.repo-card-image-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(8, 12, 16, 0.58) 0%, rgba(8, 12, 16, 0.05) 40%, rgba(8, 12, 16, 0.82) 100%);
+  pointer-events: none;
 }
 
-.repo-card-title {
-  margin-bottom: 0.5rem !important;
+.repo-card-top {
+  position: absolute;
+  top: 0.85rem;
+  left: 0.85rem;
+  right: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
 
-  color: #f0f6fc !important;
+.repo-type {
+  padding: 0.28rem 0.48rem;
+  background: rgba(13, 17, 23, 0.62);
+  border: 1px solid rgba(240, 246, 252, 0.15);
+  border-radius: 5px;
+  color: #d0d7de;
+  backdrop-filter: blur(8px);
+  font-size: 0.56rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
 
-  font-size: 1rem !important;
+.visibility-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.28rem 0.5rem;
+  background: rgba(13, 17, 23, 0.7);
+  border: 1px solid rgba(240, 246, 252, 0.13);
+  border-radius: 999px;
+  color: #d0d7de;
+  backdrop-filter: blur(8px);
+  font-size: 0.61rem;
+  text-transform: capitalize;
+}
 
-  font-weight: 500 !important;
+.visibility-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #3fb950;
+  box-shadow: 0 0 8px rgba(63, 185, 80, 0.55);
+}
 
-  word-break: break-word;
+.visibility-badge.private .visibility-dot {
+  background: #d29922;
+  box-shadow: 0 0 8px rgba(210, 153, 34, 0.5);
+}
+
+.repo-card-image-title {
+  position: absolute;
+  left: 1rem;
+  right: 1rem;
+  bottom: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: #fff;
+  font-size: 1.08rem;
+  font-weight: 600;
+  line-height: 1.25;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.55);
+}
+
+.repo-folder-icon {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: rgba(13, 17, 23, 0.58);
+  border: 1px solid rgba(240, 246, 252, 0.15);
+  border-radius: 8px;
+  color: #79c0ff;
+  backdrop-filter: blur(8px);
+  font-size: 0.9rem;
+}
+
+/* =========================================================
+   CARD BODY
+   ========================================================= */
+
+.repo-card-body {
+  min-height: 116px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1rem 1rem 0.9rem;
 }
 
 .repo-card-description {
   display: -webkit-box;
-
+  margin: 0;
   overflow: hidden;
-
-  color: #8b949e !important;
-
-  font-size: 0.78rem !important;
-
-  line-height: 1.55 !important;
-
+  color: #8b949e;
+  font-size: 0.77rem;
+  line-height: 1.55;
   -webkit-line-clamp: 2;
-
   -webkit-box-orient: vertical;
 }
 
-
-/* =========================================
-   Repository Metadata
-========================================= */
-
-.repo-card-meta {
+.repo-card-footer {
   display: flex;
-
   align-items: center;
-
   justify-content: space-between;
-
-  gap: 0.5rem;
-
+  gap: 0.7rem;
   margin-top: 1rem;
-
-  padding-top: 0.8rem;
-
+  padding-top: 0.75rem;
   border-top: 1px solid #21262d;
 }
 
-.repo-card-meta span {
+.repo-updated {
   color: #6e7681;
-
-  font-size: 0.68rem;
+  font-size: 0.64rem;
 }
 
-.repo-card-meta span:first-child {
-  padding: 0.25rem 0.55rem;
-
-  background: #0d1117;
-
-  border: 1px solid #30363d;
-
-  border-radius: 20px;
-
-  color: #8b949e;
-}
-
-
-/* =========================================
-   Repository Card Actions
-========================================= */
-
-.repo-card-actions {
-  padding: 0.75rem 1rem 1rem !important;
-
-  border-top: 0 !important;
-}
-
-.repo-card-actions .MuiButton-root {
-  padding: 0;
-
+.repo-open {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
   color: #58a6ff;
-
-  font-family: "Manrope", sans-serif;
-
-  font-size: 0.75rem;
-
-  text-transform: none;
+  font-size: 0.68rem;
+  font-weight: 600;
+  transition: color 0.2s ease, transform 0.2s ease;
 }
 
-.repo-card-actions .MuiButton-root:hover {
-  background: transparent;
+.repo-open span {
+  font-size: 0.8rem;
+  transition: transform 0.2s ease;
+}
 
+.dashboard-repo-card:hover .repo-open {
   color: #79c0ff;
 }
 
+.dashboard-repo-card:hover .repo-open span {
+  transform: translate(2px, -2px);
+}
 
-/* =========================================
-   Empty State
-========================================= */
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
 
 .empty {
   min-height: 300px;
-
   display: flex;
-
   flex-direction: column;
-
   align-items: center;
-
   justify-content: center;
-
   padding: 3rem 1rem;
-
-  background: #161b22;
-
-  border: 1px solid #30363d;
-
-  border-radius: 12px;
-
+  background: rgba(22, 27, 34, 0.75);
+  border: 1px dashed #30363d;
+  border-radius: 16px;
   text-align: center;
 }
 
 .empty-icon {
   width: 58px;
-
   height: 58px;
-
   display: flex;
-
   align-items: center;
-
   justify-content: center;
-
   margin-bottom: 1rem;
-
-  background: #21262d;
-
+  background: #161b22;
   border: 1px solid #30363d;
-
-  border-radius: 50%;
-
-  font-size: 1.3rem;
+  border-radius: 15px;
+  color: #58a6ff;
+  font-size: 1.45rem;
 }
 
 .empty h2 {
   margin: 0;
-
   color: #f0f6fc;
-
   font-size: 1.05rem;
-
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .empty p {
+  max-width: 360px;
   margin: 0.5rem 0 1.2rem;
-
   color: #8b949e;
-
   font-size: 0.8rem;
+  line-height: 1.5;
 }
 
 .empty-create-btn {
   padding: 0.6rem 1rem;
-
   background: transparent;
-
   border: 1px solid #30363d;
-
-  border-radius: 7px;
-
+  border-radius: 8px;
   color: #58a6ff;
-
   font-family: "Manrope", sans-serif;
-
   font-size: 0.78rem;
-
   cursor: pointer;
-
   transition: 0.2s ease;
 }
 
 .empty-create-btn:hover {
   background: #21262d;
-
   border-color: #58a6ff;
 }
 
+/* =========================================================
+   DANGER ZONE
+   ========================================================= */
 
-/* =========================================
-   Create Repository Dialog
-========================================= */
+.danger-zone {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-top: 4rem;
+  padding: 1.25rem 1.4rem;
+  background: rgba(18, 20, 23, 0.8);
+  border: 1px solid rgba(248, 81, 73, 0.25);
+  border-radius: 13px;
+}
+
+.danger-zone-content h3 {
+  margin: 0;
+  color: #f85149;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.danger-zone-content p {
+  margin: 0.35rem 0 0;
+  color: #8b949e;
+  font-size: 0.75rem;
+}
+
+.danger-kicker {
+  margin-bottom: 0.35rem;
+  color: rgba(248, 81, 73, 0.7);
+}
+
+.delete-account-btn {
+  flex-shrink: 0;
+  padding: 0.55rem 0.9rem;
+  background: transparent;
+  border: 1px solid #f85149;
+  border-radius: 7px;
+  color: #f85149;
+  font-family: "Manrope", sans-serif;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.delete-account-btn:hover {
+  background: #f85149;
+  color: #fff;
+  box-shadow: 0 5px 15px rgba(248, 81, 73, 0.15);
+}
+
+/* =========================================================
+   MUI DIALOGS
+   ========================================================= */
 
 .MuiDialog-paper {
   background: #161b22 !important;
-
   color: #f0f6fc !important;
-
   border: 1px solid #30363d;
-
-  border-radius: 12px !important;
-
-  box-shadow:
-    0 24px 60px rgba(0, 0, 0, 0.55) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55) !important;
 }
 
 .MuiDialogTitle-root {
   color: #f0f6fc !important;
-
   font-family: "Manrope", sans-serif !important;
-
-  font-weight: 500 !important;
+  font-weight: 600 !important;
 }
 
 .MuiDialogContent-root {
   color: #8b949e !important;
 }
-
-
-/* =========================================
-   Dialog Inputs
-========================================= */
 
 .MuiDialogContent-root .MuiInputLabel-root {
   color: #8b949e;
@@ -560,7 +735,6 @@
 
 .MuiDialogContent-root .MuiOutlinedInput-root {
   color: #f0f6fc;
-
   background: #0d1117;
 }
 
@@ -568,95 +742,110 @@
   border-color: #30363d;
 }
 
-.MuiDialogContent-root
-  .MuiOutlinedInput-root:hover
-  .MuiOutlinedInput-notchedOutline {
+.MuiDialogContent-root .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
   border-color: #484f58;
 }
 
-.MuiDialogContent-root
-  .MuiOutlinedInput-root.Mui-focused
-  .MuiOutlinedInput-notchedOutline {
+.MuiDialogContent-root .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
   border-color: #58a6ff;
 }
 
+.MuiDialogContent-root .MuiFormLabel-root {
+  color: #8b949e;
+}
 
-/* =========================================
-   Dialog Error
-========================================= */
+.MuiDialogContent-root .MuiRadio-root {
+  color: #6e7681;
+}
 
-.MuiDialogContent-root > p {
+.MuiDialogContent-root .MuiRadio-root.Mui-checked {
+  color: #58a6ff;
+}
+
+.MuiDialogContent-root .MuiFormControlLabel-label {
+  color: #c9d1d9;
+  font-size: 0.85rem;
+}
+
+.dialog-error {
   margin: 0.3rem 0;
-
   color: #f85149;
-
   font-size: 0.75rem;
 }
 
-
-/* =========================================
-   Dialog Actions
-========================================= */
+.delete-dialog-text {
+  margin: 0;
+  color: #8b949e;
+  line-height: 1.55;
+  font-size: 0.85rem;
+}
 
 .MuiDialogActions-root {
   padding: 1rem 1.5rem !important;
-
   border-top: 1px solid #21262d;
 }
 
 .MuiDialogActions-root .MuiButton-root {
   text-transform: none;
-
   font-family: "Manrope", sans-serif;
-
   border-radius: 7px;
 }
 
-.MuiDialogActions-root .MuiButton-contained {
+.MuiDialogActions-root .MuiButton-contained:not(.MuiButton-containedError) {
   background: #238636;
 }
 
-.MuiDialogActions-root .MuiButton-contained:hover {
+.MuiDialogActions-root .MuiButton-contained:not(.MuiButton-containedError):hover {
   background: #2ea043;
 }
 
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
 
-/* =========================================
-   Responsive
-========================================= */
-
-@media (max-width: 800px) {
+@media (max-width: 900px) {
   .dashboard-page {
     padding: 2rem 4% 4rem;
   }
 
+  .repo-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
   .dashboard-header {
     align-items: flex-start;
-
     flex-direction: column;
+    padding: 1.6rem;
   }
 
   .new-repo-btn {
     width: 100%;
+    justify-content: center;
+  }
+
+  .user-card {
+    align-items: flex-start;
   }
 
   .repo-grid {
-    grid-template-columns:
-      repeat(
-        auto-fill,
-        minmax(230px, 1fr)
-      );
+    grid-template-columns: 1fr;
+  }
+
+  .repo-card-image-wrap {
+    height: 205px;
   }
 }
 
-
 @media (max-width: 500px) {
   .dashboard-page {
-    padding: 1.3rem 3% 3rem;
+    padding: 1.25rem 3% 3rem;
   }
 
   .dashboard-header {
     padding: 1.3rem;
+    border-radius: 14px;
   }
 
   .welcome h1 {
@@ -664,433 +853,68 @@
   }
 
   .welcome p {
-    font-size: 0.8rem;
+    font-size: 0.78rem;
   }
 
   .user-card {
     padding: 1rem;
-
     gap: 0.8rem;
+    border-radius: 13px;
   }
 
   .user-avatar {
     width: 44px;
-
     height: 44px;
-
+    border-radius: 11px;
     font-size: 1rem;
   }
 
-  .repo-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* =========================================
-   Dashboard Search
-========================================= */
-
-.dashboard-search {
-  display: flex;
-
-  align-items: center;
-
-  gap: 0.7rem;
-
-  margin-top: 1.5rem;
-
-  padding: 0.7rem;
-
-  background: #161b22;
-
-  border: 1px solid #30363d;
-
-  border-radius: 10px;
-
-  transition: border-color 0.2s ease;
-}
-
-.dashboard-search:focus-within {
-  border-color: #58a6ff;
-}
-
-
-/* Search Input */
-
-.dashboard-search-input {
-  display: flex;
-
-  align-items: center;
-
-  flex: 1;
-
-  min-width: 0;
-
-  gap: 0.6rem;
-
-  padding: 0 0.7rem;
-}
-
-.search-icon {
-  flex-shrink: 0;
-
-  color: #8b949e;
-
-  font-size: 1.2rem;
-}
-
-.dashboard-search-input input {
-  width: 100%;
-
-  padding: 0.6rem 0;
-
-  background: transparent;
-
-  border: none;
-
-  outline: none;
-
-  color: #f0f6fc;
-
-  font-family: "Manrope", sans-serif;
-
-  font-size: 0.85rem;
-}
-
-.dashboard-search-input input::placeholder {
-  color: #6e7681;
-}
-
-
-/* Clear Button */
-
-.search-clear {
-  width: 26px;
-
-  height: 26px;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  padding: 0;
-
-  background: transparent;
-
-  border: none;
-
-  color: #8b949e;
-
-  font-size: 1.1rem;
-
-  cursor: pointer;
-
-  border-radius: 50%;
-}
-
-.search-clear:hover {
-  background: #21262d;
-
-  color: #f0f6fc;
-}
-
-
-/* Search Button */
-
-.dashboard-search-btn {
-  padding: 0.6rem 1.1rem;
-
-  background: #21262d;
-
-  border: 1px solid #30363d;
-
-  border-radius: 7px;
-
-  color: #c9d1d9;
-
-  font-family: "Manrope", sans-serif;
-
-  font-size: 0.78rem;
-
-  cursor: pointer;
-
-  transition: 0.2s ease;
-}
-
-.dashboard-search-btn:hover {
-  background: #30363d;
-
-  border-color: #58a6ff;
-
-  color: #ffffff;
-}
-
-
-/* =========================================
-   Responsive
-========================================= */
-
-@media (max-width: 550px) {
-  .dashboard-search {
-    padding: 0.5rem;
-
-    flex-direction: column;
-
-    align-items: stretch;
+  .user-card-header {
+    align-items: flex-start;
   }
 
-  .dashboard-search-input {
-    padding: 0.2rem 0.5rem;
+  .profile-edit-btn {
+    font-size: 0.65rem;
   }
 
-  .dashboard-search-btn {
-    width: 100%;
+  .repo-section {
+    margin-top: 2rem;
   }
-}
 
-/* =========================================
-   Profile Edit
-========================================= */
+  .repo-section-title {
+    align-items: center;
+  }
 
-.user-card-header {
-  display: flex;
+  .repo-section-title h2 {
+    font-size: 1.05rem;
+  }
 
-  align-items: center;
+  .repo-count {
+    font-size: 0.6rem;
+  }
 
-  justify-content: space-between;
+  .repo-card-image-wrap {
+    height: 190px;
+  }
 
-  gap: 1rem;
-}
-
-.profile-edit-btn {
-  padding: 0.35rem 0.7rem;
-
-  background: transparent;
-
-  border: 1px solid #30363d;
-
-  border-radius: 6px;
-
-  color: #8b949e;
-
-  font-family: "Manrope", sans-serif;
-
-  font-size: 0.72rem;
-
-  cursor: pointer;
-
-  transition: 0.2s ease;
-}
-
-.profile-edit-btn:hover {
-  border-color: #58a6ff;
-
-  color: #58a6ff;
-
-  background: #21262d;
-}
-
-
-/* =========================================
-   Profile Edit Area
-========================================= */
-
-.profile-edit-area {
-  margin-top: 0.7rem;
-}
-
-.profile-edit-area label {
-  display: block;
-
-  margin-bottom: 0.4rem;
-
-  color: #8b949e;
-
-  font-size: 0.72rem;
-}
-
-.profile-edit-area textarea {
-  width: 100%;
-
-  min-height: 80px;
-
-  padding: 0.7rem;
-
-  box-sizing: border-box;
-
-  resize: vertical;
-
-  background: #0d1117;
-
-  border: 1px solid #30363d;
-
-  border-radius: 7px;
-
-  outline: none;
-
-  color: #f0f6fc;
-
-  font-family: "Manrope", sans-serif;
-
-  font-size: 0.8rem;
-
-  line-height: 1.5;
-}
-
-.profile-edit-area textarea:focus {
-  border-color: #58a6ff;
-}
-
-
-/* =========================================
-   Profile Edit Actions
-========================================= */
-
-.profile-edit-actions {
-  display: flex;
-
-  justify-content: flex-end;
-
-  gap: 0.6rem;
-
-  margin-top: 0.7rem;
-}
-
-.profile-cancel-btn,
-.profile-save-btn {
-  padding: 0.45rem 0.8rem;
-
-  border-radius: 6px;
-
-  font-family: "Manrope", sans-serif;
-
-  font-size: 0.72rem;
-
-  cursor: pointer;
-
-  transition: 0.2s ease;
-}
-
-.profile-cancel-btn {
-  background: transparent;
-
-  border: 1px solid #30363d;
-
-  color: #8b949e;
-}
-
-.profile-cancel-btn:hover {
-  background: #21262d;
-
-  color: #f0f6fc;
-}
-
-.profile-save-btn {
-  background: #238636;
-
-  border: 1px solid #238636;
-
-  color: white;
-}
-
-.profile-save-btn:hover {
-  background: #2ea043;
-}
-
-/* =========================================
-   Danger Zone
-========================================= */
-
-.danger-zone {
-  display: flex;
-
-  align-items: center;
-
-  justify-content: space-between;
-
-  /* gap: 2rem; */
-
-  /* margin-top: 4rem; */
-
-  padding: 1.2rem 1.4rem;
-
-  border: 1px solid #3b2424;
-/* 
-  border-radius: 10px; */
-
-  background: #121417;
-}
-
-.danger-zone-content h3 {
-  margin: 0;
-
-  color: #f85149;
-
-  font-size: 0.9rem;
-
-  font-weight: 500;
-}
-
-.danger-zone-content p {
-  margin: 0.35rem 0 0;
-
-  color: #8b949e;
-
-  font-size: 0.75rem;
-}
-
-
-/* Delete button */
-
-.delete-account-btn {
-  flex-shrink: 0;
-
-  padding: 0.55rem 0.9rem;
-
-  background: transparent;
-
-  border: 1px solid #f85149;
-
-  border-radius: 6px;
-
-  color: #f85149;
-
-  font-family: "Manrope", sans-serif;
-
-  font-size: 0.75rem;
-
-  cursor: pointer;
-
-  transition: 0.2s ease;
-}
-
-.delete-account-btn:hover {
-  background: #f85149;
-
-  color: #ffffff;
-
-  box-shadow: 0 5px 15px rgba(248, 81, 73, 0.15);
-}
-
-
-/* =========================================
-   Responsive
-========================================= */
-
-@media (max-width: 600px) {
   .danger-zone {
     align-items: flex-start;
-
     flex-direction: column;
-
     gap: 1rem;
-
     margin-top: 3rem;
   }
 
   .delete-account-btn {
     width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-repo-card,
+  .repo-card-image,
+  .repo-open,
+  .repo-open span,
+  .new-repo-btn {
+    transition: none;
   }
 }

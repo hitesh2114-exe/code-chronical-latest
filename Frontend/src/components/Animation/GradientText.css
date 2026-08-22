@@ -1,0 +1,61 @@
+.animated-gradient-text {
+  position: relative;
+  margin: 0 auto;
+  display: inline-flex;
+  max-width: 100%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1.25rem;
+  font-weight: 700;
+  backdrop-filter: blur(10px);
+  transition: box-shadow 0.5s ease-out;
+  overflow: hidden;
+  cursor: pointer;
+  box-sizing: border-box;
+  padding: 0.5rem 1rem;
+}
+
+.animated-gradient-text.with-border {
+  padding: 0.75rem 1.5rem;
+}
+
+.gradient-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: inherit;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.gradient-overlay::before {
+  content: '';
+  position: absolute;
+  border-radius: inherit;
+  width: calc(100% - 2px);
+  height: calc(100% - 2px);
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #120F17;
+  z-index: -1;
+}
+
+.text-content {
+  display: inline-block;
+  position: relative;
+  z-index: 2;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  
+  /* Large Hero Scale: Minimum 4rem, scales up to 18rem dynamically */
+  font-size: clamp(4rem, 22vw, 18rem);
+}

@@ -1,9 +1,15 @@
 import React from "react";
 import Hero from "./Hero";
-import Feature from "./Feature";
+import About from "./About";
 import { useEffect } from "react";
 import "./Homepage.css";
 import AnimationOne from "./AnimationOne";
+import CLI from "./CLI";
+import Features from "./Features";
+import AnimationTwo from "./AnimationTwo";
+import AnimationThree from "./AnimationThree";
+import Documentation from "./Documentation";
+import Footer from "../Commons/Footer";
 
 function Homepage() {
   useEffect(() => {
@@ -17,8 +23,13 @@ function Homepage() {
   return (
     <>
       <Hero />
+      <About />
       <AnimationOne />
-      {/* <Feature /> */}
+      <CLI />
+      <AnimationTwo />
+      <Features />
+      <Documentation />
+      <Footer />
     </>
   );
 }

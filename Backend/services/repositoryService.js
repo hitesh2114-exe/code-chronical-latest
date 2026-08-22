@@ -827,6 +827,25 @@ class RepositoryService {
       throw err;
     }
   }
+
+  async changeVisibility(repoId, userId, visibility) {
+    try {
+      const repository = await Repository.findById(repoId);
+      if (!repository) {
+        throw new ApiError(404, "Repository not found.");
+      }
+
+      // Validate visibility
+      if (!["public", "private"].includes(visibility)) {
+        throw new ApiError(400, "Invalid repository visibility.");
+      }
+      repository.visibility = visibility;
+      await repository.save();
+      return repository;
+    } catch (err) {
+      throw err;
+    }
+  }
 }
 
 module.exports = new RepositoryService();

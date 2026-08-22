@@ -18,6 +18,8 @@ import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import DialogContentText from "@mui/material/DialogContentText";
 
 function Repository() {
   const navigate = useNavigate();
@@ -51,7 +53,11 @@ function Repository() {
   const [description, setDescription] = useState("");
   const [updatingDescription, setUpdatingDescription] = useState(false);
 
-  const [filePath, setFilePath] = useState("");
+  const [visibilityDialogOpen, setVisibilityDialogOpen] = useState(false);
+  const [newVisibility, setNewVisibility] = useState("");
+  const [visibilityLoading, setVisibilityLoading] = useState(false);
+
+  // const [filePath, setFilePath] = useState("");
 
   //used to get the current logged in user info
   const fetchCurrentUser = async () => {
@@ -343,6 +349,40 @@ function Repository() {
     setFileContent("");
   };
 
+  const handleVisibilityChange = async () => {
+    try {
+      setVisibilityLoading(true);
+
+      const token = localStorage.getItem("token");
+
+      const response = await axios.patch(
+        `http://localhost:8080/api/repositories/${repoId}/change-visibility`,
+        {
+          visibility: newVisibility,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setRepo((prev) => ({
+        ...prev,
+        visibility: response.data.response.visibility,
+      }));
+
+      setVisibilityDialogOpen(false);
+    } catch (err) {
+      console.error(
+        "Error changing visibility:",
+        err.response?.data?.message || err.message
+      );
+    } finally {
+      setVisibilityLoading(false);
+    }
+  };
+
   // useEffect(() => {
   //   console.log(repo);
   // }, [repo]);
@@ -420,7 +460,57 @@ function Repository() {
           </div>
 
           <div className="repository-info">
-            <span>🌐 {repo.visibility}</span>
+            <span>
+              🌐 {repo.visibility}
+              {isOwner && (
+                <button
+                  className="visibility-edit-btn"
+                  onClick={() => {
+                    setNewVisibility(
+                      repo.visibility === "public" ? "private" : "public"
+                    );
+                    setVisibilityDialogOpen(true);
+                  }}
+                >
+                  <EditOutlinedIcon fontSize="small" />
+                </button>
+              )}
+            </span>
+            <Dialog
+              open={visibilityDialogOpen}
+              onClose={() => {
+                if (!visibilityLoading) {
+                  setVisibilityDialogOpen(false);
+                }
+              }}
+            >
+              <DialogTitle>Change repository visibility?</DialogTitle>
+
+              <DialogContent>
+                <DialogContentText>
+                  {newVisibility === "public"
+                    ? "This repository will become public and can be cloned by other users."
+                    : "This repository will become private and only authorized users will be able to access it."}
+                </DialogContentText>
+              </DialogContent>
+
+              <DialogActions>
+                <Button
+                  onClick={() => setVisibilityDialogOpen(false)}
+                  disabled={visibilityLoading}
+                >
+                  Cancel
+                </Button>
+
+                <Button
+                  variant="contained"
+                  onClick={handleVisibilityChange}
+                  disabled={visibilityLoading}
+                >
+                  {visibilityLoading ? "Updating..." : "Confirm"}
+                </Button>
+              </DialogActions>
+            </Dialog>
             <span>
               Created :
               {repo.createdAt && new Date(repo.createdAt).toLocaleString()}

@@ -11,6 +11,7 @@ import Explore from "./components/Explore/Explore";
 import ProtectedRoute from "./ProtectedRoute";
 import UserProfile from "./components/Explore/UserProfile";
 import ScrollToTop from "./ScrollToTop";
+import DocumentationPage from "./components/Documentation/DocumentationPage";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <ScrollToTop />
         <Routes>
           <Route path="/" element={<Homepage />} />
+          <Route path="/documentation" element={<DocumentationPage />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
           <Route path="/explore" element={<Explore />} />
