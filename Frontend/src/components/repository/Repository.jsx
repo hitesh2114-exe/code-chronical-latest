@@ -64,7 +64,7 @@ function Repository() {
     if (!token) return;
 
     try {
-      const response = await axios.get("https://code-chronicle-backend.onrender.com/api/auth/me", {
+      const response = await axios.get("https://code-chronical-latest-backend.onrender.com/api/auth/me", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -80,7 +80,7 @@ function Repository() {
   const fetchFiles = async () => {
     try {
       const response = await axios.get(
-        `https://code-chronicle-backend.onrender.com/api/repositories/${repoId}/files?path=${currentPath}`,
+        `https://code-chronical-latest-backend.onrender.com/api/repositories/${repoId}/files?path=${currentPath}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -99,7 +99,7 @@ function Repository() {
   const fetchRepo = async () => {
     try {
       const response = await axios.get(
-        `https://code-chronicle-backend.onrender.com/api/repositories/${repoId}`,
+        `https://code-chronical-latest-backend.onrender.com/api/repositories/${repoId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -138,7 +138,7 @@ function Repository() {
     try {
       setSelectedFilePath(path);
       const response = await axios.get(
-        `https://code-chronicle-backend.onrender.com/api/repositories/${repoId}/file`,
+        `https://code-chronical-latest-backend.onrender.com/api/repositories/${repoId}/file`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -194,7 +194,7 @@ function Repository() {
       }
 
       const response = await axios.post(
-        `https://code-chronicle-backend.onrender.com/api/repositories/${repoId}/upload`,
+        `https://code-chronical-latest-backend.onrender.com/api/repositories/${repoId}/upload`,
         formData,
         {
           headers: {
@@ -228,7 +228,7 @@ function Repository() {
       setIsUploading(true);
 
       const response = await axios.post(
-        `https://code-chronicle-backend.onrender.com/api/repositories/${repoId}/upload-files`,
+        `https://code-chronical-latest-backend.onrender.com/api/repositories/${repoId}/upload-files`,
         formData,
         {
           headers: {
@@ -253,7 +253,7 @@ function Repository() {
   const handleDeleteRepository = async () => {
     try {
       const response = await axios.delete(
-        `https://code-chronicle-backend.onrender.com/api/repositories/${repoId}`,
+        `https://code-chronical-latest-backend.onrender.com/api/repositories/${repoId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -270,7 +270,7 @@ function Repository() {
   const handleDeleteFileOrFolder = async () => {
     try {
       const response = await axios.delete(
-        `https://code-chronicle-backend.onrender.com/api/repositories/${repoId}/file`,
+        `https://code-chronical-latest-backend.onrender.com/api/repositories/${repoId}/file`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -292,7 +292,7 @@ function Repository() {
     try {
       setIsSaving(true);
       const response = await axios.put(
-        `https://code-chronicle-backend.onrender.com/api/repositories/${repoId}/file`,
+        `https://code-chronical-latest-backend.onrender.com/api/repositories/${repoId}/file`,
         {
           path: selectedFilePath,
           content: editedContent,
@@ -322,7 +322,7 @@ function Repository() {
       const token = localStorage.getItem("token");
 
       const response = await axios.patch(
-        `https://code-chronicle-backend.onrender.com/api/repositories/${repoId}`,
+        `https://code-chronical-latest-backend.onrender.com/api/repositories/${repoId}`,
         {
           description,
         },
@@ -356,7 +356,7 @@ function Repository() {
       const token = localStorage.getItem("token");
 
       const response = await axios.patch(
-        `https://code-chronicle-backend.onrender.com/api/repositories/${repoId}/change-visibility`,
+        `https://code-chronical-latest-backend.onrender.com/api/repositories/${repoId}/change-visibility`,
         {
           visibility: newVisibility,
         },
