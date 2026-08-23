@@ -430,12 +430,12 @@
 
   .sm-panel-item {
     font-size: clamp(2rem, 10vw, 2.8rem);
-    padding-right: 2.1em;
+    padding-right: 1rem;
     letter-spacing: -1px;
   }
 
   .sm-panel-list[data-numbering] .sm-panel-item::after {
-    right: 0.4em;
+    right: 0.4rem;
     top: 0.1em;
     font-size: 0.6rem;
   }

@@ -62,6 +62,7 @@ function Explore() {
 
       <div className="explore-page">
         <div className="explore-header">
+          <span className="explore-kicker">DISCOVER THE COMMUNITY</span>
           <h1>Explore</h1>
 
           <p>Discover repositories and users from Code Chronicle.</p>
@@ -110,7 +111,10 @@ function Explore() {
 
         <div className="explore-results">
           <div className="results-header">
-            <h2>{searchType === "repository" ? "Repositories" : "Users"}</h2>
+            <div>
+              <span className="results-kicker">BROWSE</span>
+              <h2>{searchType === "repository" ? "Repositories" : "Users"}</h2>
+            </div>
 
             <span>
               {results.length} result

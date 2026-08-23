@@ -191,3 +191,23 @@
     margin-bottom:10px;
 
 }
+
+/* Code Chronicle theme alignment */
+.commits-page { padding: 3.5rem 8% 5.5rem; background: radial-gradient(circle at 87% 7%, rgba(105, 117, 101, 0.16), transparent 26rem), #000; color: #fff; font-family: "Manrope", sans-serif; }
+.repo-header { position: relative; overflow: hidden; padding: clamp(2rem, 4vw, 3rem); border-color: #30352d; border-radius: 18px; background: linear-gradient(125deg, #10130f, #0b0b0b 68%); box-shadow: 0 22px 60px rgba(0, 0, 0, 0.34); }
+.commit-kicker { display: block; margin-bottom: 0.75rem; color: #b7ff6a; font-size: 0.65rem; font-weight: 600; letter-spacing: 0.16em; }
+.repo-header h1 { color: #fff; font-weight: 500; letter-spacing: -0.045em; }
+.repo-header p, .commit-date { color: #a5a5a5; }
+.repo-meta span { padding: 0.35rem 0.7rem; border: 1px solid #3c4538; border-radius: 999px; background: #080808; color: #c5d2c0; font-size: 0.74rem; }
+.commit-section-title { margin-top: 3rem; color: #fff; font-weight: 500; }
+.commit-section-title .commit-kicker { margin-bottom: 0.4rem; }
+.timeline::before { background: #3c4538; }
+.commit-dot { border-color: #000; background: #b7ff6a; box-shadow: 0 0 18px rgba(183, 255, 106, 0.48); }
+.commit-card { border-color: #30352d; border-radius: 14px; background: #0b0b0b; }
+.commit-card:hover { border-color: #697565; box-shadow: 0 14px 32px rgba(0, 0, 0, 0.32); }
+.commit-message { font-weight: 500; }
+.commit-id { color: #b7ff6a; }
+.view-btn { border-radius: 7px; background: #697565; }
+.view-btn:hover { background: #596555; }
+.empty { color: #a5a5a5; }
+@media (max-width: 600px) { .commits-page { padding: 2rem 5% 4rem; } }

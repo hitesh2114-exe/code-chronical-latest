@@ -8,7 +8,7 @@
 
   position: relative;
   overflow: hidden;
-  padding-top: 3rem;
+  padding: 4rem 0;
 }
 
 /* =================================
@@ -26,7 +26,7 @@
   grid-template-columns: 1fr 1fr;
   align-items: center;
 
-  gap: 5rem;
+  gap: clamp(3rem, 7vw, 7rem);
 
   position: relative;
   z-index: 1;
@@ -137,7 +137,7 @@
 
 .about-visual {
   width: 100%;
-  height: 460px;
+  height: 480px;
 
   display: flex;
   align-items: center;
@@ -167,6 +167,13 @@
 
   position: relative;
   z-index: 2;
+  transform: rotate(1.5deg);
+  transition: transform 0.35s ease, border-color 0.35s ease;
+}
+
+.version-card:hover {
+  border-color: rgba(105, 117, 101, 0.8);
+  transform: rotate(0deg) translateY(-6px);
 }
 
 /* =================================
@@ -356,6 +363,7 @@
 
   .version-card {
     max-width: 650px;
+    transform: none;
   }
 }
 

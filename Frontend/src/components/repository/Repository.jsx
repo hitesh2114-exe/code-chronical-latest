@@ -408,6 +408,7 @@ function Repository() {
       <NavBar />
       <div className="repository-page">
         <div className="repository-header">
+          <span className="repository-kicker">REPOSITORY OVERVIEW</span>
           <div className="repository-title">{repo.name}</div>
 
           <div className="repository-description-section">
@@ -788,6 +789,7 @@ function Repository() {
               <Button
                 variant="contained"
                 onClick={() => folderInputRef.current.click()}
+                style={{ backgroundColor: "green" }}
               >
                 Upload Folder
               </Button>
@@ -803,6 +805,7 @@ function Repository() {
               <Button
                 variant="contained"
                 onClick={() => fileInputRef.current.click()}
+                style={{ backgroundColor: "green" }}
               >
                 Upload Files
               </Button>

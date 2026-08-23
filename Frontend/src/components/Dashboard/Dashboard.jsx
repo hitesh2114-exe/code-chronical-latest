@@ -188,13 +188,33 @@ function Dashboard() {
         <div className="dashboard-header">
           {/* <Button variant="outlined">Outlined</Button> */}
           <div className="welcome">
+            <span className="welcome-kicker">YOUR WORKSPACE</span>
             <h1>Welcome back, {user.username}</h1>
             <p>Keep building. Keep committing.</p>
           </div>
 
-          <button className="new-repo-btn" onClick={handleOpen}>
+          <button className="new-repo-btn" onClick={handleOpen} style={{backgroundColor : "green"}}>
             + New Repository
           </button>
+        </div>
+
+        <div className="dashboard-overview" aria-label="Repository overview">
+          <div className="overview-item">
+            <span>Repositories</span>
+            <strong>{repo.length}</strong>
+          </div>
+          <div className="overview-item">
+            <span>Public</span>
+            <strong>
+              {repo.filter((repository) => repository.visibility === "public").length}
+            </strong>
+          </div>
+          <div className="overview-item">
+            <span>Private</span>
+            <strong>
+              {repo.filter((repository) => repository.visibility === "private").length}
+            </strong>
+          </div>
         </div>
 
         <div className="user-card">
@@ -204,7 +224,10 @@ function Dashboard() {
 
           <div className="user-details">
             <div className="user-card-header">
-              <h2>{user.username}</h2>
+              <div>
+                <span className="profile-kicker">PROFILE</span>
+                <h2>{user.username}</h2>
+              </div>
 
               {!isEditingProfile && (
                 <button
@@ -277,7 +300,11 @@ function Dashboard() {
         </div>
 
         <div className="repo-section-title">
-          <h2>Your Repositories</h2>
+          <div>
+            <span className="section-kicker">COLLECTION</span>
+            <h2>Your Repositories</h2>
+          </div>
+          <span className="repo-count">{filteredRepos.length} total</span>
         </div>
 
         {filteredRepos.length === 0 ? (
@@ -433,6 +460,7 @@ function Dashboard() {
 
       <div className="danger-zone">
         <div className="danger-zone-content">
+          <span className="danger-kicker">ACCOUNT SETTINGS</span>
           <h3>Delete Account</h3>
 
           <p>

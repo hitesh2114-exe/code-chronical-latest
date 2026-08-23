@@ -16,9 +16,10 @@
   align-items: center;
   justify-content: space-between;
   gap: 4rem;
-  border: 1px solid #2f293a;
+  border: 1px solid #30352d;
   border-radius: 20px;
-  background: #0b0b0b;
+  background: linear-gradient(135deg, #0d0f0c 0%, #0b0b0b 62%);
+  box-shadow: 0 26px 70px rgba(0, 0, 0, 0.28);
 }
 
 .documentation-content {
@@ -75,7 +76,7 @@
   padding: 1rem 1.3rem;
   border: 1px solid #3c3d37;
   border-radius: 8px;
-  background: transparent;
+  background: rgba(105, 117, 101, 0.1);
   color: #fff;
   font-size: 0.82rem;
   font-weight: 500;

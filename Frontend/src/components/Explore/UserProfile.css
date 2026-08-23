@@ -339,3 +339,26 @@
     font-size: 1.2rem;
   }
 }
+
+/* Code Chronicle theme alignment */
+.user-profile-page { padding: 3.5rem 8% 5.5rem; background: radial-gradient(circle at 86% 5%, rgba(105, 117, 101, 0.15), transparent 26rem), #000; color: #fff; }
+.user-profile-header { padding: clamp(1.75rem, 4vw, 2.75rem); margin-bottom: 2.8rem; border: 1px solid #30352d; border-radius: 18px; background: linear-gradient(125deg, #10130f, #0b0b0b 70%); box-shadow: 0 20px 55px rgba(0, 0, 0, 0.3); }
+.user-avatar { border-color: #4a5546; background: linear-gradient(145deg, #34402f, #161b14); color: #e7f2e1; box-shadow: 0 0 0 7px rgba(183, 255, 106, 0.04); }
+.profile-kicker { display: inline-block; margin-bottom: 0.5rem; color: #b7ff6a; font-size: 0.64rem; font-weight: 600; letter-spacing: 0.15em; }
+.user-profile-info h1, .repositories-header h2 { color: #fff; font-weight: 500; letter-spacing: -0.04em; }
+.user-profile-info p { color: #a5a5a5; }
+.repositories-header { padding-bottom: 1rem; border-color: #30352d; }
+.repositories-header span { padding: 0.32rem 0.6rem; border: 1px solid #3c4538; border-radius: 999px; color: #b7ff6a; font-size: 0.68rem; }
+.profile-repository-card { border-color: #30352d; border-radius: 14px !important; background: #0b0b0b !important; }
+.profile-repository-card:hover { border-color: #697565; box-shadow: 0 16px 35px rgba(0, 0, 0, 0.35) !important; }
+.profile-repository-card .MuiCardMedia-root { opacity: 0.92; filter: brightness(1.16) saturate(1.12) contrast(1.04); }
+.profile-repository-card:hover .MuiCardMedia-root { opacity: 1; filter: brightness(1.23) saturate(1.16) contrast(1.05); }
+.repo-card-title { color: #fff !important; font-weight: 500 !important; }
+.repo-card-description { color: #a5a5a5 !important; }
+.repo-card-updated { color: #8f9d8a !important; }
+.profile-repository-card .MuiButton-root { color: #b7ff6a; }
+.profile-repository-card .MuiButton-root:hover { background: #181c14; color: #e7f2e1; }
+.empty-repositories { border-color: #3c4538; border-radius: 14px; background: #0b0b0b; }
+.empty-repositories h3 { color: #fff; }
+.empty-repositories p { color: #8d8d8d; }
+@media (max-width: 700px) { .user-profile-page { padding: 2.5rem 5% 4rem; } }

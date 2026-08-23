@@ -65,6 +65,7 @@ function UserProfile() {
           </div>
 
           <div className="user-profile-info">
+            <span className="profile-kicker">DEVELOPER PROFILE</span>
             <h1>{user.username}</h1>
 
             <p>{user.bio || "No bio available."}</p>
@@ -73,7 +74,10 @@ function UserProfile() {
 
         <div className="user-repositories">
           <div className="repositories-header">
-            <h2>Repositories</h2>
+            <div>
+              <span className="profile-kicker">PUBLIC WORK</span>
+              <h2>Repositories</h2>
+            </div>
 
             <span>
               {repositories.length}{" "}

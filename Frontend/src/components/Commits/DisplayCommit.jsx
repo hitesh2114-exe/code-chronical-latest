@@ -76,6 +76,7 @@ function DisplayCommit() {
       <NavBar />
       <div className="display-commit-page">
         <div className="commit-header">
+          <span className="commit-kicker">HISTORICAL SNAPSHOT</span>
           <h1>Commit Snapshot</h1>
 
           <p>Browse files exactly as they existed in this commit.</p>

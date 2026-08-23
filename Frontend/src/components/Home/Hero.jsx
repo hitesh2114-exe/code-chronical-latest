@@ -113,6 +113,9 @@ function Hero() {
       />
 
       <Box className="hero-content">
+        <Typography className="hero-eyebrow">
+          A VERSION CONTROL SYSTEM FOR MODERN PROJECTS
+        </Typography>
         <Typography component="h1" className="hero-title">
           <SplitText
             text="Capture every milestone of your project"
@@ -136,6 +139,10 @@ function Hero() {
             showCallback
           />
         </Typography>
+        <Typography className="hero-supporting-copy">
+          Build with confidence, keep every change in context, and stay close
+          to the history of your work.
+        </Typography>
       </Box>
 
       <Box className="hero-brand">
@@ -145,6 +152,11 @@ function Hero() {
           Track • Commit • Chronicle
         </Typography>
       </Box>
+
+      <div className="hero-scroll-cue" aria-hidden="true">
+        <span></span>
+        Scroll to explore
+      </div>
 
       <Dialog
         open={logoutDialogOpen}

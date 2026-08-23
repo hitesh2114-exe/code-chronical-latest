@@ -7,6 +7,14 @@
   overflow: hidden;
 }
 
+.cli-section::before {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 80% 48%, rgba(105, 117, 101, 0.1), transparent 30%);
+  content: "";
+  pointer-events: none;
+}
+
 .cli-container {
   width: 92%;
   max-width: 1400px;
@@ -17,6 +25,8 @@
   align-items: center;
   gap: 6rem;
   padding: 7rem 0;
+  position: relative;
+  z-index: 1;
 }
 
 /* =================================
@@ -197,6 +207,13 @@
   box-shadow:
     0 35px 90px rgba(0, 0, 0, 0.75),
     0 0 0 1px rgba(255, 255, 255, 0.015);
+  transform: translateY(0);
+  transition: transform 0.35s ease, border-color 0.35s ease;
+}
+
+.cli-terminal:hover {
+  border-color: rgba(105, 117, 101, 0.72);
+  transform: translateY(-6px);
 }
 
 /* =================================

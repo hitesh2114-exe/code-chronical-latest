@@ -61,6 +61,7 @@ function Commits() {
       <NavBar />
       <div className="commits-page">
         <div className="repo-header">
+          <span className="commit-kicker">PROJECT HISTORY</span>
           <h1>{repo.name}</h1>
 
           <p>{repo.description}</p>
@@ -72,7 +73,10 @@ function Commits() {
           </div>
         </div>
 
-        <div className="commit-section-title">Commit History</div>
+        <div className="commit-section-title">
+          <span className="commit-kicker">TIMELINE</span>
+          Commit History
+        </div>
 
         {commits.length === 0 ? (
           <div className="empty">

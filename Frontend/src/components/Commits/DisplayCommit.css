@@ -203,3 +203,18 @@
 }
 
 }
+
+/* Code Chronicle theme alignment */
+.display-commit-page { padding: 3.5rem 8% 5.5rem; background: radial-gradient(circle at 88% 6%, rgba(105, 117, 101, 0.16), transparent 27rem), #000; color: #fff; font-family: "Manrope", sans-serif; }
+.commit-header { padding: clamp(2rem, 4vw, 3rem); border-color: #30352d; border-radius: 18px; background: linear-gradient(125deg, #10130f, #0b0b0b 68%); box-shadow: 0 22px 60px rgba(0, 0, 0, 0.34); }
+.commit-kicker { display: block; margin-bottom: 0.75rem; color: #b7ff6a; font-size: 0.65rem; font-weight: 600; letter-spacing: 0.16em; }
+.commit-header h1 { color: #fff; font-weight: 500; letter-spacing: -0.045em; }
+.commit-header p { color: #a5a5a5; }
+.commit-sidebar, .commit-viewer { border-color: #30352d; border-radius: 14px; background: #0b0b0b; }
+.sidebar-title, .viewer-title { border-color: #30352d; background: #0d0f0c; color: #fff; font-weight: 500; }
+.back-btn { border-color: #30352d; color: #b7ff6a; }
+.back-btn:hover, .file-item:hover { background: #181c14; }
+.file-item { border-color: rgba(197, 210, 192, 0.06); color: #c5d2c0; }
+.viewer-content { background: #080808; color: #c5d2c0; }
+.viewer-content::-webkit-scrollbar-thumb, .file-list::-webkit-scrollbar-thumb { background: #3c4538; }
+@media(max-width:950px) { .display-commit-page { padding: 2rem 5% 4rem; } }
