@@ -11,7 +11,7 @@ connectDB();
 
 app.use(
   cors({
-    origin: "https://code-chronical-latest-frontend.onrender.com",
+    origin: "https://code-chronical-latest.onrender.com",
   })
 );
 
