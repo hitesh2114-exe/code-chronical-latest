@@ -152,11 +152,16 @@ class RepositoryService {
         recursive: true,
       });
 
+      console.log("Download directory:", downloadDir);
+      console.log("Remote Supabase path:", remotePath);
+
       await downloadDirectoryFromSupabase(
         "codechronicle",
         remotePath,
         downloadDir
       );
+      
+      console.log("Supabase download completed");
 
       //create zip file
       const sourceDir = downloadDir;
@@ -165,10 +170,17 @@ class RepositoryService {
         "../temp/zipped",
         `${timestamp}.zip`
       );
+
       await zipDirectory(sourceDir, zipPath);
+
+      if (!fs.existsSync(zipPath)) {
+        throw new Error(`ZIP file was not created at: ${zipPath}`);
+      }
+
       return { zipPath, downloadDir };
     } catch (error) {
-      console.log(error);
+      console.error("Pull service failed:", error);
+      throw error;
     }
   }
 

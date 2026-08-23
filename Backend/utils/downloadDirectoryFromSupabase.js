@@ -4,26 +4,40 @@ const { supabase } = require("../config/supabase");
 
 async function downloadDirectoryFromSupabase(
   bucketName,
-  storagePath, //remote path
-  downloadDir //local path
+  storagePath,
+  downloadDir
 ) {
-  // console.log("reachead downloadDirectoryFromSupabase");
+  console.log("Downloading from Supabase");
+  console.log("Bucket:", bucketName);
+  console.log("Remote path:", storagePath);
+  console.log("Local path:", downloadDir);
 
-  await fs.mkdir(downloadDir, { recursive: true }); //creates the parent folder
+  await fs.mkdir(downloadDir, { recursive: true });
 
-  const { data: items, error } = await supabase.storage //read from supabase
+  const { data: items, error } = await supabase.storage
     .from(bucketName)
     .list(storagePath);
 
   if (error) {
+    console.error("Supabase list error:", error);
     throw new Error(error.message);
   }
+
+  console.log(
+    `Found ${items.length} items in ${storagePath}`
+  );
 
   for (const item of items) {
     const remoteItemPath = `${storagePath}/${item.name}`;
     const localItemPath = path.join(downloadDir, item.name);
 
-    // If the item has no id, treat it as a folder
+    console.log(
+      "Processing:",
+      remoteItemPath,
+      "| id:",
+      item.id
+    );
+
     if (!item.id) {
       await downloadDirectoryFromSupabase(
         bucketName,
@@ -31,24 +45,43 @@ async function downloadDirectoryFromSupabase(
         localItemPath
       );
     } else {
-      // Download the file
-      const { data: fileData, error } = await supabase.storage //A Blob is simply a container holding binary data.
+      console.log(
+        "Downloading file:",
+        remoteItemPath
+      );
+
+      const { data: fileData, error } = await supabase.storage
         .from(bucketName)
         .download(remoteItemPath);
 
       if (error) {
+        console.error(
+          "Supabase download error:",
+          remoteItemPath,
+          error
+        );
+
         throw new Error(error.message);
       }
 
-      // Convert Blob to Buffer
-      const buffer = Buffer.from(await fileData.arrayBuffer()); //ArrayBuffer : a chunk of raw memory
+      const buffer = Buffer.from(
+        await fileData.arrayBuffer()
+      );
 
-      // Save file locally
       await fs.writeFile(localItemPath, buffer);
 
-      console.log(`Downloaded: ${remoteItemPath} from supabase`);
+      console.log(
+        `Downloaded successfully: ${remoteItemPath}`
+      );
     }
   }
+
+  console.log(
+    "Finished downloading:",
+    storagePath
+  );
 }
 
-module.exports = { downloadDirectoryFromSupabase };
+module.exports = {
+  downloadDirectoryFromSupabase,
+};

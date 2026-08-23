@@ -37,7 +37,7 @@ async function pullRepo() {
     console.log("Remote latest commit:", latestCommit);
 
     const response = await repositoryApi.pullRepository(repositoryId, token); //receive the zip file from backend
-    // console.log(response);
+    console.log(response);
     const tempDir = path.join(repoPath, "temp"); //create temporary folder
     tempDirectory = tempDir;
     fswp.mkdirSync(tempDir, { recursive: true });
@@ -73,8 +73,10 @@ async function pullRepo() {
       return;
     }
 
-    console.log("problem in pulling...", +err.message);
-   } finally {
+    console.log("Pull failed");
+    console.log("Status:", err.response.status);
+    console.log("Backend response:", err.response.data);
+  } finally {
     //deleting the temp folder
     try {
       if (tempDirectory && fswp.existsSync(tempDirectory)) {

@@ -1,3 +1,3 @@
 module.exports = {
-  BACKEND_URL: "http://localhost:8080",
+  BACKEND_URL: "https://code-chronical-latest-backend.onrender.com",
 };

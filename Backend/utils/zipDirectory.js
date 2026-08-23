@@ -1,31 +1,51 @@
-const fs = require("fs"); //file system
-const archiver = require("archiver"); //used to compress file to ZIP file
+const fs = require("fs");
+const path = require("path");
+const archiver = require("archiver");
 
 async function zipDirectory(sourceDir, outputZip) {
   return new Promise(async (resolve, reject) => {
-    const output = fs.createWriteStream(outputZip);
-    const archive = archiver("zip", {
-      zlib: { level: 9 },
-    });
+    try {
+      if (!fs.existsSync(sourceDir)) {
+        return reject(
+          new Error(`Source directory does not exist: ${sourceDir}`)
+        );
+      }
 
-    output.on("close", () => {
-      resolve();
-    });
+      const outputDir = path.dirname(outputZip);
 
-    output.on("error", (err) => {
-      reject(err);
-    });
+      // Make sure the ZIP output directory exists.
+      fs.mkdirSync(outputDir, {
+        recursive: true,
+      });
 
-    archive.on("error", (err) => {
-      reject(err);
-    });
+      const output = fs.createWriteStream(outputZip);
 
-    archive.pipe(output);
+      const archive = archiver("zip", {
+        zlib: { level: 9 },
+      });
 
-    // Add the entire directory while preserving its structure.
-    archive.directory(sourceDir, false);
+      output.on("close", () => {
+        console.log(`ZIP created successfully: ${outputZip}`);
 
-    await archive.finalize();
+        resolve();
+      });
+
+      output.on("error", (err) => {
+        reject(err);
+      });
+
+      archive.on("error", (err) => {
+        reject(err);
+      });
+
+      archive.pipe(output);
+
+      archive.directory(sourceDir, false);
+
+      await archive.finalize();
+    } catch (error) {
+      reject(error);
+    }
   });
 }
 
