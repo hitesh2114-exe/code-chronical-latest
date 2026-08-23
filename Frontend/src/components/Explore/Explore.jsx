@@ -23,7 +23,7 @@ function Explore() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/api/explore");
+      const response = await axios.get("https://code-chronical-latest-backend.onrender.com/api/explore");
 
       const responseData = response.data.response;
 

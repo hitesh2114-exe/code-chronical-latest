@@ -53,7 +53,7 @@ function Dashboard() {
 
       const token = localStorage.getItem("token");
 
-      await axios.delete("http://localhost:8080/api/users/me", {
+      await axios.delete("https://code-chronical-latest-backend.onrender.com/api/users/me", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -85,7 +85,7 @@ function Dashboard() {
   const getRepo = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8080/api/repositories/my",
+        "https://code-chronical-latest-backend.onrender.com/api/repositories/my",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -100,7 +100,7 @@ function Dashboard() {
 
   const getUser = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/api/auth/me", {
+      const response = await axios.get("https://code-chronical-latest-backend.onrender.com/api/auth/me", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -128,7 +128,7 @@ function Dashboard() {
   const handleSaveProfile = async () => {
     try {
       const response = await axios.put(
-        "http://localhost:8080/api/users/bio",
+        "https://code-chronical-latest-backend.onrender.com/api/users/bio",
         {
           bio,
         },
@@ -159,7 +159,7 @@ function Dashboard() {
   const handleCreateRepository = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:8080/api/repositories/create`,
+        `https://code-chronical-latest-backend.onrender.com/api/repositories/create`,
         formData,
         {
           headers: {
@@ -193,7 +193,11 @@ function Dashboard() {
             <p>Keep building. Keep committing.</p>
           </div>
 
-          <button className="new-repo-btn" onClick={handleOpen} style={{backgroundColor : "green"}}>
+          <button
+            className="new-repo-btn"
+            onClick={handleOpen}
+            style={{ backgroundColor: "green" }}
+          >
             + New Repository
           </button>
         </div>
@@ -206,13 +210,19 @@ function Dashboard() {
           <div className="overview-item">
             <span>Public</span>
             <strong>
-              {repo.filter((repository) => repository.visibility === "public").length}
+              {
+                repo.filter((repository) => repository.visibility === "public")
+                  .length
+              }
             </strong>
           </div>
           <div className="overview-item">
             <span>Private</span>
             <strong>
-              {repo.filter((repository) => repository.visibility === "private").length}
+              {
+                repo.filter((repository) => repository.visibility === "private")
+                  .length
+              }
             </strong>
           </div>
         </div>
@@ -452,7 +462,16 @@ function Dashboard() {
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
 
-          <Button variant="contained" onClick={handleCreateRepository}>
+          <Button
+            variant="contained"
+            onClick={handleCreateRepository}
+            sx={{
+              backgroundColor: "green",
+              "&:hover": {
+                backgroundColor: "darkgreen",
+              },
+            }}
+          >
             Create
           </Button>
         </DialogActions>

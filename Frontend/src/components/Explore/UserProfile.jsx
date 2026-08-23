@@ -31,7 +31,7 @@ function UserProfile() {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/api/explore/${userId}`
+        `https://code-chronical-latest-backend.onrender.com/api/explore/${userId}`
       );
       const responseData = response.data.response;
 

@@ -18,7 +18,7 @@ function DisplayCommit() {
   const fetchFiles = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/api/commits/get/${commitId}/?path=${currentPath}`,
+        `https://code-chronical-latest-backend.onrender.com/api/commits/get/${commitId}/?path=${currentPath}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -40,7 +40,7 @@ function DisplayCommit() {
     try {
       console.log("current path : ", path);
       const response = await axios.get(
-        `http://localhost:8080/api/commits/get/${commitId}/file/?path=${path}`,
+        `https://code-chronical-latest-backend.onrender.com/api/commits/get/${commitId}/file/?path=${path}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

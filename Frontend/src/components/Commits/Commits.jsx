@@ -17,7 +17,7 @@ function Commits() {
   const fetchRepo = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/api/repositories/${repoId}`,
+        `https://code-chronical-latest-backend.onrender.com/api/repositories/${repoId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -33,7 +33,7 @@ function Commits() {
   const getAllCommits = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/api/commits/${repoId}`,
+        `https://code-chronical-latest-backend.onrender.com/api/commits/${repoId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

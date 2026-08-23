@@ -36,7 +36,7 @@ function Signup() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/auth/register",
+        "https://code-chronical-latest-backend.onrender.com/api/auth/register",
         formData
       );
       setError("");
