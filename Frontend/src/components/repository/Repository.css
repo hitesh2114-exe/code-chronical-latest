@@ -103,6 +103,40 @@
   margin: 0;
 }
 
+.repository-id code {
+  max-width: 240px;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+
+  color: #c9d1d9;
+}
+
+.copy-repository-id-btn {
+  margin-left: 0.45rem;
+
+  padding: 0.2rem 0.45rem;
+
+  border: 1px solid #30363d;
+
+  border-radius: 5px;
+
+  background: #161b22;
+
+  color: #58a6ff;
+
+  font: inherit;
+
+  cursor: pointer;
+}
+
+.copy-repository-id-btn:hover {
+  background: #21262d;
+}
+
 
 /* =========================================
    Main Repository Area

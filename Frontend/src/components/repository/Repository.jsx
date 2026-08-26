@@ -38,9 +38,11 @@ function Repository() {
   const [uploadType, setUploadType] = useState(""); //to check if file is selected or folder
   const [isUploading, setIsUploading] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false); //for deleting the repo
+  const [isDeletingRepository, setIsDeletingRepository] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null); //file or folder that actually needed to be deleted
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false); //for deleting the files/folders
   const [isDeletingFileOrFolder, setIsDeletingFileOrFolder] = useState(false);
+  const [repositoryIdCopied, setRepositoryIdCopied] = useState(false);
 
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(""); //stores the edited file content
@@ -252,6 +254,10 @@ function Repository() {
   };
 
   const handleDeleteRepository = async () => {
+    if (isDeletingRepository) return;
+
+    setIsDeletingRepository(true);
+
     try {
       const response = await axios.delete(
         `https://code-chronical-latest-backend.onrender.com/api/repositories/${repoId}`,
@@ -265,6 +271,20 @@ function Repository() {
       navigate(`/dashboard`);
     } catch (error) {
       console.error("Failed to delete repository:", error);
+    } finally {
+      setIsDeletingRepository(false);
+    }
+  };
+
+  const handleCopyRepositoryId = async () => {
+    if (!repoId) return;
+
+    try {
+      await navigator.clipboard.writeText(repoId);
+      setRepositoryIdCopied(true);
+      window.setTimeout(() => setRepositoryIdCopied(false), 2000);
+    } catch (error) {
+      console.error("Failed to copy repository ID:", error);
     }
   };
 
@@ -484,6 +504,16 @@ function Repository() {
                   <EditOutlinedIcon fontSize="small" />
                 </button>
               )}
+            </span>
+            <span className="repository-id">
+              ID: <code>{repoId}</code>
+              <button
+                type="button"
+                className="copy-repository-id-btn"
+                onClick={handleCopyRepositoryId}
+              >
+                {repositoryIdCopied ? "Copied!" : "Copy"}
+              </button>
             </span>
             <Dialog
               open={visibilityDialogOpen}
@@ -822,15 +852,20 @@ function Repository() {
                 variant="contained"
                 color="error"
                 onClick={() => setDeleteDialogOpen(true)}
+                disabled={isDeletingRepository}
               >
-                Delete Repository
+                {isDeletingRepository ? "Deleting..." : "Delete Repository"}
               </Button>
             </>
           )}
         </Box>
         <Dialog
           open={deleteDialogOpen}
-          onClose={() => setDeleteDialogOpen(false)}
+          onClose={() => {
+            if (!isDeletingRepository) {
+              setDeleteDialogOpen(false);
+            }
+          }}
         >
           <DialogTitle>Delete Repository?</DialogTitle>
 
@@ -842,14 +877,20 @@ function Repository() {
           </DialogContent>
 
           <DialogActions>
-            <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
+            <Button
+              onClick={() => setDeleteDialogOpen(false)}
+              disabled={isDeletingRepository}
+            >
+              Cancel
+            </Button>
 
             <Button
               color="error"
               variant="contained"
               onClick={handleDeleteRepository}
+              disabled={isDeletingRepository}
             >
-              Delete
+              {isDeletingRepository ? "Deleting..." : "Delete"}
             </Button>
           </DialogActions>
         </Dialog>
