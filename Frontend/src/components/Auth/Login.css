@@ -1,0 +1,314 @@
+/* Container & Base Layout */
+.login-container {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #0d0d0d;
+}
+
+.login-bg-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(65%) contrast(105%);
+  z-index: 0;
+}
+
+.login-gradient-overlay {
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.75) 100%),
+              linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, transparent 60%);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Header Navigation Link */
+.login-back-home {
+  position: absolute;
+  top: 2.5rem;
+  right: 3.5rem;
+  z-index: 10;
+}
+
+.login-back-home-text {
+  color: rgba(255, 255, 255, 0.7);
+  font-family: 'Manrope', sans-serif;
+  font-weight: 400;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+.login-home-anchor {
+  text-decoration: none;
+  color: #ffffff;
+  font-weight: 500;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.login-home-anchor::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 1px;
+  bottom: -2px;
+  left: 0;
+  background-color: #ffffff;
+  transition: width 0.3s ease;
+}
+
+.login-home-anchor:hover::after {
+  width: 100%;
+}
+
+/* Vertical Rotated Brand Heading */
+.login-vertical-title {
+  position: absolute;
+  left: 14.5%;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.85);
+  z-index: 5;
+  pointer-events: none;
+}
+
+.login-rotated-heading {
+  transform: rotate(-90deg);
+  transform-origin: center center;
+  font-size: 3.5rem;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  margin: 0;
+  opacity: 0.9;
+}
+
+/* Bottom Tagline */
+.login-tagline-box {
+  position: absolute;
+  bottom: 2.5rem;
+  right: 3.5rem;
+  color: rgba(255, 255, 255, 0.65);
+  z-index: 6;
+  text-align: right;
+  pointer-events: none;
+}
+
+.login-tagline-text {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 300;
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;
+  margin: 0;
+}
+
+/* Fixed Dimension Form Card */
+.login-form-card {
+  position: relative;
+  z-index: 5;
+  width: 580px;
+  height: 540px;
+  max-width: 90%;
+  padding: 2.8rem 3rem;
+  background: rgba(18, 18, 18, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 1.5rem;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4),
+              inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.login-header-group {
+  margin-bottom: 0.5rem;
+}
+
+.login-form-header {
+  color: #ffffff;
+  font-size: 2.2rem;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.4rem 0;
+}
+
+.login-subtext {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.875rem;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 400;
+  margin: 0;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* Fixed Height Input Area */
+.login-input-group {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 1.1rem;
+  width: 100%;
+  height: 200px;
+}
+
+.login-error-box {
+  height: 1.8rem;
+  display: flex;
+  align-items: center;
+}
+
+.login-error-message {
+  font-size: 0.8rem;
+  color: #ff6b6b;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 400;
+  margin: 0;
+}
+
+/* Primary Button Design */
+.login-submit-btn {
+  width: 100%;
+  height: 3.2rem !important;
+  background-color: #ffffff !important;
+  color: #0a0a0a !important;
+  border-radius: 0.75rem !important;
+  text-transform: none !important;
+  font-family: 'Manrope', sans-serif !important;
+  font-size: 0.95rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.02em !important;
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15) !important;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.login-submit-btn:hover {
+  background-color: #f0f0f0 !important;
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.25) !important;
+  transform: translateY(-1px);
+}
+
+.login-footer-box {
+  display: flex;
+  justify-content: center;
+}
+
+.login-footer-text {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.875rem;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 400;
+  margin: 0;
+}
+
+.login-link-anchor {
+  color: #ffffff;
+  font-weight: 500;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  transition: all 0.2s ease;
+}
+
+.login-link-anchor:hover {
+  border-bottom-color: #ffffff;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+}
+
+/* Material UI Textfield Adjustments */
+.login-custom-textfield {
+  width: 100%;
+}
+
+.login-custom-textfield .MuiInputLabel-root {
+  color: rgba(255, 255, 255, 0.5);
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.9rem;
+}
+
+.login-custom-textfield .MuiInputLabel-root.Mui-focused {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.login-custom-textfield .MuiOutlinedInput-root {
+  color: #ffffff;
+  border-radius: 0.75rem;
+  background: rgba(0, 0, 0, 0.2);
+  transition: background 0.2s ease;
+}
+
+.login-custom-textfield .MuiOutlinedInput-root:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.login-custom-textfield .MuiOutlinedInput-root fieldset {
+  border-color: rgba(255, 255, 255, 0.15);
+  transition: border-color 0.2s ease;
+}
+
+.login-custom-textfield .MuiOutlinedInput-root:hover fieldset {
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.login-custom-textfield .MuiOutlinedInput-root.Mui-focused fieldset {
+  border-color: rgba(255, 255, 255, 0.7);
+  border-width: 1px;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 1350px) {
+  .login-vertical-title {
+    left: 10%;
+  }
+}
+
+@media (max-width: 1100px) {
+  .login-vertical-title {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .login-back-home {
+    top: 1.8rem;
+    right: 1.5rem;
+  }
+
+  .login-tagline-box {
+    bottom: 1.5rem;
+    right: 50%;
+    transform: translateX(50%);
+    width: 100%;
+    text-align: center;
+  }
+
+  .login-form-card {
+    height: auto;
+    padding: 2.2rem 1.5rem;
+    border-radius: 1.2rem;
+  }
+  
+  .login-input-group {
+    height: auto;
+  }
+}

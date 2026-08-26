@@ -1,7 +1,6 @@
 const fs = require("fs").promises; //file system
 const fswp = require("fs");
 const path = require("path");
-const supabase = require("../config/supabase");
 const { requireAuth } = require("../utils/auth");
 const repositoryApi = require("../services/repositoryApi");
 const { getToken } = require("../utils/auth");
@@ -37,7 +36,7 @@ async function pullRepo() {
     console.log("Remote latest commit:", latestCommit);
 
     const response = await repositoryApi.pullRepository(repositoryId, token); //receive the zip file from backend
-    console.log(response);
+    // console.log(response);
     const tempDir = path.join(repoPath, "temp"); //create temporary folder
     tempDirectory = tempDir;
     fswp.mkdirSync(tempDir, { recursive: true });

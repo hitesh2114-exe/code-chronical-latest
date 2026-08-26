@@ -1,6 +1,6 @@
 {
   "name": "codechronicle-cli",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "bin": {
     "chron": "./index.js"
   },
@@ -13,7 +13,6 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@supabase/supabase-js": "^2.111.0",
     "archiver": "^6.0.2",
     "axios": "^1.18.1",
     "dotenv": "^17.4.2",
