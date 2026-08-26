@@ -82,11 +82,11 @@ function Hero() {
   const socialItems = [
     {
       label: "GitHub",
-      link: "https://github.com",
+      link: "https://github.com/hitesh2114-exe",
     },
     {
       label: "LinkedIn",
-      link: "https://linkedin.com",
+      link: "https://www.linkedin.com/in/hitesh-pandey2005",
     },
   ];
 

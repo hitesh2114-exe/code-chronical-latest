@@ -45,7 +45,7 @@ function Footer() {
           <Link to="/">Home</Link>
           <Link to="/documentation">Documentation</Link>
           <a
-            href="https://github.com"
+            href="https://github.com/hitesh2114-exe"
             target="_blank"
             rel="noopener noreferrer"
           >
