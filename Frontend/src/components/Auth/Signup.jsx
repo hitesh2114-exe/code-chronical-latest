@@ -17,6 +17,7 @@ function Signup() {
 
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [isRegistering, setIsRegistering] = useState(false);
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -34,6 +35,10 @@ function Signup() {
   const handleRegister = async (e) => {
     e.preventDefault();
 
+    if (isRegistering) return;
+
+    setIsRegistering(true);
+
     try {
       const response = await axios.post(
         "https://code-chronical-latest-backend.onrender.com/api/auth/register",
@@ -45,6 +50,8 @@ function Signup() {
       navigate("/");
     } catch (err) {
       setError(err?.response?.data?.message || "something went wrong");
+    } finally {
+      setIsRegistering(false);
     }
   };
 
@@ -152,6 +159,10 @@ function Signup() {
                         onClick={() => setShowPassword((visible) => !visible)}
                         onMouseDown={(event) => event.preventDefault()}
                         edge="end"
+                        sx={{
+                          color: "#f0f6fc",
+                          "&:hover": { color: "#58a6ff" },
+                        }}
                       >
                         {showPassword ? <VisibilityOff /> : <Visibility />}
                       </IconButton>
@@ -172,8 +183,9 @@ function Signup() {
             variant="contained"
             type="submit"
             className="signup-submit-btn"
+            disabled={isRegistering}
           >
-            Create Account
+            {isRegistering ? "Creating Account..." : "Create Account"}
           </Button>
         </form>
 

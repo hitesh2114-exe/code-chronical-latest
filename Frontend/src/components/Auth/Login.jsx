@@ -17,6 +17,7 @@ function Login() {
 
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [isSigningIn, setIsSigningIn] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -33,6 +34,10 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
 
+    if (isSigningIn) return;
+
+    setIsSigningIn(true);
+
     try {
       const response = await axios.post(
         "https://code-chronical-latest-backend.onrender.com/api/auth/login",
@@ -44,6 +49,8 @@ function Login() {
       navigate("/");
     } catch (err) {
       setError(err?.response?.data?.message || "something went wrong");
+    } finally {
+      setIsSigningIn(false);
     }
   };
 
@@ -141,6 +148,10 @@ function Login() {
                         onClick={() => setShowPassword((visible) => !visible)}
                         onMouseDown={(event) => event.preventDefault()}
                         edge="end"
+                        sx={{
+                          color: "#f0f6fc",
+                          "&:hover": { color: "#58a6ff" },
+                        }}
                       >
                         {showPassword ? <VisibilityOff /> : <Visibility />}
                       </IconButton>
@@ -157,8 +168,13 @@ function Login() {
             )}
           </Box>
 
-          <Button variant="contained" type="submit" className="login-submit-btn">
-            Sign In
+          <Button
+            variant="contained"
+            type="submit"
+            className="login-submit-btn"
+            disabled={isSigningIn}
+          >
+            {isSigningIn ? "Signing In..." : "Sign In"}
           </Button>
         </form>
 
