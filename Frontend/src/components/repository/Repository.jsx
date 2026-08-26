@@ -480,6 +480,7 @@ function Repository() {
                   <button
                     className="description-edit-btn"
                     onClick={() => setIsEditingDescription(true)}
+                    style={{backgroundColor : "green"}}
                   >
                     Edit
                   </button>
