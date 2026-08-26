@@ -164,7 +164,7 @@ function Signup() {
                           "&:hover": { color: "#58a6ff" },
                         }}
                       >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                        {showPassword ? <Visibility /> : <VisibilityOff />}
                       </IconButton>
                     </InputAdornment>
                   ),
