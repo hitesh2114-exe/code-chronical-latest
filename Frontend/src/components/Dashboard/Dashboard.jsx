@@ -243,6 +243,7 @@ function Dashboard() {
                 <button
                   className="profile-edit-btn"
                   onClick={() => setIsEditingProfile(true)}
+                  style={{backgroundColor : "green"}}
                 >
                   Edit
                 </button>
@@ -276,6 +277,7 @@ function Dashboard() {
                   <button
                     className="profile-save-btn"
                     onClick={handleSaveProfile}
+                    style={{background : "green"}}
                   >
                     Save Changes
                   </button>
