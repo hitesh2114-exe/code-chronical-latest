@@ -67,11 +67,14 @@ function Repository() {
     if (!token) return;
 
     try {
-      const response = await axios.get("https://code-chronical-latest-backend.onrender.com/api/auth/me", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        "https://code-chronical-latest-backend.onrender.com/api/auth/me",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       setCurrentUserId(response.data.data._id);
     } catch (error) {
@@ -480,7 +483,7 @@ function Repository() {
                   <button
                     className="description-edit-btn"
                     onClick={() => setIsEditingDescription(true)}
-                    style={{backgroundColor : "green"}}
+                    style={{ backgroundColor: "green" }}
                   >
                     Edit
                   </button>
@@ -546,6 +549,7 @@ function Repository() {
                   variant="contained"
                   onClick={handleVisibilityChange}
                   disabled={visibilityLoading}
+                  style={{ backgroundColor: "green" }}
                 >
                   {visibilityLoading ? "Updating..." : "Confirm"}
                 </Button>
@@ -686,6 +690,7 @@ function Repository() {
                       setEditedContent(fileContent);
                       setIsEditing(true);
                     }}
+                    style={{ backgroundColor: "green" }}
                   >
                     Edit
                   </Button>
