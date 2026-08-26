@@ -486,19 +486,24 @@
   }
 }
 
+/* StaggeredMenu.css */
+
 .staggered-menu-wrapper.fixed-wrapper::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.3); /* Slightly darkened for contrast */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   pointer-events: none;
   opacity: 0;
-  transition: opacity 0.3s ease;
-  z-index: 1;
+  visibility: hidden;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+  z-index: 2; /* Sits behind prelayers (z-index: 5) and panel (z-index: 10) */
 }
 
 .staggered-menu-wrapper.fixed-wrapper[data-open]::before {
   opacity: 1;
+  visibility: visible;
+  pointer-events: auto; /* Enables click-away backdrop detection */
 }
