@@ -53,11 +53,14 @@ function Dashboard() {
 
       const token = localStorage.getItem("token");
 
-      await axios.delete("https://code-chronical-latest-backend.onrender.com/api/users/me", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await axios.delete(
+        "https://code-chronical-latest-backend.onrender.com/api/users/me",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       localStorage.removeItem("token");
 
@@ -100,11 +103,14 @@ function Dashboard() {
 
   const getUser = async () => {
     try {
-      const response = await axios.get("https://code-chronical-latest-backend.onrender.com/api/auth/me", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        "https://code-chronical-latest-backend.onrender.com/api/auth/me",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       setUser(response?.data?.data);
       setBio(response?.data?.data.bio || "");
     } catch (err) {
@@ -243,7 +249,7 @@ function Dashboard() {
                 <button
                   className="profile-edit-btn"
                   onClick={() => setIsEditingProfile(true)}
-                  style={{backgroundColor : "green"}}
+                  style={{ backgroundColor: "green" }}
                 >
                   Edit
                 </button>
@@ -277,7 +283,7 @@ function Dashboard() {
                   <button
                     className="profile-save-btn"
                     onClick={handleSaveProfile}
-                    style={{background : "green"}}
+                    style={{ background: "green" }}
                   >
                     Save Changes
                   </button>
@@ -336,7 +342,11 @@ function Dashboard() {
             </p>
 
             {repo.length === 0 && (
-              <button className="empty-create-btn" onClick={handleOpen}>
+              <button
+                className="empty-create-btn"
+                onClick={handleOpen}
+                style={{ backgroundColor: "green" }}
+              >
                 + Create Repository
               </button>
             )}
