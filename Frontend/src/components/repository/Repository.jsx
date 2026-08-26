@@ -40,6 +40,7 @@ function Repository() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false); //for deleting the repo
   const [deleteTarget, setDeleteTarget] = useState(null); //file or folder that actually needed to be deleted
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false); //for deleting the files/folders
+  const [isDeletingFileOrFolder, setIsDeletingFileOrFolder] = useState(false);
 
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(""); //stores the edited file content
@@ -268,6 +269,10 @@ function Repository() {
   };
 
   const handleDeleteFileOrFolder = async () => {
+    if (isDeletingFileOrFolder || !deleteTarget) return;
+
+    setIsDeletingFileOrFolder(true);
+
     try {
       const response = await axios.delete(
         `https://code-chronical-latest-backend.onrender.com/api/repositories/${repoId}/file`,
@@ -282,9 +287,12 @@ function Repository() {
       );
       // console.log(response.data);
       setOpenDeleteDialog(false);
+      setDeleteTarget(null);
       await fetchFiles();
     } catch (err) {
       console.log(err);
+    } finally {
+      setIsDeletingFileOrFolder(false);
     }
   };
 
@@ -868,7 +876,9 @@ function Repository() {
 
           <DialogActions>
             <Button
+              disabled={isDeletingFileOrFolder}
               onClick={() => {
+                if (isDeletingFileOrFolder) return;
                 setOpenDeleteDialog(false);
                 setDeleteTarget(null);
               }}
@@ -880,8 +890,9 @@ function Repository() {
               color="error"
               variant="contained"
               onClick={handleDeleteFileOrFolder}
+              disabled={isDeletingFileOrFolder}
             >
-              Delete
+              {isDeletingFileOrFolder ? "Deleting..." : "Delete"}
             </Button>
           </DialogActions>
         </Dialog>
