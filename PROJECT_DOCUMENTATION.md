@@ -1975,3 +1975,307 @@ codechronicle-cli@1.0.2
 The package is licensed under the MIT License, consistent with the main Code Chronicle project.
 
 The CLI is maintained and versioned independently through npm releases.
+
+# 11. Database & Storage Documentation
+
+## 11.1 Overview
+
+Code Chronicle uses **MongoDB**, **Mongoose**, and **Supabase** as part of its data and storage infrastructure.
+
+The backend separates application data management from file and storage-related operations.
+
+```text
+                    Code Chronicle Backend
+                            │
+              ┌─────────────┴─────────────┐
+              │                           │
+              ▼                           ▼
+          MongoDB                     Supabase
+       Application Data           Storage Services
+              │
+       ┌──────┼──────┐
+       │      │      │
+       ▼      ▼      ▼
+     Users  Repos  Commits
+```
+
+---
+
+## 11.2 MongoDB
+
+**MongoDB** is the primary database used by Code Chronicle for storing structured application data.
+
+The backend communicates with MongoDB through **Mongoose**.
+
+MongoDB is used for information such as:
+
+* User records
+* Repository records
+* Commit records
+* Repository metadata
+* Relationships between application entities
+
+The database stores application-level information required to manage the Code Chronicle platform.
+
+---
+
+## 11.3 Mongoose
+
+**Mongoose** provides the object-modeling layer between the Node.js backend and MongoDB.
+
+It is used to:
+
+* Define database schemas
+* Create models
+* Validate model data
+* Query MongoDB
+* Create and update records
+* Manage application data
+
+The main database models are maintained inside:
+
+```text
+Backend/model/
+```
+
+---
+
+## 11.4 User Data
+
+The User model represents a Code Chronicle account.
+
+User information is used for:
+
+* Authentication
+* User profiles
+* Repository ownership
+* Authorization
+* Identifying repository-related activity
+
+The relationship between users and repositories can be represented as:
+
+```text
+User
+ │
+ ├── Repository A
+ ├── Repository B
+ └── Repository C
+```
+
+A user can therefore be associated with multiple repositories.
+
+---
+
+## 11.5 Repository Data
+
+The Repository model represents a Code Chronicle repository.
+
+Repository records contain the metadata required to identify and manage repositories.
+
+Repository information is used for:
+
+* Repository identification
+* Ownership
+* Visibility
+* Repository management
+* Commit association
+* File-related operations
+
+The repository record acts as the central reference for the project's version history.
+
+---
+
+## 11.6 Commit Data
+
+Commits represent recorded versions of a repository.
+
+A commit is associated with a repository and contains information required to identify a particular project state.
+
+Commit-related information includes concepts such as:
+
+* Commit identifier
+* Commit message
+* Timestamp
+* Parent commit
+* Repository association
+* Project state
+
+The relationship can be represented as:
+
+```text
+User
+  │
+  ▼
+Repository
+  │
+  ├── Commit 1
+  │
+  ├── Commit 2
+  │
+  ├── Commit 3
+  │
+  └── ...
+```
+
+The parent-commit relationship allows the project's version history to be represented as a sequence of states.
+
+---
+
+## 11.7 Entity Relationships
+
+The primary relationships within the application are:
+
+```text
+┌──────────┐
+│   User   │
+└────┬─────┘
+     │ owns
+     ▼
+┌──────────────┐
+│  Repository  │
+└──────┬───────┘
+       │ contains
+       ▼
+┌──────────────┐
+│    Commit    │
+└──────────────┘
+```
+
+These relationships allow Code Chronicle to determine:
+
+* Who owns a repository
+* Which commits belong to a repository
+* Which user is associated with repository operations
+* Which project state is associated with a commit
+
+---
+
+## 11.8 Supabase
+
+**Supabase** is integrated into the Code Chronicle backend as part of the project's storage infrastructure.
+
+It supports storage-related functionality used by the application.
+
+The backend can therefore work with separate systems for structured application data and storage-related operations:
+
+```text
+Application Data
+       │
+       ▼
+    MongoDB
+
+Storage Operations
+       │
+       ▼
+    Supabase
+```
+
+This separation allows storage functionality to be handled independently from the primary application database.
+
+---
+
+## 11.9 Local CLI Storage
+
+The CLI maintains local repository information through a hidden `.chron` directory.
+
+A simplified representation is:
+
+```text
+Project/
+│
+├── .chron/
+│   ├── config.json
+│   ├── staging/
+│   └── commits/
+│
+└── Project Files
+```
+
+The `.chron` directory contains the local information required by the CLI to manage a Code Chronicle repository.
+
+### `config.json`
+
+Stores local repository configuration information used by the CLI.
+
+### `staging/`
+
+Contains information related to files prepared for the next commit.
+
+### `commits/`
+
+Contains locally stored commit information and project snapshots.
+
+The `.chron` directory represents the local repository state and is separate from the backend's database and storage systems.
+
+---
+
+## 11.10 Data Flow During Repository Operations
+
+### Repository Creation
+
+When a repository is created, the backend processes the repository information and stores the required application data.
+
+```text
+User
+ │
+ ▼
+Backend API
+ │
+ ▼
+MongoDB
+ │
+ └── Repository Metadata
+```
+
+### Commit
+
+When a commit is created through the CLI:
+
+```text
+Local Project
+      │
+      ▼
+CLI Commit
+      │
+      ▼
+Local Commit State
+      │
+      ▼
+Commit Information
+```
+
+The commit information can subsequently be synchronized with the remote repository through the push operation.
+
+### Push
+
+When a commit is pushed:
+
+```text
+Local Repository
+      │
+      ▼
+CLI Push
+      │
+      ▼
+Backend API
+      │
+      ├──────────────► Database
+      │
+      └──────────────► Storage
+```
+
+The backend coordinates the required repository and commit operations between the CLI and the remote infrastructure.
+
+---
+
+## 11.11 Data Responsibility Summary
+
+| System       | Primary Responsibility                      |
+| ------------ | ------------------------------------------- |
+| MongoDB      | Application and repository metadata         |
+| Mongoose     | MongoDB data modeling and interaction       |
+| Supabase     | Storage-related functionality               |
+| Backend      | Coordinates database and storage operations |
+| CLI `.chron` | Local repository metadata and state         |
+
+This separation allows Code Chronicle to maintain local repository state through the CLI while using backend services for persistent remote data and storage.
