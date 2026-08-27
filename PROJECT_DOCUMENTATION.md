@@ -3048,3 +3048,824 @@ This limitation is part of the current implementation and can be addressed in a 
 
 This workflow forms the central version-management mechanism of Code Chronicle.
 
+# 14. API Documentation
+
+## 14.1 API Overview
+
+The Code Chronicle backend exposes a REST API used by both the web frontend and CLI.
+
+The API provides functionality for:
+
+* Authentication
+* User management
+* Repository management
+* Commit management
+* Repository exploration
+* File operations
+
+The API follows a resource-based structure with separate route groups for different areas of the application.
+
+```text id="g8q4qa"
+Frontend ──────┐
+               │
+               ▼
+          Code Chronicle API
+               │
+CLI ───────────┘
+               │
+       ┌───────┼────────┐
+       ▼       ▼        ▼
+     Auth  Repositories Commits
+               │
+          ┌────┴────┐
+          ▼         ▼
+        Users     Explore
+```
+
+---
+
+## 14.2 Base URL
+
+For the deployed backend, the API is hosted at:
+
+```text id="z2b0ja"
+https://code-chronical-latest-backend.onrender.com/
+```
+
+The backend API routes are exposed below this base service.
+
+During local development, the backend runs on port `8080`.
+
+```text id="g2v3i5"
+http://localhost:8080/
+```
+
+---
+
+## 14.3 Authentication API
+
+Authentication routes are grouped under:
+
+```text id="x7j9q3"
+/api/auth
+```
+
+### Register
+
+```text
+POST /api/auth/register
+```
+
+Creates a new Code Chronicle user account.
+
+The request contains the information required to create the account.
+
+### Login
+
+```text
+POST /api/auth/login
+```
+
+Authenticates an existing user and returns the authentication information required for protected operations.
+
+### Current User
+
+```text
+GET /api/auth/me
+```
+
+Retrieves information about the currently authenticated user.
+
+---
+
+## 14.4 Repository API
+
+Repository-related routes are grouped under:
+
+```text id="g5h5z8"
+/api/repositories
+```
+
+The repository API supports operations such as:
+
+* Creating repositories
+* Listing a user's repositories
+* Retrieving repository information
+* Updating repositories
+* Deleting repositories
+* Changing repository visibility
+* Uploading files
+* Retrieving files
+* Updating files
+* Deleting files
+* Pushing repository changes
+* Pulling repository data
+* Cloning repositories
+
+### Major Repository Endpoints
+
+| Method   | Endpoint                                      | Purpose                         |
+| -------- | --------------------------------------------- | ------------------------------- |
+| `POST`   | `/api/repositories`                           | Create repository               |
+| `GET`    | `/api/repositories/my`                        | Retrieve user's repositories    |
+| `GET`    | `/api/repositories/:repoId`                   | Retrieve repository             |
+| `PATCH`  | `/api/repositories/:repoId`                   | Update repository               |
+| `DELETE` | `/api/repositories/:repoId`                   | Delete repository               |
+| `PATCH`  | `/api/repositories/:repoId/change-visibility` | Change visibility               |
+| `GET`    | `/api/repositories/:repoId/files`             | Retrieve repository files       |
+| `GET`    | `/api/repositories/:repoId/file`              | Retrieve a file                 |
+| `PUT`    | `/api/repositories/:repoId/file`              | Update a file                   |
+| `DELETE` | `/api/repositories/:repoId/file`              | Delete a file                   |
+| `POST`   | `/api/repositories/:repoId/upload`            | Upload repository data          |
+| `POST`   | `/api/repositories/:repoId/upload-files`      | Upload files                    |
+| `POST`   | `/api/repositories/:repositoryId/push`        | Push repository changes         |
+| `GET`    | `/api/repositories/:repositoryId/pull`        | Retrieve remote repository data |
+| `GET`    | `/api/repositories/:repositoryId/clone`       | Clone repository                |
+| `GET`    | `/api/repositories/:repoId/latest-commit`     | Retrieve latest commit          |
+
+---
+
+## 14.5 Commit API
+
+Commit-related functionality is grouped under:
+
+```text id="l8f5my"
+/api/commits
+```
+
+The commit API provides access to repository history and individual commit information.
+
+### Endpoints
+
+| Method | Endpoint                          | Purpose                       |
+| ------ | --------------------------------- | ----------------------------- |
+| `GET`  | `/api/commits/:repoId`            | Retrieve repository commits   |
+| `GET`  | `/api/commits/get/:commitId`      | Retrieve a specific commit    |
+| `GET`  | `/api/commits/get/:commitId/file` | Retrieve a file from a commit |
+
+These endpoints are primarily used by the frontend to display commit history and commit details.
+
+---
+
+## 14.6 Exploration API
+
+Repository exploration functionality is grouped under:
+
+```text id="0a2mup"
+/api/explore
+```
+
+The exploration API supports functionality for discovering repositories and related public information.
+
+It is used by the frontend's exploration functionality.
+
+---
+
+## 14.7 User API
+
+User-related routes are grouped under:
+
+```text id="2h8j4a"
+/api/users
+```
+
+These endpoints provide user-related information required by features such as user profiles and repository exploration.
+
+---
+
+## 14.8 API Authentication
+
+Protected endpoints require the client to provide valid authentication information.
+
+The general request structure is:
+
+```text id="d4y7l0"
+Client
+  │
+  │ Request + Authentication Token
+  ▼
+Backend
+  │
+  ▼
+Authentication Middleware
+  │
+  ▼
+Authorization Check
+  │
+  ▼
+Route Handler
+```
+
+Requests without valid authentication information are rejected when the requested operation requires an authenticated user.
+
+---
+
+## 14.9 API Request Flow
+
+A typical API request follows:
+
+```text id="1g7x7e"
+Frontend / CLI
+      │
+      ▼
+HTTP Request
+      │
+      ▼
+Route
+      │
+      ▼
+Middleware
+      │
+      ▼
+Controller
+      │
+      ▼
+Service
+      │
+      ▼
+Database / Storage
+      │
+      ▼
+Response
+      │
+      ▼
+Frontend / CLI
+```
+
+This structure separates HTTP handling from business logic and data access.
+
+---
+
+## 14.10 Repository Push API
+
+The push operation is primarily used by the CLI to synchronize a local commit with the remote repository.
+
+```text
+POST /api/repositories/:repositoryId/push
+```
+
+The general flow is:
+
+```text id="7m9g4x"
+Local CLI Repository
+        │
+        ▼
+     chron push
+        │
+        ▼
+Push API
+        │
+        ▼
+Backend Processing
+        │
+        ▼
+Remote Repository
+```
+
+The backend processes the repository and commit information supplied by the CLI.
+
+---
+
+## 14.11 Repository Pull API
+
+The pull operation retrieves remote repository information.
+
+```text
+GET /api/repositories/:repositoryId/pull
+```
+
+The general flow is:
+
+```text id="x4z3pd"
+Remote Repository
+       │
+       ▼
+ Pull API
+       │
+       ▼
+      CLI
+       │
+       ▼
+Local Repository
+```
+
+---
+
+## 14.12 Clone API
+
+The clone operation retrieves an existing repository for local use.
+
+```text
+GET /api/repositories/:repositoryId/clone
+```
+
+The CLI uses this functionality when executing:
+
+```bash id="y6i8v1"
+chron clone <repository-id>
+```
+
+---
+
+## 14.13 File APIs
+
+The repository API provides endpoints for file operations.
+
+Supported operations include:
+
+* Retrieve files
+* Retrieve individual files
+* Upload files
+* Update files
+* Delete files
+
+These operations allow the web application to provide repository file-management functionality.
+
+---
+
+## 14.14 API Responses
+
+API responses are returned to the requesting client after the requested operation has been processed.
+
+Successful responses generally provide the requested resource or operation result.
+
+When an operation cannot be completed, the backend returns an appropriate HTTP error response.
+
+Common categories include:
+
+```text id="08j8sm"
+2xx → Successful operation
+4xx → Client/request/authentication error
+5xx → Server-side error
+```
+
+The exact response structure depends on the individual endpoint.
+
+---
+
+## 14.15 API Error Handling
+
+Errors can occur due to:
+
+* Invalid request data
+* Missing required information
+* Authentication failure
+* Authorization failure
+* Resource not found
+* Database errors
+* File operation errors
+* Unexpected server errors
+
+The backend's error-handling middleware provides centralized processing for server-side errors.
+
+---
+
+## 14.16 Frontend API Usage
+
+The frontend communicates with the backend using HTTP requests, primarily through Axios.
+
+The frontend uses API operations for:
+
+* Authentication
+* Repository management
+* File operations
+* Commit history
+* User information
+* Repository exploration
+
+The response from the backend is then used to update the corresponding React interface.
+
+---
+
+## 14.17 CLI API Usage
+
+The CLI uses API service modules to communicate with the backend.
+
+The main service modules include:
+
+```text id="f8s7hl"
+CLI/services/
+├── api.js
+├── authService.js
+└── repositoryApi.js
+```
+
+These services provide reusable API communication for CLI commands.
+
+This prevents individual commands from having to independently implement the complete HTTP communication logic.
+
+---
+
+## 14.18 API Security
+
+Protected API operations use authentication and authorization mechanisms to restrict access.
+
+Security considerations include:
+
+* Authentication token verification
+* Repository ownership checks
+* Request validation
+* Password hashing
+* Secure handling of credentials
+* HTTPS for production communication
+
+Sensitive authentication information should never be included directly in source code or committed to the repository.
+
+---
+
+## 14.19 API Development and Testing
+
+The backend API can be tested locally by running the backend server:
+
+```bash id="4m1zqt"
+cd Backend
+npm install
+npm start
+```
+
+The local backend is available at:
+
+```text id="ap1t8c"
+http://localhost:8080/
+```
+
+API endpoints can then be tested using the frontend, CLI, or an API testing tool.
+
+
+# 15. Environment Variables & Configuration
+
+Code Chronicle uses environment variables for deployment-specific and sensitive configuration.
+
+## 15.1 Backend
+
+The backend uses environment variables for services such as:
+
+* MongoDB
+* JWT authentication
+* Supabase
+* Other service credentials
+
+The configuration is maintained through a backend `.env` file during local development.
+
+Example:
+
+```env
+MONGODB_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+SUPABASE_URL=your_supabase_url
+SUPABASE_KEY=your_supabase_key
+```
+
+The exact variable names should match those used by the backend implementation.
+
+## 15.2 Frontend
+
+The frontend can use Vite environment variables for backend API configuration.
+
+Example:
+
+```env
+VITE_API_URL=http://localhost:8080
+```
+
+For production, the frontend communicates with the deployed backend:
+
+```text
+https://code-chronical-latest-backend.onrender.com/
+```
+
+## 15.3 CLI
+
+The CLI maintains its own configuration through its configuration and utility modules. It does not require the backend `.env` file for normal CLI usage.
+
+## 15.4 Security
+
+Sensitive information such as database credentials, JWT secrets, API keys, and service credentials must not be committed to the repository.
+
+Environment files containing secrets should be excluded through `.gitignore`.
+
+Configuration should be provided separately for development and production environments.
+
+# 16. Installation & Local Development
+
+## 16.1 Prerequisites
+
+The following are required to run Code Chronicle locally:
+
+* **Node.js**
+* **npm**
+* **MongoDB**
+* Internet connection for required external services
+
+Verify Node.js and npm:
+
+```bash
+node --version
+npm --version
+```
+
+---
+
+## 16.2 Clone the Repository
+
+```bash
+git clone https://github.com/hitesh2114-exe/code-chronical-latest.git
+cd code-chronical-latest
+```
+
+---
+
+## 16.3 Install Dependencies
+
+Each component has its own dependencies.
+
+### Frontend
+
+```bash
+cd Frontend
+npm install
+```
+
+### Backend
+
+```bash
+cd ../Backend
+npm install
+```
+
+### CLI
+
+```bash
+cd ../CLI
+npm install
+```
+
+---
+
+## 16.4 Run the Backend
+
+From the `Backend` directory:
+
+```bash
+npm start
+```
+
+The local backend runs on:
+
+```text
+http://localhost:8080/
+```
+
+---
+
+## 16.5 Run the Frontend
+
+From the `Frontend` directory:
+
+```bash
+npm run dev
+```
+
+The development URL is provided by Vite in the terminal.
+
+---
+
+## 16.6 Run the CLI
+
+For local CLI development:
+
+```bash
+cd CLI
+node index.js --help
+```
+
+For normal usage, the published npm package can be installed globally:
+
+```bash
+npm install -g codechronicle-cli
+```
+
+Then:
+
+```bash
+chron --help
+```
+
+---
+
+## 16.7 Local Development Flow
+
+For complete local development, the components work together as follows:
+
+```text
+Frontend ──┐
+           ├──► Backend ──► MongoDB / Supabase
+CLI ───────┘
+```
+
+The frontend and CLI communicate with the backend API, while the backend manages application data and storage services.
+
+# 17. Deployment
+
+## 17.1 Deployment Overview
+
+Code Chronicle is deployed as separate frontend and backend services.
+
+```text id="j7k8x9"
+User
+ │
+ ▼
+Frontend
+ │
+ ▼
+Backend API
+ │
+ ├──► MongoDB
+ └──► Supabase
+```
+
+The CLI is distributed separately through npm.
+
+---
+
+## 17.2 Frontend Deployment
+
+The React frontend is deployed on **Render**.
+
+**Production URL:**
+
+```text id="h3s5n2"
+https://code-chronical-latest.onrender.com/
+```
+
+The frontend is built using Vite before deployment.
+
+Production build:
+
+```bash id="v7c1x4"
+npm run build
+```
+
+---
+
+## 17.3 Backend Deployment
+
+The Node.js/Express backend is deployed on **Render**.
+
+**Production URL:**
+
+```text id="k8m2q1"
+https://code-chronical-latest-backend.onrender.com/
+```
+
+The backend runs as a web service and communicates with the configured database and storage services.
+
+---
+
+## 17.4 Database and Storage
+
+The production backend connects to the configured:
+
+* MongoDB database
+* Supabase services
+
+Connection credentials are provided through the deployment platform's environment variables.
+
+---
+
+## 17.5 CLI Distribution
+
+The Code Chronicle CLI is distributed through npm.
+
+```text id="n6f4r8"
+Package: codechronicle-cli
+Version: 1.0.2
+Command: chron
+```
+
+Installation:
+
+```bash id="y2v5k7"
+npm install -g codechronicle-cli
+```
+
+---
+
+## 17.6 Deployment Summary
+
+| Component | Platform | Purpose          |
+| --------- | -------- | ---------------- |
+| Frontend  | Render   | Web application  |
+| Backend   | Render   | REST API         |
+| Database  | MongoDB  | Application data |
+| Storage   | Supabase | Storage services |
+| CLI       | npm      | CLI distribution |
+
+# 18. Testing
+
+## 18.1 Overview
+
+Testing in Code Chronicle focuses on verifying the functionality of the backend, frontend, and CLI and ensuring that the main repository workflows operate correctly.
+
+## 18.2 Backend Testing
+
+The backend contains a dedicated testing directory:
+
+```text
+Backend/test/
+```
+
+Backend testing can be used to verify areas such as:
+
+* Authentication
+* Repository operations
+* Commit operations
+* API behavior
+* Validation
+* Error handling
+
+## 18.3 Frontend Testing
+
+The frontend includes an ESLint-based code-quality check.
+
+Run:
+
+```bash
+npm run lint
+```
+
+The linting process helps identify code-quality and syntax issues before deployment.
+
+## 18.4 CLI Testing
+
+The CLI can be tested by installing the published npm package:
+
+```bash
+npm install -g codechronicle-cli
+```
+
+Then verify the installation:
+
+```bash
+chron --help
+```
+
+The primary CLI workflow can be tested using:
+
+```text
+login → init → add → commit → push
+```
+
+Additional commands such as `pull`, `clone`, and `revert` can be tested against available repositories.
+
+## 18.5 Manual Testing
+
+Manual testing is useful for verifying complete end-to-end workflows involving:
+
+* Frontend → Backend communication
+* CLI → Backend communication
+* Repository creation
+* File operations
+* Commit and push operations
+* Authentication
+* Repository exploration
+
+Testing should be performed locally before deploying significant changes to the production services.
+
+# 19. Current Limitations
+
+The current version of Code Chronicle has the following known limitations:
+
+### 19.1 Commit and Push Workflow
+
+In the current CLI implementation, a **push is required after each commit before creating another commit**.
+
+The current workflow is:
+
+```text id="1v6c8g"
+Add → Commit → Push → Add → Commit → Push
+```
+
+Multiple local commits cannot currently be accumulated and pushed together.
+
+### 19.2 Future Improvements
+
+The commit workflow can be improved in future versions to support multiple local commits before synchronization with the remote repository.
+
+---
+
+# 20. License
+
+Code Chronicle is released under the **MIT License**.
+
+The MIT License permits users to use, copy, modify, merge, publish, distribute, sublicense, and sell copies of the software, subject to the conditions of the license.
+
+The complete license text is available in the project's:
+
+```text id="8k4xq2"
+LICENSE
+```
+
+file.
+
+The Code Chronicle CLI is also distributed under the MIT License.
