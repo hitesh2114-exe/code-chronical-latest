@@ -1,14 +1,14 @@
 # Code Chronicle
 
-> A custom, Git-inspired version control system with a web platform and command-line interface.
+> A full-stack version control platform with a web application and command-line interface.
 
-Code Chronicle is a full-stack version control platform that provides Git-like repository management through both a **web application** and a **CLI**. It allows users to create and manage repositories, track changes through commits, explore projects, and synchronize code with remote repositories.
+Code Chronicle is a complete version control platform that allows users to create and manage repositories, track project changes through commits, explore codebases, and synchronize projects with remote repositories.
 
-The project is built as three major components:
+The project consists of three major components:
 
-* **Frontend** — A React-based web interface for managing and exploring repositories.
-* **Backend** — A Node.js/Express REST API that handles authentication, repositories, commits, users, and file operations.
-* **CLI** — A Node.js command-line tool that provides Git-inspired version-control commands.
+* **Frontend** — React-based web application for managing and exploring repositories.
+* **Backend** — Node.js/Express REST API responsible for authentication, repositories, commits, users, and file operations.
+* **CLI** — Node.js command-line tool for managing Code Chronicle repositories directly from the terminal.
 
 ---
 
@@ -16,49 +16,45 @@ The project is built as three major components:
 
 * User registration and authentication
 * Create and manage repositories
-* Public/private repository support
+* Public and private repositories
 * Upload, edit, and manage files
-* Commit and track project versions
+* Create and track commits
 * View commit history
 * Explore repositories and user profiles
 * Push and pull repositories
 * Clone repositories
 * Revert to previous commits
-* Git-inspired CLI workflow
 * Web-based repository management
+* Command-line repository management
 
 ---
 
-## 🖥️ Web Platform
-
-The Code Chronicle web application provides an intuitive interface for:
-
-* Dashboard and repository management
-* Repository file browsing
-* Commit history and commit details
-* Repository exploration
-* User profiles
-* Authentication
-* Project documentation
-
-### Live Links
+## 🌐 Live Application
 
 **Frontend:**
-`[ Add Frontend Live Link Here ]`
+https://code-chronical-latest.onrender.com/
 
-**Backend/API:**
-`[ Add Backend Live Link Here ]`
+**Backend / API:**
+https://code-chronical-latest-backend.onrender.com/
 
 ---
 
 ## ⚡ Code Chronicle CLI
 
-The **Code Chronicle CLI** provides a terminal-based workflow similar to Git.
+The Code Chronicle CLI allows users to manage repositories directly from the terminal.
 
-The CLI executable is:
+### Installation
+
+Node.js is required.
 
 ```bash
-chron
+npm install -g codechronicle-cli
+```
+
+After installation:
+
+```bash
+chron --help
 ```
 
 ### Available Commands
@@ -78,7 +74,7 @@ chron clone <repository-id>
 chron revert <commit-id>
 ```
 
-A typical workflow looks like:
+### Basic Workflow
 
 ```bash
 chron login
@@ -90,33 +86,33 @@ chron push
 
 The CLI maintains local repository information inside a `.chron` directory and communicates with the Code Chronicle backend for remote repository operations.
 
+> **Current Version Note:** In the current version, every commit must be followed by a `push` operation before creating the next commit. This limitation is planned for improvement in future versions.
+
 ---
 
 ## 📦 NPM Package
 
-The CLI is distributed as an npm package and exposes the `chron` command.
+Code Chronicle CLI is distributed through npm as:
 
-After installing the package, the CLI can be used directly from the terminal:
+**Package:** `codechronicle-cli`
+**Latest Version:** `1.0.2`
+**Command:** `chron`
 
-```bash
-chron --help
-```
-
-The package provides the command-line interface for interacting with Code Chronicle repositories without requiring users to manually interact with the web application.
+[View codechronicle-cli on npm](https://www.npmjs.com/package/codechronicle-cli?utm_source=chatgpt.com)
 
 ---
 
 ## 🛠️ Technology Stack
 
-| Component      | Technologies                                  |
-| -------------- | --------------------------------------------- |
-| Frontend       | React, Vite, React Router, Axios, Material UI |
-| Backend        | Node.js, Express.js                           |
-| Database       | MongoDB, Mongoose                             |
-| CLI            | Node.js, Yargs, Axios, Inquirer               |
-| Authentication | JWT, bcryptjs                                 |
-| Validation     | Joi                                           |
-| File Handling  | Multer, Archiver, Unzipper                    |
+| Component          | Technologies                                  |
+| ------------------ | --------------------------------------------- |
+| Frontend           | React, Vite, React Router, Axios, Material UI |
+| Backend            | Node.js, Express.js                           |
+| Database & Storage | MongoDB, Mongoose, Supabase                   |
+| CLI                | Node.js, Yargs, Axios, Inquirer               |
+| Authentication     | JWT, bcryptjs                                 |
+| Validation         | Joi                                           |
+| File Handling      | Multer, Archiver, Unzipper                    |
 
 ---
 
@@ -127,7 +123,7 @@ Code-Chronicle/
 │
 ├── Frontend/       # React web application
 ├── Backend/        # REST API and server
-├── CLI/            # Code Chronicle command-line tool
+├── CLI/            # Command-line interface
 ├── LICENSE         # MIT License
 └── README.md
 ```
@@ -135,6 +131,17 @@ Code-Chronicle/
 ---
 
 ## 🚀 Getting Started
+
+### Prerequisite
+
+**Node.js** is required.
+
+Check your installation:
+
+```bash
+node --version
+npm --version
+```
 
 ### Clone the Repository
 
@@ -145,15 +152,21 @@ cd code-chronical-latest
 
 ### Install Dependencies
 
+**Frontend**
+
 ```bash
 cd Frontend
 npm install
 ```
 
+**Backend**
+
 ```bash
 cd ../Backend
 npm install
 ```
+
+**CLI**
 
 ```bash
 cd ../CLI
@@ -174,7 +187,7 @@ cd Backend
 npm start
 ```
 
-### Run CLI
+### Run CLI Locally
 
 ```bash
 cd CLI
@@ -193,24 +206,24 @@ For detailed information about the architecture, implementation, API endpoints, 
 
 ---
 
-## 📄 License
-
-Code Chronicle is licensed under the **MIT License**.
-
-See the [LICENSE](LICENSE) file for details.
-
----
-
 ## 🔗 Links
 
 **GitHub Repository:**
 https://github.com/hitesh2114-exe/code-chronical-latest
 
 **Live Frontend:**
-`[ Add Link ]`
+https://code-chronical-latest.onrender.com/
 
 **Live Backend:**
-`[ Add Link ]`
+https://code-chronical-latest-backend.onrender.com/
 
 **NPM Package:**
-`[ Add NPM Package Link ]`
+https://www.npmjs.com/package/codechronicle-cli
+
+---
+
+## 📄 License
+
+Code Chronicle is licensed under the **MIT License**.
+
+See the [LICENSE](LICENSE) file for details.
