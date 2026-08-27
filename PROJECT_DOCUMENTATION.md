@@ -1,5 +1,28 @@
 # Code Chronicle — Project Documentation
 
+## Table of Contents
+
+1. [Project Overview](#1-project-overview)
+2. [Problem Statement](#2-problem-statement)
+3. [Project Objectives](#3-project-objectives)
+4. [System Overview](#4-system-overview)
+5. [Documentation Scope](#5-documentation-scope)
+6. [Technology Stack](#6-technology-stack)
+7. [Project Structure](#7-project-structure)
+8. [Frontend Documentation](#8-frontend-documentation)
+9. [Backend Documentation](#9-backend-documentation)
+10. [CLI Documentation](#10-cli-documentation)
+11. [Database & Storage Documentation](#11-database--storage-documentation)
+12. [Authentication & Authorization](#12-authentication--authorization)
+13. [Repository & Commit Workflow](#13-repository--commit-workflow)
+14. [API Documentation](#14-api-documentation)
+15. [Environment Variables & Configuration](#15-environment-variables--configuration)
+16. [Installation & Local Development](#16-installation--local-development)
+17. [Deployment](#17-deployment)
+18. [Testing](#18-testing)
+19. [Current Limitations](#19-current-limitations)
+20. [License](#20-license)
+
 ## 1. Project Overview
 
 **Code Chronicle** is a full-stack version control platform designed to provide a complete environment for managing source-code repositories and tracking project history.
