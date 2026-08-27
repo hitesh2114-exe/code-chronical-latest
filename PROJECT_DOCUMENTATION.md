@@ -2628,3 +2628,423 @@ The following information should never be exposed publicly:
 
 The authentication system should also be kept behind HTTPS in production deployments to protect credentials and tokens while they are being transmitted.
 
+
+# 13. Repository & Commit Workflow
+
+## 13.1 Overview
+
+Repository and commit management form the core functionality of Code Chronicle.
+
+A repository represents a project managed through Code Chronicle, while commits represent recorded versions of that project.
+
+The workflow involves two main environments:
+
+* **Local repository** — Managed through the Code Chronicle CLI and the `.chron` directory.
+* **Remote repository** — Managed through the Code Chronicle backend and accessed through the web application or CLI.
+
+The overall workflow is:
+
+```text id="n5o6la"
+Local Project
+     │
+     ▼
+chron init
+     │
+     ▼
+Local Repository
+     │
+     ▼
+chron add
+     │
+     ▼
+Staging
+     │
+     ▼
+chron commit
+     │
+     ▼
+Local Commit
+     │
+     ▼
+chron push
+     │
+     ▼
+Remote Repository
+```
+
+---
+
+## 13.2 Repository Initialization
+
+A repository is initialized using:
+
+```bash id="0p1iym"
+chron init <repository-name>
+```
+
+The initialization process prepares the current project for Code Chronicle version tracking.
+
+A `.chron` directory is created to maintain local repository information.
+
+```text id="p3o7t5"
+Project/
+│
+├── .chron/
+│   ├── config.json
+│   ├── staging/
+│   └── commits/
+│
+└── Project Files
+```
+
+The local configuration allows the CLI to associate the project with its Code Chronicle repository.
+
+---
+
+## 13.3 Staging Files
+
+Before creating a commit, files are added to the staging area.
+
+```bash id="c2d0u4"
+chron add <file>
+```
+
+For example:
+
+```bash id="n1fn8t"
+chron add app.js
+```
+
+Multiple files or the entire project can be added:
+
+```bash id="e6v1xb"
+chron add .
+```
+
+The staging process can be represented as:
+
+```text id="r9gqwl"
+Working Directory
+       │
+       │ chron add
+       ▼
+   Staging Area
+```
+
+Only the files prepared through the staging process are considered for the subsequent commit.
+
+---
+
+## 13.4 Creating a Commit
+
+A commit records the staged state of the project.
+
+```bash id="a3s5ty"
+chron commit "<commit-message>"
+```
+
+Example:
+
+```bash id="f4d9x1"
+chron commit "Add repository authentication"
+```
+
+The commit operation creates a local representation of the project state and records relevant commit information.
+
+A commit contains concepts such as:
+
+* Unique commit identifier
+* Commit message
+* Timestamp
+* Parent commit
+* Repository association
+* Project state
+
+The commit history forms a sequence of project versions.
+
+```text id="y0b6pj"
+Commit 1
+   │
+   ▼
+Commit 2
+   │
+   ▼
+Commit 3
+   │
+   ▼
+Commit 4
+```
+
+---
+
+## 13.5 Local Commit Storage
+
+The CLI stores local commit information inside:
+
+```text id="4bqudi"
+.chron/commits/
+```
+
+Each commit can contain the project state and associated metadata required by the CLI.
+
+This provides a local representation of the project's version history before it is synchronized with the remote repository.
+
+---
+
+## 13.6 Push
+
+The `push` command synchronizes the latest local commit with the remote repository.
+
+```bash id="6j0g6s"
+chron push
+```
+
+The push process can be represented as:
+
+```text id="4jjxip"
+Local Commit
+     │
+     ▼
+chron push
+     │
+     ▼
+Backend API
+     │
+     ▼
+Remote Repository
+```
+
+The backend processes the incoming repository and commit information and updates the remote repository accordingly.
+
+---
+
+## 13.7 Pull
+
+The `pull` command retrieves repository information from the remote repository.
+
+```bash id="q5m8xv"
+chron pull
+```
+
+The general flow is:
+
+```text id="q0rbr2"
+Remote Repository
+       │
+       ▼
+Backend API
+       │
+       ▼
+chron pull
+       │
+       ▼
+Local Project
+```
+
+Pull is used when the local project needs to retrieve the available remote repository state.
+
+---
+
+## 13.8 Clone
+
+An existing repository can be downloaded using:
+
+```bash id="gq5x4p"
+chron clone <repository-id>
+```
+
+The clone operation:
+
+1. Identifies the requested remote repository.
+2. Communicates with the Code Chronicle backend.
+3. Retrieves the repository contents and relevant information.
+4. Creates the project locally.
+5. Initializes the required local repository configuration.
+
+The simplified flow is:
+
+```text id="2k9s3r"
+Remote Repository
+       │
+       ▼
+   chron clone
+       │
+       ▼
+Local Project
+       │
+       ▼
+.chron/
+```
+
+---
+
+## 13.9 Revert
+
+A previous project state can be restored using:
+
+```bash id="l5y5pq"
+chron revert <commit-id>
+```
+
+The commit identifier specifies the project version that should be restored.
+
+The workflow is:
+
+```text id="0a8p8k"
+Commit History
+      │
+      ▼
+Select Commit
+      │
+      ▼
+chron revert
+      │
+      ▼
+Restore Project State
+```
+
+Reverting allows users to move the working project back to a previously recorded state.
+
+---
+
+## 13.10 Repository Lifecycle
+
+The complete lifecycle of a repository can be represented as:
+
+```text id="8z3m9a"
+Create / Initialize
+        │
+        ▼
+     Add Files
+        │
+        ▼
+      Commit
+        │
+        ▼
+       Push
+        │
+        ▼
+ Remote Repository
+        │
+   ┌────┴────┐
+   │         │
+  Pull     Clone
+   │         │
+   ▼         ▼
+Local      Local
+Project    Project
+   │
+   ▼
+  Revert
+```
+
+---
+
+## 13.11 Web Repository Workflow
+
+Repository functionality is also available through the Code Chronicle web application.
+
+Users can interact with repositories through the web interface to perform operations such as:
+
+* Creating repositories
+* Viewing repository information
+* Browsing files
+* Uploading files
+* Editing files
+* Deleting files
+* Viewing commits
+* Viewing individual commit details
+* Managing repository visibility
+
+The frontend communicates with the backend API to perform these operations.
+
+```text id="d3f9oa"
+Web Interface
+      │
+      ▼
+Backend API
+      │
+      ├──► Repository Data
+      │
+      ├──► Commit Data
+      │
+      └──► File Operations
+```
+
+---
+
+## 13.12 CLI and Web Repository Consistency
+
+The CLI and web application interact with the same backend infrastructure.
+
+```text id="y5f5hl"
+       ┌─────────────┐
+       │  Frontend   │
+       └──────┬──────┘
+              │
+              │
+              ▼
+       ┌─────────────┐
+       │   Backend   │
+       │     API     │
+       └──────┬──────┘
+              ▲
+              │
+              │
+       ┌──────┴──────┐
+       │     CLI     │
+       └─────────────┘
+```
+
+This allows repository information and operations to be accessed through both interfaces.
+
+---
+
+## 13.13 Current Commit Workflow Limitation
+
+The current CLI implementation requires a push after each commit before another commit can be created.
+
+Therefore, the supported workflow is:
+
+```text id="j0c2t6"
+chron add .
+     │
+     ▼
+chron commit "Change 1"
+     │
+     ▼
+chron push
+     │
+     ▼
+chron add .
+     │
+     ▼
+chron commit "Change 2"
+     │
+     ▼
+chron push
+```
+
+Multiple local commits cannot currently be accumulated and pushed together.
+
+This limitation is part of the current implementation and can be addressed in a future version by allowing independent local commits to exist before synchronization.
+
+---
+
+## 13.14 Repository and Commit Responsibilities
+
+| Operation                           | Primary Component  |
+| ----------------------------------- | ------------------ |
+| Initialize local repository         | CLI                |
+| Stage files                         | CLI                |
+| Create local commit                 | CLI                |
+| Push commit                         | CLI + Backend      |
+| Pull remote state                   | CLI + Backend      |
+| Clone repository                    | CLI + Backend      |
+| Revert project state                | CLI                |
+| Create/manage repository through UI | Frontend + Backend |
+| Store repository metadata           | Backend + MongoDB  |
+| Maintain local repository state     | CLI + `.chron`     |
+
+This workflow forms the central version-management mechanism of Code Chronicle.
+
