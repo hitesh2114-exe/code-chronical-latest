@@ -2279,3 +2279,352 @@ The backend coordinates the required repository and commit operations between th
 | CLI `.chron` | Local repository metadata and state         |
 
 This separation allows Code Chronicle to maintain local repository state through the CLI while using backend services for persistent remote data and storage.
+
+# 12. Authentication & Authorization
+
+## 12.1 Overview
+
+Code Chronicle uses an authentication and authorization system to protect user accounts and restricted repository operations.
+
+Authentication is handled through the backend and is used by both the **web application** and the **CLI**.
+
+The system uses:
+
+* **JWT** for authentication tokens
+* **bcryptjs** for password hashing
+* Authentication middleware for protected requests
+* Authorization checks for restricted repository operations
+
+The general authentication flow is:
+
+```text id="v9e8ny"
+User
+ │
+ ▼
+Login / Registration
+ │
+ ▼
+Backend Authentication API
+ │
+ ▼
+Credential Verification
+ │
+ ▼
+JWT Token
+ │
+ ├──────────────► Frontend
+ │
+ └──────────────► CLI
+```
+
+---
+
+## 12.2 User Registration
+
+New users can create a Code Chronicle account through the registration interface.
+
+The registration process follows:
+
+```text id="1y8i9t"
+Registration Form
+       │
+       ▼
+Frontend
+       │
+       ▼
+Backend API
+       │
+       ▼
+Validate User Data
+       │
+       ▼
+Hash Password
+       │
+       ▼
+Store User
+       │
+       ▼
+MongoDB
+```
+
+Passwords are processed using `bcryptjs` before being stored.
+
+Plain-text passwords should not be stored in the database.
+
+---
+
+## 12.3 User Login
+
+Existing users can authenticate through the login interface.
+
+The general process is:
+
+```text id="0k5m90"
+Login Credentials
+       │
+       ▼
+Backend
+       │
+       ▼
+Find User
+       │
+       ▼
+Verify Password
+       │
+       ▼
+Generate JWT
+       │
+       ▼
+Return Authentication Response
+```
+
+The authentication token is subsequently used when accessing protected functionality.
+
+---
+
+## 12.4 JWT Authentication
+
+JSON Web Tokens (JWT) are used to identify authenticated users when making protected API requests.
+
+A simplified request flow is:
+
+```text id="q36v1y"
+Client
+  │
+  │ Request + JWT
+  ▼
+Authentication Middleware
+  │
+  ▼
+Verify Token
+  │
+ ┌┴─────────────┐
+ │              │
+Valid          Invalid
+ │              │
+ ▼              ▼
+Continue      Reject
+Request       Request
+```
+
+The backend verifies the token before allowing access to protected operations.
+
+---
+
+## 12.5 Frontend Authentication
+
+The frontend provides dedicated authentication pages for:
+
+* Registration
+* Login
+
+Protected application areas use the `ProtectedRoute` component.
+
+The frontend authentication flow can be represented as:
+
+```text id="b3f3tr"
+Login
+ │
+ ▼
+Authentication API
+ │
+ ▼
+JWT / Authentication State
+ │
+ ▼
+ProtectedRoute
+ │
+ ├── Authenticated ──► Protected Page
+ │
+ └── Not Authenticated ──► Login
+```
+
+This prevents users who are not authenticated from directly accessing restricted application pages.
+
+---
+
+## 12.6 CLI Authentication
+
+The CLI provides its own authentication commands:
+
+```bash id="v1c5zq"
+chron login
+chron logout
+chron whoami
+```
+
+### `chron login`
+
+Authenticates the CLI user through the Code Chronicle backend.
+
+### `chron logout`
+
+Removes the locally stored authentication information.
+
+### `chron whoami`
+
+Displays information about the currently authenticated user.
+
+The CLI maintains the required authentication information locally so that protected commands can communicate with the backend.
+
+---
+
+## 12.7 Authorization
+
+Authentication determines **who the user is**, while authorization determines **what the user is allowed to do**.
+
+Code Chronicle applies authorization checks to protected repository operations.
+
+For example, repository management operations can require the authenticated user to have the appropriate ownership or access permissions.
+
+The general flow is:
+
+```text id="k7fr5e"
+Request
+   │
+   ▼
+Authenticate User
+   │
+   ▼
+Identify User
+   │
+   ▼
+Check Authorization
+   │
+ ┌─┴───────────┐
+ │             │
+Allowed       Denied
+ │             │
+ ▼             ▼
+Operation    Error Response
+```
+
+---
+
+## 12.8 Repository Ownership
+
+Repository ownership is an important part of authorization.
+
+The backend associates repositories with users and can use this relationship when determining whether a user can perform restricted repository operations.
+
+```text id="k7z8l3"
+User
+ │
+ │ owns
+ ▼
+Repository
+ │
+ ├── File Operations
+ ├── Commit Operations
+ └── Repository Management
+```
+
+Operations that modify or manage a repository can therefore be protected using the authenticated user's identity and repository ownership.
+
+---
+
+## 12.9 Protected API Requests
+
+Protected requests generally follow this sequence:
+
+```text id="2c72zj"
+Frontend / CLI
+      │
+      ▼
+HTTP Request
+      │
+      ▼
+Authentication Middleware
+      │
+      ▼
+Authorization Check
+      │
+      ▼
+Controller
+      │
+      ▼
+Service
+      │
+      ▼
+Database / Storage
+```
+
+If authentication or authorization fails, the request is rejected before the protected operation is performed.
+
+---
+
+## 12.10 Password Security
+
+User passwords are handled using **bcryptjs**.
+
+The purpose of password hashing is to ensure that the original password is not directly stored in the database.
+
+The conceptual process is:
+
+```text id="m5e3l9"
+User Password
+      │
+      ▼
+bcryptjs
+      │
+      ▼
+Password Hash
+      │
+      ▼
+MongoDB
+```
+
+During login, the supplied password is compared against the stored hash rather than being compared with a stored plain-text password.
+
+---
+
+## 12.11 Authentication Components
+
+The authentication system is distributed across several parts of the project.
+
+### Backend
+
+Responsible for:
+
+* Registration
+* Login
+* Password verification
+* JWT generation and verification
+* Authentication middleware
+* Authorization checks
+
+### Frontend
+
+Responsible for:
+
+* Registration interface
+* Login interface
+* Authentication state
+* Protected routes
+
+### CLI
+
+Responsible for:
+
+* Terminal-based login
+* Logout
+* Current-user information
+* Maintaining local authentication information
+* Sending authenticated API requests
+
+---
+
+## 12.12 Authentication Security Considerations
+
+Authentication credentials and secrets should be managed through secure configuration rather than committed to source control.
+
+The following information should never be exposed publicly:
+
+* User passwords
+* JWT secrets
+* Database credentials
+* External service credentials
+* Authentication tokens
+
+The authentication system should also be kept behind HTTPS in production deployments to protect credentials and tokens while they are being transmitted.
+
