@@ -617,3 +617,334 @@ Provides a concise introduction, features, setup instructions, CLI information, 
 
 Contains the complete technical documentation of the Code Chronicle system, including its architecture, implementation, workflows, APIs, configuration, deployment, limitations, and future improvements.
 
+# 8. Frontend Documentation
+
+## 8.1 Frontend Overview
+
+The Code Chronicle frontend is a React-based web application built using **Vite**. It provides the primary graphical interface through which users interact with the Code Chronicle platform.
+
+The frontend communicates with the backend through REST API requests and is responsible for presenting repository, user, commit, and authentication functionality in an interactive web interface.
+
+The frontend provides interfaces for:
+
+* User registration and login
+* User authentication
+* Dashboard
+* Repository creation and management
+* Repository file browsing
+* File creation, editing, uploading, and deletion
+* Commit history
+* Commit details
+* Repository exploration
+* User profiles
+* Project documentation
+
+The frontend is designed using reusable React components and separates functionality into feature-oriented component directories.
+
+---
+
+## 8.2 Frontend Architecture
+
+The frontend follows a component-based React architecture.
+
+```text
+                         Frontend
+                            │
+                            ▼
+                     ┌─────────────┐
+                     │   main.jsx  │
+                     │ Entry Point │
+                     └──────┬──────┘
+                            │
+                            ▼
+                     ┌─────────────┐
+                     │   App.jsx   │
+                     │ Application │
+                     │   Routing   │
+                     └──────┬──────┘
+                            │
+          ┌─────────────────┼─────────────────┐
+          │                 │                 │
+          ▼                 ▼                 ▼
+      Auth Pages       Application       Public Pages
+          │               Pages              │
+          │                 │                │
+          ▼                 ▼                ▼
+       Login /         Dashboard /       Home /
+       Signup          Repository /      Explore /
+                       Commits           Documentation
+                            │
+                            ▼
+                     Backend REST API
+```
+
+The application is divided into reusable components that handle specific areas of the platform.
+
+---
+
+## 8.3 Application Entry Point
+
+The main entry point of the frontend is:
+
+```text
+Frontend/src/main.jsx
+```
+
+This file initializes the React application and mounts it to the application's root HTML element.
+
+The entry point loads the main application component and the global styling required by the application.
+
+---
+
+## 8.4 Main Application
+
+The primary application component is:
+
+```text
+Frontend/src/App.jsx
+```
+
+`App.jsx` defines the main application structure and configures the application's routes.
+
+It connects the individual frontend pages and components into a single navigable application.
+
+The application uses **React Router** for client-side navigation.
+
+---
+
+## 8.5 Routing
+
+Code Chronicle uses React Router to provide navigation between different areas of the application.
+
+The major application routes include:
+
+| Route                 | Purpose                   |
+| --------------------- | ------------------------- |
+| `/`                   | Home page                 |
+| `/documentation`      | Project documentation     |
+| `/signup`             | User registration         |
+| `/login`              | User login                |
+| `/explore`            | Repository exploration    |
+| `/user/:userId`       | User profile              |
+| `/dashboard`          | User dashboard            |
+| `/repository/:repoId` | Repository view           |
+| `/commits/:repoId`    | Repository commit history |
+| `/commit/:commitId`   | Individual commit details |
+
+Dynamic route parameters such as `:repoId`, `:commitId`, and `:userId` allow the same component structure to display information for different repositories, commits, and users.
+
+---
+
+## 8.6 Protected Routes
+
+Code Chronicle contains a dedicated component:
+
+```text
+Frontend/src/ProtectedRoute.jsx
+```
+
+The `ProtectedRoute` component is used to restrict access to pages that require authentication.
+
+The general flow is:
+
+```text
+User Requests Protected Page
+            │
+            ▼
+     ProtectedRoute
+            │
+       ┌────┴────┐
+       │         │
+ Authenticated  Not Authenticated
+       │         │
+       ▼         ▼
+    Continue   Redirect
+    to Page    to Login
+```
+
+This prevents unauthenticated users from directly accessing protected areas of the application.
+
+---
+
+## 8.7 Frontend Component Structure
+
+The frontend organizes components according to their functionality.
+
+```text
+Frontend/src/components/
+│
+├── Animation/
+├── Auth/
+├── Commits/
+├── Common/
+├── Dashboard/
+├── Documentation/
+├── Explore/
+├── Home/
+└── Repository/
+```
+
+### Animation
+
+Contains components responsible for animated and visual effects used throughout the application.
+
+### Auth
+
+Contains components related to:
+
+* Login
+* Registration
+* Authentication-related UI
+
+### Commits
+
+Contains components for displaying and interacting with commit information.
+
+This includes commit history and individual commit-related views.
+
+### Common
+
+Contains reusable components shared across multiple pages or features.
+
+### Dashboard
+
+Contains components used by the authenticated user's dashboard.
+
+### Documentation
+
+Contains components responsible for displaying Code Chronicle's documentation pages within the web application.
+
+### Explore
+
+Contains components for discovering and exploring repositories and users.
+
+### Home
+
+Contains components used on the application's landing/home page.
+
+### Repository
+
+Contains components related to repository management and repository file operations.
+
+---
+
+## 8.8 Global Styling
+
+Global frontend styling is defined in:
+
+```text
+Frontend/src/index.css
+```
+
+This file provides styles that apply across the application.
+
+Individual components may also contain their own CSS or styling definitions where component-specific styling is required.
+
+The frontend combines standard CSS with UI-library and animation technologies to create the application's visual interface.
+
+---
+
+## 8.9 Scroll Management
+
+The application contains:
+
+```text
+Frontend/src/ScrollToTop.jsx
+```
+
+This component handles scroll position during navigation so that navigating between pages does not unnecessarily retain the previous page's scroll position.
+
+---
+
+## 8.10 Frontend Data Flow
+
+The frontend follows a client-to-server data flow for operations that require backend information.
+
+```text
+User Interaction
+       │
+       ▼
+React Component
+       │
+       ▼
+API Request
+       │
+       ▼
+Backend REST API
+       │
+       ▼
+Database / Storage
+       │
+       ▼
+API Response
+       │
+       ▼
+React Component
+       │
+       ▼
+Updated UI
+```
+
+For example, when a user opens a repository:
+
+```text
+Repository Page
+       │
+       ▼
+Request Repository Data
+       │
+       ▼
+Backend API
+       │
+       ▼
+Repository Information
+       │
+       ▼
+Frontend State
+       │
+       ▼
+Repository UI
+```
+
+This separation keeps the frontend responsible for presentation and interaction while the backend handles the application's business logic and persistent data.
+
+---
+
+## 8.11 Frontend Development
+
+The frontend uses Vite for development and production builds.
+
+From the `Frontend` directory:
+
+### Install Dependencies
+
+```bash
+npm install
+```
+
+### Start Development Server
+
+```bash
+npm run dev
+```
+
+### Build for Production
+
+```bash
+npm run build
+```
+
+### Preview Production Build
+
+```bash
+npm run preview
+```
+
+### Run Linter
+
+```bash
+npm run lint
+```
+
+The frontend can therefore be developed independently from the backend while communicating with the configured backend API during application use.
+
