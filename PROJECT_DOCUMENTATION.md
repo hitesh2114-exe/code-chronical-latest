@@ -948,3 +948,473 @@ npm run lint
 
 The frontend can therefore be developed independently from the backend while communicating with the configured backend API during application use.
 
+# 9. Backend Documentation
+
+## 9.1 Backend Overview
+
+The Code Chronicle backend is a **Node.js and Express.js REST API** that acts as the central service layer of the platform.
+
+It provides the APIs consumed by both the Code Chronicle frontend and CLI.
+
+The backend is responsible for:
+
+* User registration and authentication
+* User information and profiles
+* Repository creation and management
+* Repository file operations
+* Commit management
+* Push and pull operations
+* Repository cloning
+* Repository exploration
+* Access control and authorization
+* Request validation
+* Database interaction
+* File and archive processing
+* Error handling
+
+The backend uses **MongoDB** as the primary database and integrates with **Supabase** for storage-related functionality.
+
+---
+
+## 9.2 Backend Architecture
+
+The backend follows a layered structure that separates routing, request handling, business logic, data models, validation, and reusable utilities.
+
+```text id="flw3f9"
+                       Backend API
+                           │
+                           ▼
+                       Routes
+                           │
+                           ▼
+                     Controllers
+                           │
+                           ▼
+                       Services
+                           │
+              ┌────────────┴────────────┐
+              │                         │
+              ▼                         ▼
+           Models                   Utilities
+              │
+              ▼
+           MongoDB
+
+Additional Services
+              │
+              ▼
+          Supabase
+```
+
+The general request flow is:
+
+```text id="q2ow1n"
+Client
+  │
+  │ HTTP Request
+  ▼
+Route
+  │
+  ▼
+Middleware
+  │
+  ▼
+Controller
+  │
+  ▼
+Service
+  │
+  ├──────────────► Database
+  │
+  └──────────────► Storage
+  │
+  ▼
+Response
+  │
+  ▼
+Client
+```
+
+This structure keeps individual responsibilities separated and makes the backend easier to maintain and extend.
+
+---
+
+## 9.3 Backend Entry Point
+
+The main backend entry point is:
+
+```text id="q0zzp5"
+Backend/index.js
+```
+
+This file initializes the Express application and configures the server.
+
+The backend performs tasks such as:
+
+* Loading environment configuration
+* Initializing Express
+* Configuring middleware
+* Configuring CORS
+* Registering API routes
+* Establishing the database connection
+* Starting the HTTP server
+
+The backend currently runs on port:
+
+```text id="0af0ey"
+8080
+```
+
+---
+
+## 9.4 Backend Directory Structure
+
+The backend is organized into multiple functional directories:
+
+```text id="0ek74z"
+Backend/
+│
+├── config/
+├── controllers/
+├── middleware/
+├── model/
+├── routes/
+├── services/
+├── test/
+├── utils/
+├── validation/
+│
+├── index.js
+├── nodemon.json
+└── package.json
+```
+
+Each directory has a specific responsibility within the backend architecture.
+
+---
+
+## 9.5 Routes
+
+The `routes/` directory defines the HTTP endpoints exposed by the backend.
+
+The major API areas include:
+
+```text id="w44izn"
+/api/auth
+/api/repositories
+/api/commits
+/api/explore
+/api/users
+```
+
+Routes are responsible for:
+
+* Defining HTTP methods
+* Defining URL patterns
+* Connecting requests to controllers
+* Applying required middleware
+
+Routes should remain focused on request routing rather than containing large amounts of business logic.
+
+---
+
+## 9.6 Controllers
+
+The `controllers/` directory contains request-handling logic.
+
+Controllers receive requests from routes, extract required information, invoke appropriate services, and return responses to the client.
+
+The backend contains controller functionality for areas such as:
+
+* Authentication
+* Repositories
+* Commits
+* Users
+* Exploration
+
+The controller layer acts as the connection between the HTTP layer and the application's business logic.
+
+```text id="q2h8kl"
+HTTP Request
+     │
+     ▼
+Controller
+     │
+     ▼
+Service
+     │
+     ▼
+Result
+     │
+     ▼
+HTTP Response
+```
+
+---
+
+## 9.7 Services
+
+The `services/` directory contains the application's business logic.
+
+Services handle operations that should not be directly implemented inside route definitions.
+
+The backend contains service functionality related to:
+
+* Authentication
+* Repository management
+* Commit operations
+* User operations
+* Repository exploration
+
+This separation allows the same business logic to be reused by different controllers or application flows.
+
+---
+
+## 9.8 Database Models
+
+The `model/` directory contains the MongoDB/Mongoose models used by the application.
+
+The primary entities include:
+
+### User
+
+Stores information associated with Code Chronicle users.
+
+User-related information is used for:
+
+* Authentication
+* User profiles
+* Repository ownership
+* Access control
+
+### Repository
+
+Represents a Code Chronicle repository.
+
+Repository information includes details required to identify and manage repositories and their associated project data.
+
+### Commit
+
+Represents a recorded version of a repository.
+
+Commit information is used to maintain project history and identify individual repository states.
+
+The relationship can be represented as:
+
+```text id="6eyk3c"
+User
+ │
+ └── owns ──► Repositories
+                    │
+                    └── contains ──► Commits
+```
+
+---
+
+## 9.9 Middleware
+
+The `middleware/` directory contains reusable request-processing functions.
+
+Middleware is used for tasks such as:
+
+* Authentication
+* Authorization
+* Repository ownership verification
+* Error handling
+* Request processing
+
+A typical protected request follows:
+
+```text id="qvqlxj"
+Request
+   │
+   ▼
+Authentication Middleware
+   │
+   ▼
+Authorization / Ownership Check
+   │
+   ▼
+Controller
+   │
+   ▼
+Response
+```
+
+Middleware prevents protected operations from being executed without the required authentication or permissions.
+
+---
+
+## 9.10 Validation
+
+The `validation/` directory contains validation logic for incoming data.
+
+The backend uses **Joi** for request validation.
+
+Validation ensures that incoming data satisfies the expected structure and constraints before it reaches the main business logic.
+
+A simplified flow is:
+
+```text id="8c2jps"
+Client Data
+    │
+    ▼
+Validation
+    │
+ ┌──┴───┐
+ │      │
+Valid  Invalid
+ │      │
+ ▼      ▼
+Service Error Response
+```
+
+This reduces invalid data entering the application's database and business logic.
+
+---
+
+## 9.11 Configuration
+
+The `config/` directory contains configuration-related functionality.
+
+Configuration is separated from application logic so that environment-specific settings can be changed without modifying the main application code.
+
+Sensitive configuration values such as database credentials, authentication secrets, and external service credentials should be supplied through environment variables.
+
+---
+
+## 9.12 Utilities
+
+The `utils/` directory contains reusable helper functionality used throughout the backend.
+
+Utilities are intended for operations that are shared across different parts of the application and do not belong directly to a controller or service.
+
+---
+
+## 9.13 File and Archive Handling
+
+Code Chronicle performs file-related operations for repository management.
+
+The backend uses libraries such as:
+
+* **Multer** for handling uploaded files
+* **Archiver** for creating compressed archives
+* **Unzipper** for extracting archives
+
+These operations are important for transferring repository contents between the CLI, backend, and storage systems.
+
+A simplified repository transfer flow is:
+
+```text id="x7n1hm"
+Repository Files
+      │
+      ▼
+Archive / Upload
+      │
+      ▼
+Backend
+      │
+      ▼
+Storage
+```
+
+When repository data needs to be retrieved:
+
+```text id="7xyqrf"
+Storage
+   │
+   ▼
+Archive
+   │
+   ▼
+Backend
+   │
+   ▼
+Extracted Repository
+```
+
+---
+
+## 9.14 Database
+
+MongoDB is used as the primary database for Code Chronicle.
+
+Mongoose provides the data-modeling layer between the Node.js backend and MongoDB.
+
+The database stores application-level information such as:
+
+* Users
+* Repositories
+* Commits
+* Repository metadata
+
+MongoDB handles structured application data while storage services are used for repository file data where required.
+
+---
+
+## 9.15 Supabase Integration
+
+Supabase is integrated into the backend as part of the project's storage infrastructure.
+
+It is used for storage-related operations involving repository files and project data.
+
+This allows the backend to separate:
+
+```text id="4xv3dq"
+Application Metadata
+        │
+        ▼
+     MongoDB
+
+Repository File Storage
+        │
+        ▼
+     Supabase
+```
+
+This separation helps keep database records and larger file-storage operations independent.
+
+---
+
+## 9.16 Error Handling
+
+The backend contains dedicated error-handling functionality through middleware.
+
+Errors can originate from:
+
+* Invalid requests
+* Authentication failures
+* Authorization failures
+* Missing resources
+* Database operations
+* File operations
+* Storage operations
+* Unexpected server errors
+
+Centralized error handling provides consistent responses to clients and prevents application-specific error logic from being duplicated throughout the backend.
+
+---
+
+## 9.17 Backend Development
+
+From the `Backend` directory, install dependencies using:
+
+```bash id="j6g9q1"
+npm install
+```
+
+Start the backend:
+
+```bash id="syw2se"
+npm start
+```
+
+The backend runs on port:
+
+```text id="0f0xqm"
+8080
+```
+
+The backend can then be accessed by the frontend and CLI through the configured API base URL.
+
+---
