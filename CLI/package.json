@@ -1,8 +1,8 @@
 {
   "name": "codechronicle-cli",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "bin": {
-    "chron": "./index.js"
+    "chron": "index.js"
   },
   "main": "index.js",
   "scripts": {
@@ -10,7 +10,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "description": "",
   "dependencies": {
     "archiver": "^6.0.2",
