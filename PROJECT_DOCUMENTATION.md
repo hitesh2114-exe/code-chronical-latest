@@ -1418,3 +1418,560 @@ The backend runs on port:
 The backend can then be accessed by the frontend and CLI through the configured API base URL.
 
 ---
+
+# 10. CLI Documentation
+
+## 10.1 CLI Overview
+
+The **Code Chronicle CLI** is a Node.js-based command-line application that allows users to interact with Code Chronicle repositories directly from a terminal.
+
+The CLI is distributed as an npm package:
+
+**Package:** `codechronicle-cli`
+**Current Version:** `1.0.2`
+**Executable:** `chron`
+
+Users can install the CLI globally using:
+
+```bash
+npm install -g codechronicle-cli
+```
+
+After installation, the CLI can be accessed using:
+
+```bash
+chron --help
+```
+
+The CLI communicates with the Code Chronicle backend for authentication and remote repository operations while maintaining local repository information on the user's machine.
+
+---
+
+## 10.2 CLI Architecture
+
+The CLI is organized into commands, services, configuration, and utility modules.
+
+```text id="7u1zq5"
+                         Code Chronicle CLI
+                                │
+                         ┌──────▼──────┐
+                         │   index.js  │
+                         │ CLI Entry   │
+                         └──────┬──────┘
+                                │
+                                ▼
+                           Yargs Commands
+                                │
+        ┌──────────┬────────────┼────────────┬──────────┐
+        │          │            │            │          │
+        ▼          ▼            ▼            ▼          ▼
+      Auth      Repository    Commit       Remote     Utility
+    Commands    Commands      Commands    Commands    Functions
+        │          │            │            │          │
+        └──────────┴────────────┼────────────┴──────────┘
+                                │
+                                ▼
+                           CLI Services
+                                │
+                                ▼
+                       Code Chronicle API
+```
+
+The CLI separates individual commands into separate files, allowing each operation to have its own implementation.
+
+---
+
+## 10.3 CLI Directory Structure
+
+```text id="ef5v5s"
+CLI/
+│
+├── commands/
+│   ├── add.js
+│   ├── clone.js
+│   ├── commit.js
+│   ├── init.js
+│   ├── login.js
+│   ├── logout.js
+│   ├── pull.js
+│   ├── push.js
+│   ├── revert.js
+│   └── whoami.js
+│
+├── config/
+│   └── config.js
+│
+├── services/
+│   ├── api.js
+│   ├── authService.js
+│   └── repositoryApi.js
+│
+├── utils/
+│   ├── auth.js
+│   ├── chronConfig.js
+│   ├── unzipDirectory.js
+│   └── zipDirectory.js
+│
+├── index.js
+└── package.json
+```
+
+### `commands/`
+
+Contains the implementation of individual CLI commands.
+
+### `config/`
+
+Contains CLI configuration such as the backend API configuration.
+
+### `services/`
+
+Contains reusable functions for API communication, authentication, and repository operations.
+
+### `utils/`
+
+Contains helper functions for local configuration, authentication, directory compression, and archive extraction.
+
+### `index.js`
+
+Acts as the CLI entry point and registers commands using Yargs.
+
+---
+
+## 10.4 Installation
+
+Node.js and npm are required to install and use the CLI.
+
+Install the published package globally:
+
+```bash
+npm install -g codechronicle-cli
+```
+
+Verify the installation:
+
+```bash
+chron --help
+```
+
+The installed package provides the `chron` executable.
+
+The package is available on npm:
+
+[codechronicle-cli on npm](https://www.npmjs.com/package/codechronicle-cli?utm_source=chatgpt.com)
+
+---
+
+## 10.5 CLI Authentication
+
+The CLI provides authentication commands that allow users to authenticate their terminal session with Code Chronicle.
+
+### Login
+
+```bash
+chron login
+```
+
+The login command collects the required user credentials and authenticates the user through the backend API.
+
+### Logout
+
+```bash
+chron logout
+```
+
+Removes the locally stored authentication information.
+
+### Current User
+
+```bash
+chron whoami
+```
+
+Displays information about the currently authenticated Code Chronicle user.
+
+The authentication flow can be represented as:
+
+```text id="pfv0h3"
+chron login
+     │
+     ▼
+User Credentials
+     │
+     ▼
+Backend Authentication API
+     │
+     ▼
+Authentication Token
+     │
+     ▼
+Local CLI Configuration
+```
+
+Protected commands use the stored authentication information when communicating with the backend.
+
+---
+
+## 10.6 Local Repository Initialization
+
+A Code Chronicle repository can be initialized using:
+
+```bash
+chron init <repository-name>
+```
+
+The initialization process creates the required local repository configuration and prepares the current project for Code Chronicle version tracking.
+
+A hidden `.chron` directory is used to maintain local repository information.
+
+---
+
+## 10.7 `.chron` Directory
+
+The `.chron` directory acts as the local metadata directory for a Code Chronicle repository.
+
+It stores information required by the CLI to identify and manage the local repository.
+
+A simplified representation is:
+
+```text id="0wq9ju"
+.chron/
+│
+├── commits/
+│
+├── staging/
+│
+└── config.json
+```
+
+### `config.json`
+
+Stores local repository configuration information required by the CLI.
+
+### `staging/`
+
+Contains files that have been added to the staging area and are prepared for the next commit.
+
+### `commits/`
+
+Contains locally stored commit information and project snapshots.
+
+The `.chron` directory should generally be treated as internal repository metadata and should not be manually modified unless required for development or debugging.
+
+---
+
+## 10.8 Adding Files
+
+Files are added to the staging area using:
+
+```bash
+chron add <file>
+```
+
+For example:
+
+```bash
+chron add index.js
+```
+
+A complete project can be staged using:
+
+```bash
+chron add .
+```
+
+The `add` command prepares selected files for the next commit.
+
+The general flow is:
+
+```text id="u8x3qm"
+Working Directory
+       │
+       ▼
+    chron add
+       │
+       ▼
+   Staging Area
+```
+
+---
+
+## 10.9 Creating Commits
+
+A commit records the current staged project state.
+
+The command format is:
+
+```bash
+chron commit "<commit-message>"
+```
+
+Example:
+
+```bash
+chron commit "Add authentication feature"
+```
+
+The commit operation creates a local project snapshot and records commit metadata.
+
+A commit can contain information such as:
+
+* Commit identifier
+* Commit message
+* Timestamp
+* Parent commit information
+* Repository state
+
+The commit history can then be accessed through the Code Chronicle platform.
+
+---
+
+## 10.10 Push
+
+The `push` command transfers the latest local commit to the remote Code Chronicle repository.
+
+```bash
+chron push
+```
+
+The general flow is:
+
+```text id="l4o6vf"
+Local Commit
+     │
+     ▼
+   chron push
+     │
+     ▼
+Backend API
+     │
+     ▼
+Remote Repository
+```
+
+The push operation packages the required repository data and communicates with the backend to update the remote repository.
+
+---
+
+## 10.11 Pull
+
+The `pull` command retrieves repository information from the remote Code Chronicle repository.
+
+```bash
+chron pull
+```
+
+The operation allows a local project to retrieve the available remote repository state.
+
+Simplified flow:
+
+```text id="x5q3gc"
+Remote Repository
+       │
+       ▼
+   chron pull
+       │
+       ▼
+Backend API
+       │
+       ▼
+Local Project
+```
+
+---
+
+## 10.12 Clone
+
+The `clone` command allows an existing Code Chronicle repository to be retrieved locally.
+
+```bash
+chron clone <repository-id>
+```
+
+The command communicates with the backend, retrieves the repository data, and extracts the project contents into the local environment.
+
+The CLI uses archive utilities to package and extract repository contents during transfer.
+
+---
+
+## 10.13 Revert
+
+The `revert` command allows the project to be restored to a previous commit state.
+
+```bash
+chron revert <commit-id>
+```
+
+The command uses a specified commit identifier to identify the project state that should be restored.
+
+Simplified flow:
+
+```text id="j2v0pq"
+Commit History
+      │
+      ▼
+Commit ID
+      │
+      ▼
+chron revert
+      │
+      ▼
+Selected Project State
+```
+
+---
+
+## 10.14 Complete CLI Workflow
+
+A typical Code Chronicle workflow is:
+
+```text id="j19k0n"
+chron login
+     │
+     ▼
+chron init my-project
+     │
+     ▼
+chron add .
+     │
+     ▼
+chron commit "Initial commit"
+     │
+     ▼
+chron push
+```
+
+For subsequent changes:
+
+```text id="f3z0so"
+Modify Files
+     │
+     ▼
+chron add .
+     │
+     ▼
+chron commit "Update project"
+     │
+     ▼
+chron push
+```
+
+---
+
+## 10.15 Current Commit and Push Limitation
+
+In the current version of the CLI, **each commit must be followed by a push before another commit can be created**.
+
+Therefore, the current workflow is:
+
+```text id="b6f4sp"
+Add → Commit → Push
+                │
+                ▼
+             Add → Commit → Push
+```
+
+Users cannot currently create multiple independent local commits and push them together.
+
+This is an implementation limitation of the current version and is a potential area for future improvement.
+
+---
+
+## 10.16 CLI-to-Backend Communication
+
+The CLI communicates with the Code Chronicle backend through HTTP API requests.
+
+The communication structure is:
+
+```text id="q5zjgi"
+CLI Command
+    │
+    ▼
+CLI Service
+    │
+    ▼
+API Request
+    │
+    ▼
+Code Chronicle Backend
+    │
+    ▼
+Database / Storage
+    │
+    ▼
+API Response
+    │
+    ▼
+CLI
+```
+
+The API-related functionality is separated into service modules so that individual commands do not need to implement HTTP communication independently.
+
+---
+
+## 10.17 Archive and File Operations
+
+The CLI uses archive utilities for repository transfer.
+
+### Zip
+
+`zipDirectory.js` is responsible for creating archives from project directories when required for repository transfer.
+
+### Unzip
+
+`unzipDirectory.js` extracts archived repository contents when retrieving project data.
+
+This allows complete repository contents to be transferred between the local environment and remote services.
+
+---
+
+## 10.18 CLI Configuration
+
+The CLI contains configuration and authentication utilities that manage information required for communication with the Code Chronicle backend.
+
+The configuration system allows the CLI to maintain information such as:
+
+* API configuration
+* Authentication information
+* Local repository configuration
+
+Sensitive authentication information should not be manually shared or committed to source control.
+
+---
+
+## 10.19 CLI Development
+
+To work with the CLI source code directly:
+
+```bash
+cd CLI
+npm install
+```
+
+Run the CLI locally:
+
+```bash
+node index.js --help
+```
+
+Individual commands can then be tested against the configured Code Chronicle backend.
+
+For users, the recommended installation method is the published npm package:
+
+```bash
+npm install -g codechronicle-cli
+```
+
+---
+
+## 10.20 CLI Version
+
+The currently published CLI version is:
+
+```text
+codechronicle-cli@1.0.2
+```
+
+The package is licensed under the MIT License, consistent with the main Code Chronicle project.
+
+The CLI is maintained and versioned independently through npm releases.
