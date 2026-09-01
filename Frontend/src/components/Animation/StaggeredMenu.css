@@ -435,7 +435,7 @@
   }
 
   .sm-panel-list[data-numbering] .sm-panel-item::after {
-    right: 0.4rem;
+    right: 0px;
     top: 0.1em;
     font-size: 0.6rem;
   }
@@ -473,7 +473,7 @@
   }
 
   .sm-panel-list[data-numbering] .sm-panel-item::after {
-    right: 0.35em;
+    right: 2.8rem;
     font-size: 0.55rem;
   }
 
